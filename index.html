@@ -7,187 +7,532 @@
 <meta name="description" content="Examino a realidade onde a física encontra símbolos, a teologia encontra estruturas e a ficção expõe possibilidades. Busco uma linguagem que una cálculo, imaginação e transcendência para compreender o invisível no real.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Libre+Baskerville:ital@1&family=Roboto:wght@400;500&display=swap">
 <style>
-/* Layout: caderno de laboratório — uma coluna de leitura estreita; metadados em mono como registros de bancada; capas em tons pastel. */
+/* Layout: revista literária — barra escura no topo, carrossel de capas, seções com etiqueta e coluna lateral; destaques em pastel. */
 :root {
-  --fundo: #f4f6fa; --tinta: #24283a; --suave: #5f6782; --linha: #dcdff0;
-  --lavanda: #c9c2ef; --ceu: #dbe9f4; --pessego: #f5e1d5; --cartao: #ffffff;
-  --display: "Instrument Serif", "Iowan Old Style", Georgia, serif;
-  --texto: "Newsreader", "Iowan Old Style", Georgia, serif;
-  --mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --fundo: #fbfbfd; --tinta: #23263a; --suave: #6a7088; --linha: #e3e5ee; --barra: #2a2e3d; --barra-tinta: #f3f3f8;
+  --lavanda: #d6d0f5; --pessego: #f6e2d6; --ceu: #dcebf5; --etq: #2a2e3d; --etq-tinta: #ffffff; --cartao: #ffffff;
+  --cond: "Oswald", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --ital: "Libre Baskerville", Georgia, serif;
+  --ui: "Roboto", "Segoe UI", Arial, sans-serif;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --fundo: #161925; --tinta: #e4e6f1; --suave: #a2a9c4; --linha: #2c3147;
-    --lavanda: #b3abe6; --ceu: #233043; --pessego: #3a2e34; --cartao: #1d2130; color-scheme: dark;
+    --fundo: #181b24; --tinta: #e6e8f1; --suave: #a3a9c2; --linha: #2d3245; --barra: #10121a; --barra-tinta: #e6e8f1;
+    --lavanda: #b9b1ea; --pessego: #4a3a3c; --ceu: #253245; --etq: #b9b1ea; --etq-tinta: #181b24; --cartao: #1f2330; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --fundo: #161925; --tinta: #e4e6f1; --suave: #a2a9c4; --linha: #2c3147;
-  --lavanda: #b3abe6; --ceu: #233043; --pessego: #3a2e34; --cartao: #1d2130; color-scheme: dark;
+  --fundo: #181b24; --tinta: #e6e8f1; --suave: #a3a9c2; --linha: #2d3245; --barra: #10121a; --barra-tinta: #e6e8f1;
+  --lavanda: #b9b1ea; --pessego: #4a3a3c; --ceu: #253245; --etq: #b9b1ea; --etq-tinta: #181b24; --cartao: #1f2330; color-scheme: dark;
 }
 [hidden] { display: none !important; }
 * { box-sizing: border-box; }
-body { margin: 0; background: var(--fundo); color: var(--tinta); font-family: var(--texto); font-size: 1.1rem; line-height: 1.65; -webkit-font-smoothing: antialiased; }
+html { scroll-behavior: auto; }
+body { margin: 0; background: var(--fundo); color: var(--tinta); font-family: var(--ui); font-size: 15px; line-height: 1.55; }
 img { max-width: 100%; height: auto; display: block; }
-a { color: inherit; text-decoration-color: var(--lavanda); text-decoration-thickness: 2px; text-underline-offset: 3px; }
-a:focus-visible { outline: 2px solid var(--lavanda); outline-offset: 3px; border-radius: 2px; }
-.pagina { max-width: 44rem; margin: 0 auto; padding-inline: 20px; padding-block: 3rem 4rem; }
-.meta { font-family: var(--mono); font-size: 0.74rem; letter-spacing: 0.04em; color: var(--suave); margin: 0; }
+a { color: inherit; text-decoration: none; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--lavanda); outline-offset: 2px; }
 
-/* início */
-.cab { display: flex; gap: 1.5rem; align-items: flex-start; padding-bottom: 2.2rem; border-bottom: 1px solid var(--linha); }
-.foto { width: 5.5rem; height: 5.5rem; border-radius: 50%; object-fit: cover; flex: none; box-shadow: 0 0 0 6px var(--ceu); }
-.cab-texto { min-width: 0; display: flex; flex-direction: column; gap: 0.6rem; }
-.nome { font-family: var(--display); font-weight: 400; font-size: clamp(2.3rem, 7vw, 3.4rem); line-height: 1.02; margin: 0; text-wrap: balance; }
-.bio { margin: 0; color: var(--suave); max-width: 36rem; }
-.numeros { margin-top: 0.3rem; }
-.secao { font-family: var(--mono); font-weight: 500; font-size: 0.74rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--suave); margin: 2.2rem 0 0.4rem; }
-.lista { list-style: none; margin: 0; padding: 0; }
-.lista li { border-bottom: 1px solid var(--linha); }
-.item { display: grid; grid-template-columns: 7.5rem 1fr; gap: 1.1rem; padding-block: 1.1rem; text-decoration: none; align-items: center; }
-.miniatura { aspect-ratio: 3 / 2; border-radius: 6px; overflow: hidden; background: linear-gradient(135deg, var(--ceu), var(--pessego)); max-width: 100%; }
-.miniatura img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s ease; }
-.item-texto { min-width: 0; display: flex; flex-direction: column; gap: 0.15rem; }
-.item-titulo { font-family: var(--display); font-size: 1.55rem; line-height: 1.15; text-wrap: balance; }
-.item-sub { color: var(--suave); font-size: 0.98rem; line-height: 1.4; }
-.item:hover .item-titulo { text-decoration: underline; text-decoration-color: var(--lavanda); text-decoration-thickness: 2px; text-underline-offset: 4px; }
-.item:hover .miniatura img { transform: scale(1.04); }
-.rodape { margin-top: 2.4rem; }
+/* barra do topo */
+.topo { background: var(--barra); color: var(--barra-tinta); position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10; }
+.topo-dentro { max-width: 1160px; margin: 0 auto; padding-inline: 16px; display: flex; align-items: stretch; gap: 1.5rem; min-height: 54px; }
+.logo { display: flex; flex-direction: column; justify-content: center; padding-right: 1.2rem; border-right: 1px solid rgba(255,255,255,.12); flex: none; }
+.logo-nome { font-family: var(--cond); font-weight: 600; font-size: 1.65rem; letter-spacing: .08em; line-height: 1; }
+.logo-sub { font-family: var(--ital); font-style: italic; font-size: .62rem; letter-spacing: .06em; opacity: .75; margin-top: 3px; }
+.menu { display: flex; align-items: stretch; overflow-x: auto; scrollbar-width: none; min-width: 0; }
+.menu::-webkit-scrollbar { display: none; }
+.menu a { font-family: var(--cond); text-transform: uppercase; font-size: .92rem; letter-spacing: .03em; display: flex; align-items: center; padding-inline: .85rem; white-space: nowrap; border-bottom: 3px solid transparent; opacity: .88; }
+.menu a:hover, .menu a.atual { opacity: 1; border-bottom-color: var(--lavanda); }
+
+.pagina { max-width: 1160px; margin: 0 auto; padding-inline: 16px; padding-block: 1.5rem 3rem; }
+
+/* carrossel */
+.carrossel { position: relative; aspect-ratio: 16 / 7; max-width: 100%; overflow: hidden; background: var(--ceu); margin-bottom: 2.2rem; }
+.slide { position: absolute; inset: 0; opacity: 0; transition: opacity .7s ease; }
+.slide.ativo { opacity: 1; z-index: 1; }
+.slide img { width: 100%; height: 100%; object-fit: cover; }
+.slide-txt { position: absolute; left: 0; right: 0; bottom: 0; padding: 4rem 2rem 2.2rem; background: linear-gradient(transparent, rgba(20, 22, 32, .78)); color: #fff; display: flex; flex-direction: column; gap: .35rem; }
+.slide-tema { align-self: flex-start; background: var(--lavanda); color: #23263a; font-family: var(--cond); text-transform: uppercase; font-size: .78rem; letter-spacing: .06em; padding: .15rem .55rem; }
+.slide-tit { font-family: var(--cond); font-weight: 600; text-transform: uppercase; font-size: clamp(1.4rem, 3.6vw, 2.6rem); line-height: 1.08; max-width: 46rem; text-wrap: balance; }
+.slide-meta { font-family: var(--ital); font-style: italic; font-size: .8rem; opacity: .9; }
+.seta-c { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2; width: 42px; height: 42px; border: 0; border-radius: 50%; background: rgba(255,255,255,.82); color: #23263a; font-size: 1.6rem; line-height: 1; cursor: pointer; }
+.seta-c.ant { left: 14px; } .seta-c.prox { right: 14px; }
+.pontos { position: absolute; z-index: 2; bottom: 12px; right: 18px; display: flex; gap: 7px; }
+.ponto { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid #fff; background: transparent; padding: 0; cursor: pointer; }
+.ponto.ativo { background: #fff; }
+
+/* colunas */
+.colunas { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 2.6rem; align-items: start; }
+.principal { min-width: 0; }
+
+/* etiqueta das seções */
+.etiqueta { margin: 0 0 1.3rem; border-bottom: 2px solid var(--etq); font-weight: normal; line-height: 1; }
+.etiqueta span { display: inline-block; background: var(--etq); color: var(--etq-tinta); font-family: var(--cond); text-transform: uppercase; font-size: .82rem; letter-spacing: .06em; padding: .45rem .9rem .4rem; }
+.etiqueta.grande span { font-size: 1.15rem; padding: .55rem 1.1rem .5rem; }
+.bloco { margin-bottom: 2.4rem; }
+.bloco-grade { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0; }
+.bloco-grade > .destaque { padding-right: 1.6rem; border-right: 1px solid var(--linha); }
+.bloco-grade > .lista { padding-left: 1.6rem; }
+
+.tags { display: flex; flex-wrap: wrap; gap: .25rem .9rem; margin-bottom: .45rem; }
+.tag { font-family: var(--ital); font-style: italic; text-transform: uppercase; font-size: .66rem; letter-spacing: .12em; color: var(--suave); }
+.tag::before { content: ""; display: inline-block; width: 12px; height: 2px; background: currentColor; vertical-align: middle; margin-right: 5px; }
+a.tag:hover { color: var(--tinta); }
+
+.manchete { font-family: var(--cond); font-weight: 600; text-transform: uppercase; font-size: 1.5rem; line-height: 1.18; margin: 0 0 .5rem; text-wrap: balance; }
+.manchete-p { font-family: var(--cond); font-weight: 500; text-transform: uppercase; font-size: 1.02rem; line-height: 1.25; margin: 0; text-wrap: balance; }
+.manchete a:hover, .manchete-p a:hover { background: linear-gradient(var(--lavanda), var(--lavanda)) 0 88% / 100% 38% no-repeat; }
+.byline { font-family: var(--ital); font-style: italic; font-size: .72rem; color: var(--suave); margin: 0 0 .9rem; letter-spacing: .02em; }
+.byline strong { font-weight: normal; color: var(--tinta); }
+.destaque-img { display: block; aspect-ratio: 16 / 10; overflow: hidden; margin-bottom: .9rem; background: var(--ceu); }
+.destaque-img img, .cartao-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
+.destaque-img:hover img, .cartao-img:hover img { transform: scale(1.03); }
+.resumo { color: var(--suave); font-size: .9rem; margin: 0 0 1rem; }
+.botao { display: inline-block; background: var(--etq); color: var(--etq-tinta); font-family: var(--ital); font-style: italic; text-transform: uppercase; font-size: .66rem; letter-spacing: .16em; padding: .45rem 1rem; }
+.botao:hover { background: var(--lavanda); color: #23263a; }
+
+.lista { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1.2rem; }
+.item { display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: .9rem; align-items: start; }
+.item-img { aspect-ratio: 1; overflow: hidden; background: var(--ceu); }
+.item-img img { width: 100%; height: 100%; object-fit: cover; }
+.item-txt { min-width: 0; }
+
+/* coluna lateral */
+.lateral { min-width: 0; display: flex; flex-direction: column; gap: 0; border-left: 1px solid var(--linha); padding-left: 1.6rem; }
+.caixa { padding-block: 1.3rem; border-bottom: 1px solid var(--linha); }
+.caixa:first-child { padding-top: 0; }
+.caixa-tit { font-family: var(--cond); font-weight: 400; text-transform: uppercase; font-size: .82rem; letter-spacing: .08em; margin: 0 0 1rem; display: flex; align-items: center; gap: .5rem; }
+.caixa-tit::before { content: "≡"; font-size: 1rem; color: var(--suave); }
+.autor img { width: 96px; height: 96px; border-radius: 50%; object-fit: cover; margin-bottom: .8rem; box-shadow: 0 0 0 5px var(--pessego); }
+.autor p { margin: 0 0 .7rem; color: var(--suave); font-size: .88rem; }
+.mais { font-family: var(--cond); text-transform: uppercase; font-size: .8rem; letter-spacing: .05em; }
+.mais:hover { text-decoration: underline; text-decoration-color: var(--lavanda); text-decoration-thickness: 2px; }
+.rede { display: flex; align-items: center; gap: .7rem; border: 1px solid var(--linha); border-left: 3px solid var(--lavanda); padding: .6rem .8rem; margin-bottom: .55rem; font-size: .88rem; background: var(--cartao); }
+.rede:hover { border-left-color: var(--pessego); }
+.rede-ic { width: 24px; height: 24px; border-radius: 4px; background: var(--ceu); display: grid; place-items: center; font-family: var(--cond); font-size: .8rem; flex: none; }
+.seta { margin-left: auto; font-size: 1.1rem; }
+.numerada { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.numerada li { display: grid; grid-template-columns: 2rem minmax(0, 1fr); gap: .3rem; padding-block: .75rem; border-bottom: 1px solid var(--linha); align-items: baseline; }
+.numerada li:last-child { border-bottom: 0; }
+.num { font-family: var(--ital); font-style: italic; font-size: 1.25rem; color: var(--suave); }
+.numerada a { font-family: var(--cond); font-weight: 500; text-transform: uppercase; font-size: .9rem; line-height: 1.3; }
+.numerada a:hover { color: var(--suave); }
+.temas { list-style: none; margin: 0; padding: 0; }
+.temas li { display: flex; justify-content: space-between; padding-block: .45rem; border-bottom: 1px dotted var(--linha); font-family: var(--cond); text-transform: uppercase; font-size: .88rem; letter-spacing: .03em; }
+.temas li span { font-family: var(--ui); color: var(--suave); font-variant-numeric: tabular-nums; }
+
+/* página de tema */
+.contagem { font-family: var(--ital); font-style: italic; color: var(--suave); font-size: .82rem; margin: -.6rem 0 1.4rem; }
+.cartoes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem 1.6rem; }
+.cartao-img { display: block; aspect-ratio: 16 / 10; overflow: hidden; margin-bottom: .8rem; background: var(--ceu); }
+.cartao .manchete-p { font-size: 1.2rem; margin-bottom: .4rem; }
 
 /* texto */
-.voltar { font-family: var(--mono); font-size: 0.78rem; color: var(--suave); text-decoration: none; display: inline-block; margin-bottom: 2rem; }
-.voltar:hover { color: var(--tinta); }
-.post-cab { display: flex; flex-direction: column; gap: 0.7rem; margin-bottom: 1.8rem; }
-.post-cab h1 { font-family: var(--display); font-weight: 400; font-size: clamp(2.2rem, 6.5vw, 3.3rem); line-height: 1.05; margin: 0; text-wrap: balance; }
-.post-sub { font-style: italic; color: var(--suave); margin: 0; font-size: 1.15rem; }
-.capa { margin: 0 0 2.2rem; border-radius: 8px; overflow: hidden; background: var(--ceu); }
-.corpo { overflow-wrap: break-word; }
-.corpo p { margin: 0 0 1.05em; }
-.corpo h2, .corpo h3, .corpo h4 { font-family: var(--display); font-weight: 400; line-height: 1.15; margin: 1.8em 0 0.5em; text-wrap: balance; }
-.corpo h2 { font-size: 1.9rem; } .corpo h3 { font-size: 1.55rem; } .corpo h4 { font-size: 1.3rem; }
+.post { max-width: 100%; }
+.titulo-post { font-family: var(--cond); font-weight: 600; text-transform: uppercase; font-size: clamp(1.8rem, 4.4vw, 2.7rem); line-height: 1.08; margin: .2rem 0 .6rem; text-wrap: balance; }
+.linha-fina { font-family: var(--serif); font-style: italic; font-size: 1.15rem; color: var(--suave); margin: 0 0 .8rem; }
+.capa { margin: .4rem 0 2rem; }
+.corpo { font-family: var(--serif); font-size: 1.12rem; line-height: 1.75; max-width: 42rem; overflow-wrap: break-word; }
+.corpo p { margin: 0 0 1.1em; }
+.corpo h2, .corpo h3, .corpo h4 { font-family: var(--cond); font-weight: 500; text-transform: uppercase; line-height: 1.2; margin: 1.9em 0 .6em; letter-spacing: .01em; }
+.corpo h2 { font-size: 1.5rem; } .corpo h3 { font-size: 1.25rem; } .corpo h4 { font-size: 1.1rem; }
 .corpo figure { margin: 2rem 0; }
-.corpo figure img { border-radius: 6px; }
-.corpo figcaption { font-family: var(--mono); font-size: 0.74rem; color: var(--suave); margin-top: 0.5rem; }
-.corpo blockquote { margin: 1.6em 0; padding: 0.9em 1.2em; background: var(--ceu); border-radius: 6px; font-style: italic; }
-.corpo blockquote p:last-child { margin-bottom: 0; }
-.corpo hr { border: 0; height: 1px; background: var(--linha); margin: 2.4em auto; width: 40%; }
-.corpo ul, .corpo ol { padding-left: 1.3em; margin: 0 0 1.05em; }
-.corpo li { margin-bottom: 0.35em; }
-.corpo pre { overflow-x: auto; font-family: var(--mono); font-size: 0.85rem; background: var(--cartao); padding: 1rem; border-radius: 6px; }
-.origem { margin-top: 2.4rem; }
-.navpost { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 2rem; padding-top: 1.6rem; border-top: 1px solid var(--linha); }
-.navpost a { min-width: 0; display: flex; flex-direction: column; gap: 0.2rem; text-decoration: none; font-family: var(--display); font-size: 1.25rem; line-height: 1.2; }
-.navpost a:hover { text-decoration: underline; text-decoration-color: var(--lavanda); }
+.corpo figcaption { font-family: var(--ital); font-style: italic; font-size: .78rem; color: var(--suave); margin-top: .45rem; }
+.corpo blockquote { margin: 1.7em 0; padding: .3em 0 .3em 1.2em; border-left: 3px solid var(--lavanda); font-style: italic; color: var(--suave); }
+.corpo hr { border: 0; text-align: center; margin: 2.2em 0; }
+.corpo hr::after { content: "· · ·"; letter-spacing: .6em; color: var(--suave); }
+.corpo ul, .corpo ol { padding-left: 1.3em; }
+.corpo a { text-decoration: underline; text-decoration-color: var(--lavanda); text-decoration-thickness: 2px; text-underline-offset: 3px; }
+.corpo pre { overflow-x: auto; background: var(--cartao); padding: 1rem; font-size: .85rem; }
+.origem { font-family: var(--ital); font-style: italic; font-size: .78rem; color: var(--suave); margin: 2.2rem 0 0; }
+.origem a { text-decoration: underline; text-decoration-color: var(--lavanda); }
+.navpost { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin: 1.6rem 0 2.4rem; padding-block: 1.2rem; border-block: 1px solid var(--linha); }
+.navpost a { min-width: 0; display: flex; flex-direction: column; gap: .25rem; font-family: var(--cond); text-transform: uppercase; font-size: .98rem; line-height: 1.25; }
+.navpost a span { font-family: var(--ital); font-style: italic; text-transform: none; font-size: .74rem; color: var(--suave); }
 .navpost .dir { text-align: right; align-items: flex-end; }
+.sobre-cab { display: flex; gap: 1.4rem; align-items: center; margin-bottom: 1.6rem; }
+.sobre-cab img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; flex: none; box-shadow: 0 0 0 6px var(--pessego); }
+.sobre-cab > div { min-width: 0; }
 
-@media (max-width: 560px) {
-  .cab { flex-direction: column; gap: 1.1rem; }
-  .item { grid-template-columns: 5.5rem 1fr; gap: 0.9rem; }
-  .item-titulo { font-size: 1.3rem; }
-  .item-sub { display: none; }
-  .navpost { grid-template-columns: 1fr; }
-  .navpost .dir { text-align: left; align-items: flex-start; }
+/* rodapé */
+.rodape { background: var(--barra); color: var(--barra-tinta); margin-top: 2rem; }
+.rodape-dentro { max-width: 1160px; margin: 0 auto; padding-inline: 16px; padding-block: 1.6rem; display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 2rem; }
+.rodape p { margin: 0; font-size: .82rem; opacity: .8; }
+.rodape a { text-decoration: underline; text-decoration-color: var(--lavanda); }
+
+@media (max-width: 960px) {
+  .colunas { grid-template-columns: minmax(0, 1fr); }
+  .lateral { border-left: 0; padding-left: 0; border-top: 2px solid var(--etq); padding-top: 1.4rem; }
 }
-@media (prefers-reduced-motion: reduce) { .miniatura img { transition: none; } }
+@media (max-width: 640px) {
+  .topo-dentro { flex-direction: column; gap: 0; padding-block: .5rem 0; }
+  .logo { border-right: 0; padding-right: 0; }
+  .menu { margin-inline: -16px; padding-inline: 8px; }
+  .menu a { padding-block: .7rem; }
+  .carrossel { aspect-ratio: 4 / 3.4; }
+  .slide-txt { padding: 3rem 1.1rem 2.4rem; }
+  .seta-c { display: none; }
+  .bloco-grade { grid-template-columns: minmax(0, 1fr); }
+  .bloco-grade > .destaque { padding-right: 0; border-right: 0; padding-bottom: 1.4rem; margin-bottom: 1.4rem; border-bottom: 1px solid var(--linha); }
+  .bloco-grade > .lista { padding-left: 0; }
+  .cartoes { grid-template-columns: minmax(0, 1fr); }
+  .navpost { grid-template-columns: minmax(0, 1fr); }
+  .navpost .dir { text-align: left; align-items: flex-start; }
+  .sobre-cab { flex-direction: column; align-items: flex-start; }
+}
+@media (prefers-reduced-motion: reduce) { .slide, .destaque-img img, .cartao-img img { transition: none; } }
 
 </style>
 </head>
 <body>
-<div class="pagina">
-<section id="inicio" class="inicio">
-  <header class="cab">
-    <img class="foto" src="img/509d80dae681.jpg" alt="Foto de Marcos Vinicius (Cacau)">
-    <div class="cab-texto">
-      <p class="meta">Marcos Vinicius · Cacau</p>
-      <h1 class="nome">Onde a física encontra o mito</h1>
-      <p class="bio">Examino a realidade onde a física encontra símbolos, a teologia encontra estruturas e a ficção expõe possibilidades. Busco uma linguagem que una cálculo, imaginação e transcendência para compreender o invisível no real.</p>
-      <p class="meta numeros">11 textos · 8.576 palavras · desde 15 de dezembro de 2025</p>
-    </div>
-  </header>
-  <h2 class="secao">Textos</h2>
-  <ol class="lista">
-<li><a class="item" href="#vida">
-      <span class="miniatura"><img src="mini/b922fb9e0062.jpg" alt="" loading="lazy"></span>
-      <span class="item-texto">
-        <span class="meta">Nº 11 · 24 de abril de 2026 · 7 min</span>
-        <span class="item-titulo">VIDA</span>
-        
-      </span></a></li><li><a class="item" href="#apenas-uma-visao-sobre-a-sociedade">
-      <span class="miniatura"><img src="mini/07b07b12fc8b.jpg" alt="" loading="lazy"></span>
-      <span class="item-texto">
-        <span class="meta">Nº 10 · 2 de março de 2026 · 2 min</span>
-        <span class="item-titulo">Apenas uma visão sobre a sociedade cansada</span>
-        <span class="item-sub">A Síndrome do Motor no Vácuo</span>
-      </span></a></li><li><a class="item" href="#para-meu-eu-do-futuro-parte-1">
-      <span class="miniatura"><img src="mini/943ff53d100f.jpg" alt="" loading="lazy"></span>
-      <span class="item-texto">
-        <span class="meta">Nº 09 · 26 de fevereiro de 2026 · 8 min</span>
-        <span class="item-titulo">Para Meu Eu do futuro (Parte 1)</span>
-        
-      </span></a></li><li><a class="item" href="#a-liturgia-do-invisivel-o-amor-e">
-      <span class="miniatura"><img src="mini/0140b8a95d8f.jpg" alt="" loading="lazy"></span>
-      <span class="item-texto">
-        <span class="meta">Nº 08 · 22 de janeiro de 2026 · 3 min</span>
-        <span class="item-titulo">A Liturgia do Invisível: O Amor e o Átomo em Vozes de Tchernóbil</span>
-        <span class="item-sub">Quando a Fé ocupa o espaço que a Física nega</span>
-      </span></a></li><li><a class="item" href="#a-lei-do-fone-de-ouvido-ou-por-que">
-      <span class="miniatura"><img src="mini/b163a7c36747.jpg" alt="" loading="lazy"></span>
-      <span class="item-texto">
-        <span class="meta">Nº 07 · 14 de janeiro de 2026 · 2 min</span>
-        <span class="item-titulo">A Lei do Fone de Ouvido (Ou por que sua vida vira uma bagunça sozinha)</span>
-        <span class="item-sub">Conversa de Boteco</span>
-      </span></a></li><li><a class="item" href="#a-miopia-dos-adultos-e-o-deserto">
-      <span class="miniatura"><img src="mini/1b6e0477c3bc.jpg" alt="" loading="lazy"></span>
-      <span class="item-texto">
-        <span class="meta">Nº 06 · 8 de janeiro de 2026 · 7 min</span>
-        <span class="item-titulo">A Miopia dos Adultos e o Deserto em Nós</span>
-        
-      </span></a></li><li><a class="item" href="#socrates-o-despertar-da-consciencia">
-      <span class="miniatura"><img src="mini/e1c76d38df61.jpg" alt="" loading="lazy"></span>
-      <span class="item-texto">
-        <span class="meta">Nº 05 · 30 de dezembro de 2025 · 3 min</span>
-        <span class="item-titulo">Sócrates: O Despertar da Consciência Humana</span>
-        <span class="item-sub">Parte I</span>
-      </span></a></li><li><a class="item" href="#o-silencio-e-o-barulho-mais-insuportavel">
-      <span class="miniatura"><img src="mini/9afb0997a0a9.jpg" alt="" loading="lazy"></span>
-      <span class="item-texto">
-        <span class="meta">Nº 04 · 29 de dezembro de 2025 · 2 min</span>
-        <span class="item-titulo">O silêncio é o barulho mais insuportável deste século</span>
-        
-      </span></a></li><li><a class="item" href="#a-anatomia-do-abismo-o-que-gogol">
-      <span class="miniatura"><img src="mini/197214479671.jpg" alt="" loading="lazy"></span>
-      <span class="item-texto">
-        <span class="meta">Nº 03 · 26 de dezembro de 2025 · 3 min</span>
-        <span class="item-titulo">A Anatomia do Abismo: O Que Gogol nos Ensina Sobre Perder o Chão</span>
-        
-      </span></a></li><li><a class="item" href="#antropomorfismo-o-universo-a-nossa">
-      <span class="miniatura"><img src="mini/29e467d4136d.jpg" alt="" loading="lazy"></span>
-      <span class="item-texto">
-        <span class="meta">Nº 02 · 17 de dezembro de 2025 · 2 min</span>
-        <span class="item-titulo">Antropomorfismo: O Universo à Nossa Imagem e Semelhança</span>
-        <span class="item-sub">Você já pediu desculpas para um objeto depois de esbarrar nele? Ou jurou que seu cachorro estava te julgando com o olhar? 🐶</span>
-      </span></a></li><li><a class="item" href="#sejam-bem-vindos">
-      <span class="miniatura"><img src="mini/91e31778dd0c.jpg" alt="" loading="lazy"></span>
-      <span class="item-texto">
-        <span class="meta">Nº 01 · 15 de dezembro de 2025 · 2 min</span>
-        <span class="item-titulo">Sejam Bem vindos</span>
-        
-      </span></a></li>
-  </ol>
-  <footer class="rodape meta">Textos de <a href="https://marcoscacau.substack.com" target="_blank" rel="noopener">marcoscacau.substack.com</a> · arquivo copiado em 9 de outubro de 2026</footer>
+<header class="topo">
+  <div class="topo-dentro">
+    <a class="logo" href="#inicio"><span class="logo-nome">CACAU</span><span class="logo-sub">física · ficção · teologia</span></a>
+    <nav class="menu" aria-label="Seções"><a href="#inicio">Início</a><a href="#tema-fisica">Física</a><a href="#tema-teologia">Teologia</a><a href="#tema-literatura">Literatura</a><a href="#tema-filosofia">Filosofia</a><a href="#tema-sociedade">Sociedade</a><a href="#sobre">Sobre</a></nav>
+  </div>
+</header>
+<main class="pagina">
+<section class="vista" id="v-inicio">
+  <div class="carrossel" aria-roledescription="carrossel" aria-label="Destaques">
+    <a class="slide ativo" href="#vida" data-i="0">
+  <img src="img/b922fb9e0062.jpg" alt="">
+  <span class="slide-txt"><span class="slide-tema">Teologia</span><span class="slide-tit">VIDA</span><span class="slide-meta">24 de abril de 2026</span></span>
+</a><a class="slide" href="#apenas-uma-visao-sobre-a-sociedade" data-i="1" aria-hidden="true" tabindex="-1">
+  <img src="img/07b07b12fc8b.jpg" alt="">
+  <span class="slide-txt"><span class="slide-tema">Sociedade</span><span class="slide-tit">Apenas uma visão sobre a sociedade cansada</span><span class="slide-meta">2 de março de 2026</span></span>
+</a><a class="slide" href="#para-meu-eu-do-futuro-parte-1" data-i="2" aria-hidden="true" tabindex="-1">
+  <img src="img/943ff53d100f.jpg" alt="">
+  <span class="slide-txt"><span class="slide-tema">Teologia</span><span class="slide-tit">Para Meu Eu do futuro (Parte 1)</span><span class="slide-meta">26 de fevereiro de 2026</span></span>
+</a><a class="slide" href="#a-liturgia-do-invisivel-o-amor-e" data-i="3" aria-hidden="true" tabindex="-1">
+  <img src="img/0140b8a95d8f.jpg" alt="">
+  <span class="slide-txt"><span class="slide-tema">Literatura</span><span class="slide-tit">A Liturgia do Invisível: O Amor e o Átomo em Vozes de Tchernóbil</span><span class="slide-meta">22 de janeiro de 2026</span></span>
+</a><a class="slide" href="#a-lei-do-fone-de-ouvido-ou-por-que" data-i="4" aria-hidden="true" tabindex="-1">
+  <img src="img/b163a7c36747.jpg" alt="">
+  <span class="slide-txt"><span class="slide-tema">Física</span><span class="slide-tit">A Lei do Fone de Ouvido (Ou por que sua vida vira uma bagunça sozinha)</span><span class="slide-meta">14 de janeiro de 2026</span></span>
+</a>
+    <button class="seta-c ant" type="button" aria-label="Destaque anterior">‹</button>
+    <button class="seta-c prox" type="button" aria-label="Próximo destaque">›</button>
+    <div class="pontos"><button class="ponto ativo" type="button" data-i="0" aria-label="Mostrar destaque 1"></button><button class="ponto" type="button" data-i="1" aria-label="Mostrar destaque 2"></button><button class="ponto" type="button" data-i="2" aria-label="Mostrar destaque 3"></button><button class="ponto" type="button" data-i="3" aria-label="Mostrar destaque 4"></button><button class="ponto" type="button" data-i="4" aria-label="Mostrar destaque 5"></button></div>
+  </div>
+  <div class="colunas">
+    <div class="principal"><section class="bloco">
+  <h2 class="etiqueta"><span>Últimos textos</span></h2>
+  <div class="bloco-grade">
+    <article class="destaque">
+  <div class="tags"><a class="tag" href="#tema-teologia">Teologia</a><a class="tag" href="#tema-fisica">Física</a></div>
+  <h3 class="manchete"><a href="#vida">VIDA</a></h3>
+  <p class="byline">por <strong>Cacau</strong> em 24 de abril de 2026 · 7 min de leitura</p>
+  <a class="destaque-img" href="#vida"><img src="img/b922fb9e0062.jpg" alt="" loading="lazy"></a>
+  <p class="resumo">A percepção do vácuo não é a ausência de substância, mas a manifestação da inércia espiritual. Frequentemente, o “vazio” parece possuir uma massa maior que a presença do Espírito. Isso não é um abandono…</p>
+  <a class="botao" href="#vida">Leia mais</a>
+</article>
+    <ul class="lista"><li class="item"><a class="item-img" href="#apenas-uma-visao-sobre-a-sociedade" tabindex="-1" aria-hidden="true"><img src="mini/07b07b12fc8b.jpg" alt="" loading="lazy"></a>
+  <div class="item-txt"><div class="tags"><a class="tag" href="#tema-sociedade">Sociedade</a><a class="tag" href="#tema-fisica">Física</a></div><h4 class="manchete-p"><a href="#apenas-uma-visao-sobre-a-sociedade">Apenas uma visão sobre a sociedade cansada</a></h4></div></li><li class="item"><a class="item-img" href="#para-meu-eu-do-futuro-parte-1" tabindex="-1" aria-hidden="true"><img src="mini/943ff53d100f.jpg" alt="" loading="lazy"></a>
+  <div class="item-txt"><div class="tags"><a class="tag" href="#tema-teologia">Teologia</a></div><h4 class="manchete-p"><a href="#para-meu-eu-do-futuro-parte-1">Para Meu Eu do futuro (Parte 1)</a></h4></div></li><li class="item"><a class="item-img" href="#a-liturgia-do-invisivel-o-amor-e" tabindex="-1" aria-hidden="true"><img src="mini/0140b8a95d8f.jpg" alt="" loading="lazy"></a>
+  <div class="item-txt"><div class="tags"><a class="tag" href="#tema-literatura">Literatura</a><a class="tag" href="#tema-fisica">Física</a></div><h4 class="manchete-p"><a href="#a-liturgia-do-invisivel-o-amor-e">A Liturgia do Invisível: O Amor e o Átomo em Vozes de Tchernóbil</a></h4></div></li><li class="item"><a class="item-img" href="#a-lei-do-fone-de-ouvido-ou-por-que" tabindex="-1" aria-hidden="true"><img src="mini/b163a7c36747.jpg" alt="" loading="lazy"></a>
+  <div class="item-txt"><div class="tags"><a class="tag" href="#tema-fisica">Física</a><a class="tag" href="#tema-sociedade">Sociedade</a></div><h4 class="manchete-p"><a href="#a-lei-do-fone-de-ouvido-ou-por-que">A Lei do Fone de Ouvido (Ou por que sua vida vira uma bagunça sozinha)</a></h4></div></li></ul>
+  </div>
+</section><section class="bloco">
+  <h2 class="etiqueta"><span>Física</span></h2>
+  <div class="bloco-grade">
+    <article class="destaque">
+  <div class="tags"><a class="tag" href="#tema-fisica">Física</a><a class="tag" href="#tema-sociedade">Sociedade</a></div>
+  <h3 class="manchete"><a href="#a-lei-do-fone-de-ouvido-ou-por-que">A Lei do Fone de Ouvido (Ou por que sua vida vira uma bagunça sozinha)</a></h3>
+  <p class="byline">por <strong>Cacau</strong> em 14 de janeiro de 2026 · 2 min de leitura</p>
+  <a class="destaque-img" href="#a-lei-do-fone-de-ouvido-ou-por-que"><img src="img/b163a7c36747.jpg" alt="" loading="lazy"></a>
+  <p class="resumo">Todo mundo conhece a “Lei do Fone de Ouvido”. Você enrola com todo o carinho, guarda no bolso e, dois minutos depois, tira um nó de marinheiro. Não foi um duende que fez aquilo. Foi a natureza. A mesma coisa…</p>
+  <a class="botao" href="#a-lei-do-fone-de-ouvido-ou-por-que">Leia mais</a>
+</article>
+    <ul class="lista"><li class="item"><a class="item-img" href="#antropomorfismo-o-universo-a-nossa" tabindex="-1" aria-hidden="true"><img src="mini/29e467d4136d.jpg" alt="" loading="lazy"></a>
+  <div class="item-txt"><div class="tags"><a class="tag" href="#tema-fisica">Física</a><a class="tag" href="#tema-filosofia">Filosofia</a></div><h4 class="manchete-p"><a href="#antropomorfismo-o-universo-a-nossa">Antropomorfismo: O Universo à Nossa Imagem e Semelhança</a></h4></div></li><li class="item"><a class="item-img" href="#vida" tabindex="-1" aria-hidden="true"><img src="mini/b922fb9e0062.jpg" alt="" loading="lazy"></a>
+  <div class="item-txt"><div class="tags"><a class="tag" href="#tema-teologia">Teologia</a><a class="tag" href="#tema-fisica">Física</a></div><h4 class="manchete-p"><a href="#vida">VIDA</a></h4></div></li><li class="item"><a class="item-img" href="#apenas-uma-visao-sobre-a-sociedade" tabindex="-1" aria-hidden="true"><img src="mini/07b07b12fc8b.jpg" alt="" loading="lazy"></a>
+  <div class="item-txt"><div class="tags"><a class="tag" href="#tema-sociedade">Sociedade</a><a class="tag" href="#tema-fisica">Física</a></div><h4 class="manchete-p"><a href="#apenas-uma-visao-sobre-a-sociedade">Apenas uma visão sobre a sociedade cansada</a></h4></div></li><li class="item"><a class="item-img" href="#a-liturgia-do-invisivel-o-amor-e" tabindex="-1" aria-hidden="true"><img src="mini/0140b8a95d8f.jpg" alt="" loading="lazy"></a>
+  <div class="item-txt"><div class="tags"><a class="tag" href="#tema-literatura">Literatura</a><a class="tag" href="#tema-fisica">Física</a></div><h4 class="manchete-p"><a href="#a-liturgia-do-invisivel-o-amor-e">A Liturgia do Invisível: O Amor e o Átomo em Vozes de Tchernóbil</a></h4></div></li></ul>
+  </div>
+</section><section class="bloco">
+  <h2 class="etiqueta"><span>Teologia</span></h2>
+  <div class="bloco-grade">
+    <article class="destaque">
+  <div class="tags"><a class="tag" href="#tema-teologia">Teologia</a></div>
+  <h3 class="manchete"><a href="#para-meu-eu-do-futuro-parte-1">Para Meu Eu do futuro (Parte 1)</a></h3>
+  <p class="byline">por <strong>Cacau</strong> em 26 de fevereiro de 2026 · 8 min de leitura</p>
+  <a class="destaque-img" href="#para-meu-eu-do-futuro-parte-1"><img src="img/943ff53d100f.jpg" alt="" loading="lazy"></a>
+  <p class="resumo">A adoração sem a alma é uma anomalia de presença. É o equivalente biológico de gerar filhos e atravessar o tempo sem nunca observá-los crescer, com a cognição sequestrada por estímulos paralelos, enquanto o…</p>
+  <a class="botao" href="#para-meu-eu-do-futuro-parte-1">Leia mais</a>
+</article>
+    <ul class="lista"><li class="item"><a class="item-img" href="#vida" tabindex="-1" aria-hidden="true"><img src="mini/b922fb9e0062.jpg" alt="" loading="lazy"></a>
+  <div class="item-txt"><div class="tags"><a class="tag" href="#tema-teologia">Teologia</a><a class="tag" href="#tema-fisica">Física</a></div><h4 class="manchete-p"><a href="#vida">VIDA</a></h4></div></li><li class="item"><a class="item-img" href="#o-silencio-e-o-barulho-mais-insuportavel" tabindex="-1" aria-hidden="true"><img src="mini/9afb0997a0a9.jpg" alt="" loading="lazy"></a>
+  <div class="item-txt"><div class="tags"><a class="tag" href="#tema-sociedade">Sociedade</a><a class="tag" href="#tema-teologia">Teologia</a></div><h4 class="manchete-p"><a href="#o-silencio-e-o-barulho-mais-insuportavel">O silêncio é o barulho mais insuportável deste século</a></h4></div></li></ul>
+  </div>
+</section><section class="bloco">
+  <h2 class="etiqueta"><span>Literatura</span></h2>
+  <div class="bloco-grade">
+    <article class="destaque">
+  <div class="tags"><a class="tag" href="#tema-literatura">Literatura</a><a class="tag" href="#tema-fisica">Física</a></div>
+  <h3 class="manchete"><a href="#a-liturgia-do-invisivel-o-amor-e">A Liturgia do Invisível: O Amor e o Átomo em Vozes de Tchernóbil</a></h3>
+  <p class="byline">por <strong>Cacau</strong> em 22 de janeiro de 2026 · 3 min de leitura</p>
+  <a class="destaque-img" href="#a-liturgia-do-invisivel-o-amor-e"><img src="img/0140b8a95d8f.jpg" alt="" loading="lazy"></a>
+  <p class="resumo">Nós fomos criados acreditando que o inimigo tem rosto. Que o mal empunha uma espada, uma arma, ou grita uma ofensa. Mas Tchernóbil nos ensinou a lição teológica mais aterrorizante do século XX: o mal mais…</p>
+  <a class="botao" href="#a-liturgia-do-invisivel-o-amor-e">Leia mais</a>
+</article>
+    <ul class="lista"><li class="item"><a class="item-img" href="#a-miopia-dos-adultos-e-o-deserto" tabindex="-1" aria-hidden="true"><img src="mini/1b6e0477c3bc.jpg" alt="" loading="lazy"></a>
+  <div class="item-txt"><div class="tags"><a class="tag" href="#tema-literatura">Literatura</a><a class="tag" href="#tema-filosofia">Filosofia</a></div><h4 class="manchete-p"><a href="#a-miopia-dos-adultos-e-o-deserto">A Miopia dos Adultos e o Deserto em Nós</a></h4></div></li><li class="item"><a class="item-img" href="#a-anatomia-do-abismo-o-que-gogol" tabindex="-1" aria-hidden="true"><img src="mini/197214479671.jpg" alt="" loading="lazy"></a>
+  <div class="item-txt"><div class="tags"><a class="tag" href="#tema-literatura">Literatura</a></div><h4 class="manchete-p"><a href="#a-anatomia-do-abismo-o-que-gogol">A Anatomia do Abismo: O Que Gogol nos Ensina Sobre Perder o Chão</a></h4></div></li></ul>
+  </div>
+</section><section class="bloco">
+  <h2 class="etiqueta"><span>Filosofia</span></h2>
+  <div class="bloco-grade">
+    <article class="destaque">
+  <div class="tags"><a class="tag" href="#tema-filosofia">Filosofia</a></div>
+  <h3 class="manchete"><a href="#socrates-o-despertar-da-consciencia">Sócrates: O Despertar da Consciência Humana</a></h3>
+  <p class="byline">por <strong>Cacau</strong> em 30 de dezembro de 2025 · 3 min de leitura</p>
+  <a class="destaque-img" href="#socrates-o-despertar-da-consciencia"><img src="img/e1c76d38df61.jpg" alt="" loading="lazy"></a>
+  <p class="resumo">Sócrates (470 a.C. – 399 a.C.) não foi apenas um homem de seu tempo, mas o “divisor de águas” da alma ocidental. Sua vida em Atenas representa a transição da curiosidade sobre o mundo exterior para a…</p>
+  <a class="botao" href="#socrates-o-despertar-da-consciencia">Leia mais</a>
+</article>
+    <ul class="lista"><li class="item"><a class="item-img" href="#a-miopia-dos-adultos-e-o-deserto" tabindex="-1" aria-hidden="true"><img src="mini/1b6e0477c3bc.jpg" alt="" loading="lazy"></a>
+  <div class="item-txt"><div class="tags"><a class="tag" href="#tema-literatura">Literatura</a><a class="tag" href="#tema-filosofia">Filosofia</a></div><h4 class="manchete-p"><a href="#a-miopia-dos-adultos-e-o-deserto">A Miopia dos Adultos e o Deserto em Nós</a></h4></div></li><li class="item"><a class="item-img" href="#antropomorfismo-o-universo-a-nossa" tabindex="-1" aria-hidden="true"><img src="mini/29e467d4136d.jpg" alt="" loading="lazy"></a>
+  <div class="item-txt"><div class="tags"><a class="tag" href="#tema-fisica">Física</a><a class="tag" href="#tema-filosofia">Filosofia</a></div><h4 class="manchete-p"><a href="#antropomorfismo-o-universo-a-nossa">Antropomorfismo: O Universo à Nossa Imagem e Semelhança</a></h4></div></li></ul>
+  </div>
+</section><section class="bloco">
+  <h2 class="etiqueta"><span>Sociedade</span></h2>
+  <div class="bloco-grade">
+    <article class="destaque">
+  <div class="tags"><a class="tag" href="#tema-sociedade">Sociedade</a><a class="tag" href="#tema-fisica">Física</a></div>
+  <h3 class="manchete"><a href="#apenas-uma-visao-sobre-a-sociedade">Apenas uma visão sobre a sociedade cansada</a></h3>
+  <p class="byline">por <strong>Cacau</strong> em 2 de março de 2026 · 2 min de leitura</p>
+  <a class="destaque-img" href="#apenas-uma-visao-sobre-a-sociedade"><img src="img/07b07b12fc8b.jpg" alt="" loading="lazy"></a>
+  <p class="resumo">A Síndrome do Motor no Vácuo O esgotamento do homem moderno não é a falência por excesso de trabalho, mas a combustão por excesso de futilidade. Nós não queimamos o nosso motor tracionando peso real; nós…</p>
+  <a class="botao" href="#apenas-uma-visao-sobre-a-sociedade">Leia mais</a>
+</article>
+    <ul class="lista"><li class="item"><a class="item-img" href="#o-silencio-e-o-barulho-mais-insuportavel" tabindex="-1" aria-hidden="true"><img src="mini/9afb0997a0a9.jpg" alt="" loading="lazy"></a>
+  <div class="item-txt"><div class="tags"><a class="tag" href="#tema-sociedade">Sociedade</a><a class="tag" href="#tema-teologia">Teologia</a></div><h4 class="manchete-p"><a href="#o-silencio-e-o-barulho-mais-insuportavel">O silêncio é o barulho mais insuportável deste século</a></h4></div></li><li class="item"><a class="item-img" href="#a-lei-do-fone-de-ouvido-ou-por-que" tabindex="-1" aria-hidden="true"><img src="mini/b163a7c36747.jpg" alt="" loading="lazy"></a>
+  <div class="item-txt"><div class="tags"><a class="tag" href="#tema-fisica">Física</a><a class="tag" href="#tema-sociedade">Sociedade</a></div><h4 class="manchete-p"><a href="#a-lei-do-fone-de-ouvido-ou-por-que">A Lei do Fone de Ouvido (Ou por que sua vida vira uma bagunça sozinha)</a></h4></div></li></ul>
+  </div>
+</section></div>
+    <aside class="lateral">
+  <section class="caixa autor">
+    <h2 class="caixa-tit">Sobre o autor</h2>
+    <img src="img/509d80dae681.jpg" alt="Foto de Marcos Vinicius, o Cacau">
+    <p>Examino a realidade onde a física encontra símbolos, a teologia encontra estruturas e a ficção expõe possibilidades. Busco uma linguagem que una cálculo, imaginação e transcendência para compreender o invisível no real.</p>
+    <a class="mais" href="#sobre">Conheça o Cacau →</a>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Siga e assine</h2>
+    <a class="rede" href="https://marcoscacau.substack.com" target="_blank" rel="noopener"><span class="rede-ic">S</span>Substack<span class="seta">→</span></a>
+    <a class="rede" href="https://marcoscacau.substack.com/subscribe" target="_blank" rel="noopener"><span class="rede-ic">@</span>Receber por e-mail<span class="seta">→</span></a>
+    <a class="rede" href="https://marcoscacau.substack.com/feed" target="_blank" rel="noopener"><span class="rede-ic">≋</span>RSS<span class="seta">→</span></a>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Comece por aqui</h2>
+    <ol class="numerada"><li><span class="num">1.</span><a href="#sejam-bem-vindos">Sejam Bem vindos</a></li><li><span class="num">2.</span><a href="#o-silencio-e-o-barulho-mais-insuportavel">O silêncio é o barulho mais insuportável deste século</a></li><li><span class="num">3.</span><a href="#a-liturgia-do-invisivel-o-amor-e">A Liturgia do Invisível: O Amor e o Átomo em Vozes de Tchernóbil</a></li><li><span class="num">4.</span><a href="#a-miopia-dos-adultos-e-o-deserto">A Miopia dos Adultos e o Deserto em Nós</a></li><li><span class="num">5.</span><a href="#vida">VIDA</a></li></ol>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Temas</h2>
+    <ul class="temas"><li><a href="#tema-fisica">Física</a><span>5</span></li><li><a href="#tema-teologia">Teologia</a><span>3</span></li><li><a href="#tema-literatura">Literatura</a><span>3</span></li><li><a href="#tema-filosofia">Filosofia</a><span>3</span></li><li><a href="#tema-sociedade">Sociedade</a><span>3</span></li></ul>
+  </section>
+</aside>
+  </div>
 </section>
-<article class="post" id="vida">
-  <a class="voltar" href="#inicio">← Todos os textos</a>
-  <header class="post-cab">
-    <p class="meta">Nº 11 · 24 de abril de 2026 · 1399 palavras · 7 min de leitura</p>
-    <h1>VIDA</h1>
+<section class="vista" id="v-tema-fisica">
+  <div class="colunas"><div class="principal">
+    <h1 class="etiqueta grande"><span>Física</span></h1>
+    <p class="contagem">5 textos</p>
+    <div class="cartoes"><article class="cartao">
+  <a class="cartao-img" href="#vida"><img src="mini/b922fb9e0062.jpg" alt="" loading="lazy"></a>
+  <div class="tags"><a class="tag" href="#tema-teologia">Teologia</a><a class="tag" href="#tema-fisica">Física</a></div><h3 class="manchete-p"><a href="#vida">VIDA</a></h3>
+  <p class="byline">por <strong>Cacau</strong> em 24 de abril de 2026 · 7 min de leitura</p><p class="resumo">A percepção do vácuo não é a ausência de substância, mas a manifestação da inércia espiritual. Frequentemente, o “vazio” parece possuir uma massa maior que a presença do Espírito. Isso não é um abandono…</p></article><article class="cartao">
+  <a class="cartao-img" href="#apenas-uma-visao-sobre-a-sociedade"><img src="mini/07b07b12fc8b.jpg" alt="" loading="lazy"></a>
+  <div class="tags"><a class="tag" href="#tema-sociedade">Sociedade</a><a class="tag" href="#tema-fisica">Física</a></div><h3 class="manchete-p"><a href="#apenas-uma-visao-sobre-a-sociedade">Apenas uma visão sobre a sociedade cansada</a></h3>
+  <p class="byline">por <strong>Cacau</strong> em 2 de março de 2026 · 2 min de leitura</p><p class="resumo">A Síndrome do Motor no Vácuo O esgotamento do homem moderno não é a falência por excesso de trabalho, mas a combustão por excesso de futilidade. Nós não queimamos o nosso motor tracionando peso real; nós…</p></article><article class="cartao">
+  <a class="cartao-img" href="#a-liturgia-do-invisivel-o-amor-e"><img src="mini/0140b8a95d8f.jpg" alt="" loading="lazy"></a>
+  <div class="tags"><a class="tag" href="#tema-literatura">Literatura</a><a class="tag" href="#tema-fisica">Física</a></div><h3 class="manchete-p"><a href="#a-liturgia-do-invisivel-o-amor-e">A Liturgia do Invisível: O Amor e o Átomo em Vozes de Tchernóbil</a></h3>
+  <p class="byline">por <strong>Cacau</strong> em 22 de janeiro de 2026 · 3 min de leitura</p><p class="resumo">Nós fomos criados acreditando que o inimigo tem rosto. Que o mal empunha uma espada, uma arma, ou grita uma ofensa. Mas Tchernóbil nos ensinou a lição teológica mais aterrorizante do século XX: o mal mais…</p></article><article class="cartao">
+  <a class="cartao-img" href="#a-lei-do-fone-de-ouvido-ou-por-que"><img src="mini/b163a7c36747.jpg" alt="" loading="lazy"></a>
+  <div class="tags"><a class="tag" href="#tema-fisica">Física</a><a class="tag" href="#tema-sociedade">Sociedade</a></div><h3 class="manchete-p"><a href="#a-lei-do-fone-de-ouvido-ou-por-que">A Lei do Fone de Ouvido (Ou por que sua vida vira uma bagunça sozinha)</a></h3>
+  <p class="byline">por <strong>Cacau</strong> em 14 de janeiro de 2026 · 2 min de leitura</p><p class="resumo">Todo mundo conhece a “Lei do Fone de Ouvido”. Você enrola com todo o carinho, guarda no bolso e, dois minutos depois, tira um nó de marinheiro. Não foi um duende que fez aquilo. Foi a natureza. A mesma coisa…</p></article><article class="cartao">
+  <a class="cartao-img" href="#antropomorfismo-o-universo-a-nossa"><img src="mini/29e467d4136d.jpg" alt="" loading="lazy"></a>
+  <div class="tags"><a class="tag" href="#tema-fisica">Física</a><a class="tag" href="#tema-filosofia">Filosofia</a></div><h3 class="manchete-p"><a href="#antropomorfismo-o-universo-a-nossa">Antropomorfismo: O Universo à Nossa Imagem e Semelhança</a></h3>
+  <p class="byline">por <strong>Cacau</strong> em 17 de dezembro de 2025 · 2 min de leitura</p><p class="resumo">Sabe quando você bate o dedinho do pé na quina da mesa e, além de gritar, xinga a mesa de “estúpida”? Ou quando jura que seu cachorro está fazendo “cara de culpa” porque comeu seu chinelo? Isso é…</p></article></div>
+  </div><aside class="lateral">
+  <section class="caixa autor">
+    <h2 class="caixa-tit">Sobre o autor</h2>
+    <img src="img/509d80dae681.jpg" alt="Foto de Marcos Vinicius, o Cacau">
+    <p>Examino a realidade onde a física encontra símbolos, a teologia encontra estruturas e a ficção expõe possibilidades. Busco uma linguagem que una cálculo, imaginação e transcendência para compreender o invisível no real.</p>
+    <a class="mais" href="#sobre">Conheça o Cacau →</a>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Siga e assine</h2>
+    <a class="rede" href="https://marcoscacau.substack.com" target="_blank" rel="noopener"><span class="rede-ic">S</span>Substack<span class="seta">→</span></a>
+    <a class="rede" href="https://marcoscacau.substack.com/subscribe" target="_blank" rel="noopener"><span class="rede-ic">@</span>Receber por e-mail<span class="seta">→</span></a>
+    <a class="rede" href="https://marcoscacau.substack.com/feed" target="_blank" rel="noopener"><span class="rede-ic">≋</span>RSS<span class="seta">→</span></a>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Comece por aqui</h2>
+    <ol class="numerada"><li><span class="num">1.</span><a href="#sejam-bem-vindos">Sejam Bem vindos</a></li><li><span class="num">2.</span><a href="#o-silencio-e-o-barulho-mais-insuportavel">O silêncio é o barulho mais insuportável deste século</a></li><li><span class="num">3.</span><a href="#a-liturgia-do-invisivel-o-amor-e">A Liturgia do Invisível: O Amor e o Átomo em Vozes de Tchernóbil</a></li><li><span class="num">4.</span><a href="#a-miopia-dos-adultos-e-o-deserto">A Miopia dos Adultos e o Deserto em Nós</a></li><li><span class="num">5.</span><a href="#vida">VIDA</a></li></ol>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Temas</h2>
+    <ul class="temas"><li><a href="#tema-fisica">Física</a><span>5</span></li><li><a href="#tema-teologia">Teologia</a><span>3</span></li><li><a href="#tema-literatura">Literatura</a><span>3</span></li><li><a href="#tema-filosofia">Filosofia</a><span>3</span></li><li><a href="#tema-sociedade">Sociedade</a><span>3</span></li></ul>
+  </section>
+</aside></div>
+</section><section class="vista" id="v-tema-teologia">
+  <div class="colunas"><div class="principal">
+    <h1 class="etiqueta grande"><span>Teologia</span></h1>
+    <p class="contagem">3 textos</p>
+    <div class="cartoes"><article class="cartao">
+  <a class="cartao-img" href="#vida"><img src="mini/b922fb9e0062.jpg" alt="" loading="lazy"></a>
+  <div class="tags"><a class="tag" href="#tema-teologia">Teologia</a><a class="tag" href="#tema-fisica">Física</a></div><h3 class="manchete-p"><a href="#vida">VIDA</a></h3>
+  <p class="byline">por <strong>Cacau</strong> em 24 de abril de 2026 · 7 min de leitura</p><p class="resumo">A percepção do vácuo não é a ausência de substância, mas a manifestação da inércia espiritual. Frequentemente, o “vazio” parece possuir uma massa maior que a presença do Espírito. Isso não é um abandono…</p></article><article class="cartao">
+  <a class="cartao-img" href="#para-meu-eu-do-futuro-parte-1"><img src="mini/943ff53d100f.jpg" alt="" loading="lazy"></a>
+  <div class="tags"><a class="tag" href="#tema-teologia">Teologia</a></div><h3 class="manchete-p"><a href="#para-meu-eu-do-futuro-parte-1">Para Meu Eu do futuro (Parte 1)</a></h3>
+  <p class="byline">por <strong>Cacau</strong> em 26 de fevereiro de 2026 · 8 min de leitura</p><p class="resumo">A adoração sem a alma é uma anomalia de presença. É o equivalente biológico de gerar filhos e atravessar o tempo sem nunca observá-los crescer, com a cognição sequestrada por estímulos paralelos, enquanto o…</p></article><article class="cartao">
+  <a class="cartao-img" href="#o-silencio-e-o-barulho-mais-insuportavel"><img src="mini/9afb0997a0a9.jpg" alt="" loading="lazy"></a>
+  <div class="tags"><a class="tag" href="#tema-sociedade">Sociedade</a><a class="tag" href="#tema-teologia">Teologia</a></div><h3 class="manchete-p"><a href="#o-silencio-e-o-barulho-mais-insuportavel">O silêncio é o barulho mais insuportável deste século</a></h3>
+  <p class="byline">por <strong>Cacau</strong> em 29 de dezembro de 2025 · 2 min de leitura</p><p class="resumo">Ontem, ouvi uma verdade que ecoou como um trovão: ”O silêncio é o barulho mais insuportável deste século”. Charles Chaplin, mestre da comunicação muda, já alertava que ”o barulho aniquila a beleza do…</p></article></div>
+  </div><aside class="lateral">
+  <section class="caixa autor">
+    <h2 class="caixa-tit">Sobre o autor</h2>
+    <img src="img/509d80dae681.jpg" alt="Foto de Marcos Vinicius, o Cacau">
+    <p>Examino a realidade onde a física encontra símbolos, a teologia encontra estruturas e a ficção expõe possibilidades. Busco uma linguagem que una cálculo, imaginação e transcendência para compreender o invisível no real.</p>
+    <a class="mais" href="#sobre">Conheça o Cacau →</a>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Siga e assine</h2>
+    <a class="rede" href="https://marcoscacau.substack.com" target="_blank" rel="noopener"><span class="rede-ic">S</span>Substack<span class="seta">→</span></a>
+    <a class="rede" href="https://marcoscacau.substack.com/subscribe" target="_blank" rel="noopener"><span class="rede-ic">@</span>Receber por e-mail<span class="seta">→</span></a>
+    <a class="rede" href="https://marcoscacau.substack.com/feed" target="_blank" rel="noopener"><span class="rede-ic">≋</span>RSS<span class="seta">→</span></a>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Comece por aqui</h2>
+    <ol class="numerada"><li><span class="num">1.</span><a href="#sejam-bem-vindos">Sejam Bem vindos</a></li><li><span class="num">2.</span><a href="#o-silencio-e-o-barulho-mais-insuportavel">O silêncio é o barulho mais insuportável deste século</a></li><li><span class="num">3.</span><a href="#a-liturgia-do-invisivel-o-amor-e">A Liturgia do Invisível: O Amor e o Átomo em Vozes de Tchernóbil</a></li><li><span class="num">4.</span><a href="#a-miopia-dos-adultos-e-o-deserto">A Miopia dos Adultos e o Deserto em Nós</a></li><li><span class="num">5.</span><a href="#vida">VIDA</a></li></ol>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Temas</h2>
+    <ul class="temas"><li><a href="#tema-fisica">Física</a><span>5</span></li><li><a href="#tema-teologia">Teologia</a><span>3</span></li><li><a href="#tema-literatura">Literatura</a><span>3</span></li><li><a href="#tema-filosofia">Filosofia</a><span>3</span></li><li><a href="#tema-sociedade">Sociedade</a><span>3</span></li></ul>
+  </section>
+</aside></div>
+</section><section class="vista" id="v-tema-literatura">
+  <div class="colunas"><div class="principal">
+    <h1 class="etiqueta grande"><span>Literatura</span></h1>
+    <p class="contagem">3 textos</p>
+    <div class="cartoes"><article class="cartao">
+  <a class="cartao-img" href="#a-liturgia-do-invisivel-o-amor-e"><img src="mini/0140b8a95d8f.jpg" alt="" loading="lazy"></a>
+  <div class="tags"><a class="tag" href="#tema-literatura">Literatura</a><a class="tag" href="#tema-fisica">Física</a></div><h3 class="manchete-p"><a href="#a-liturgia-do-invisivel-o-amor-e">A Liturgia do Invisível: O Amor e o Átomo em Vozes de Tchernóbil</a></h3>
+  <p class="byline">por <strong>Cacau</strong> em 22 de janeiro de 2026 · 3 min de leitura</p><p class="resumo">Nós fomos criados acreditando que o inimigo tem rosto. Que o mal empunha uma espada, uma arma, ou grita uma ofensa. Mas Tchernóbil nos ensinou a lição teológica mais aterrorizante do século XX: o mal mais…</p></article><article class="cartao">
+  <a class="cartao-img" href="#a-miopia-dos-adultos-e-o-deserto"><img src="mini/1b6e0477c3bc.jpg" alt="" loading="lazy"></a>
+  <div class="tags"><a class="tag" href="#tema-literatura">Literatura</a><a class="tag" href="#tema-filosofia">Filosofia</a></div><h3 class="manchete-p"><a href="#a-miopia-dos-adultos-e-o-deserto">A Miopia dos Adultos e o Deserto em Nós</a></h3>
+  <p class="byline">por <strong>Cacau</strong> em 8 de janeiro de 2026 · 7 min de leitura</p><p class="resumo">Antoine de Saint-Exupéry, nós aceitamos as suas desculpas. Você pediu perdão logo na dedicatória por oferecer esta obra a uma “pessoa grande”, justificando que se tratava de um livro destinado à criança que…</p></article><article class="cartao">
+  <a class="cartao-img" href="#a-anatomia-do-abismo-o-que-gogol"><img src="mini/197214479671.jpg" alt="" loading="lazy"></a>
+  <div class="tags"><a class="tag" href="#tema-literatura">Literatura</a></div><h3 class="manchete-p"><a href="#a-anatomia-do-abismo-o-que-gogol">A Anatomia do Abismo: O Que Gogol nos Ensina Sobre Perder o Chão</a></h3>
+  <p class="byline">por <strong>Cacau</strong> em 26 de dezembro de 2025 · 3 min de leitura</p><p class="resumo">Quando abrimos as primeiras páginas de Diário de um Louco , de Nikolai Gogol, o sentimento imediato é de uma estranha resistência. Para o leitor moderno, acostumado a estímulos constantes, o cotidiano de…</p></article></div>
+  </div><aside class="lateral">
+  <section class="caixa autor">
+    <h2 class="caixa-tit">Sobre o autor</h2>
+    <img src="img/509d80dae681.jpg" alt="Foto de Marcos Vinicius, o Cacau">
+    <p>Examino a realidade onde a física encontra símbolos, a teologia encontra estruturas e a ficção expõe possibilidades. Busco uma linguagem que una cálculo, imaginação e transcendência para compreender o invisível no real.</p>
+    <a class="mais" href="#sobre">Conheça o Cacau →</a>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Siga e assine</h2>
+    <a class="rede" href="https://marcoscacau.substack.com" target="_blank" rel="noopener"><span class="rede-ic">S</span>Substack<span class="seta">→</span></a>
+    <a class="rede" href="https://marcoscacau.substack.com/subscribe" target="_blank" rel="noopener"><span class="rede-ic">@</span>Receber por e-mail<span class="seta">→</span></a>
+    <a class="rede" href="https://marcoscacau.substack.com/feed" target="_blank" rel="noopener"><span class="rede-ic">≋</span>RSS<span class="seta">→</span></a>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Comece por aqui</h2>
+    <ol class="numerada"><li><span class="num">1.</span><a href="#sejam-bem-vindos">Sejam Bem vindos</a></li><li><span class="num">2.</span><a href="#o-silencio-e-o-barulho-mais-insuportavel">O silêncio é o barulho mais insuportável deste século</a></li><li><span class="num">3.</span><a href="#a-liturgia-do-invisivel-o-amor-e">A Liturgia do Invisível: O Amor e o Átomo em Vozes de Tchernóbil</a></li><li><span class="num">4.</span><a href="#a-miopia-dos-adultos-e-o-deserto">A Miopia dos Adultos e o Deserto em Nós</a></li><li><span class="num">5.</span><a href="#vida">VIDA</a></li></ol>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Temas</h2>
+    <ul class="temas"><li><a href="#tema-fisica">Física</a><span>5</span></li><li><a href="#tema-teologia">Teologia</a><span>3</span></li><li><a href="#tema-literatura">Literatura</a><span>3</span></li><li><a href="#tema-filosofia">Filosofia</a><span>3</span></li><li><a href="#tema-sociedade">Sociedade</a><span>3</span></li></ul>
+  </section>
+</aside></div>
+</section><section class="vista" id="v-tema-filosofia">
+  <div class="colunas"><div class="principal">
+    <h1 class="etiqueta grande"><span>Filosofia</span></h1>
+    <p class="contagem">3 textos</p>
+    <div class="cartoes"><article class="cartao">
+  <a class="cartao-img" href="#a-miopia-dos-adultos-e-o-deserto"><img src="mini/1b6e0477c3bc.jpg" alt="" loading="lazy"></a>
+  <div class="tags"><a class="tag" href="#tema-literatura">Literatura</a><a class="tag" href="#tema-filosofia">Filosofia</a></div><h3 class="manchete-p"><a href="#a-miopia-dos-adultos-e-o-deserto">A Miopia dos Adultos e o Deserto em Nós</a></h3>
+  <p class="byline">por <strong>Cacau</strong> em 8 de janeiro de 2026 · 7 min de leitura</p><p class="resumo">Antoine de Saint-Exupéry, nós aceitamos as suas desculpas. Você pediu perdão logo na dedicatória por oferecer esta obra a uma “pessoa grande”, justificando que se tratava de um livro destinado à criança que…</p></article><article class="cartao">
+  <a class="cartao-img" href="#socrates-o-despertar-da-consciencia"><img src="mini/e1c76d38df61.jpg" alt="" loading="lazy"></a>
+  <div class="tags"><a class="tag" href="#tema-filosofia">Filosofia</a></div><h3 class="manchete-p"><a href="#socrates-o-despertar-da-consciencia">Sócrates: O Despertar da Consciência Humana</a></h3>
+  <p class="byline">por <strong>Cacau</strong> em 30 de dezembro de 2025 · 3 min de leitura</p><p class="resumo">Sócrates (470 a.C. – 399 a.C.) não foi apenas um homem de seu tempo, mas o “divisor de águas” da alma ocidental. Sua vida em Atenas representa a transição da curiosidade sobre o mundo exterior para a…</p></article><article class="cartao">
+  <a class="cartao-img" href="#antropomorfismo-o-universo-a-nossa"><img src="mini/29e467d4136d.jpg" alt="" loading="lazy"></a>
+  <div class="tags"><a class="tag" href="#tema-fisica">Física</a><a class="tag" href="#tema-filosofia">Filosofia</a></div><h3 class="manchete-p"><a href="#antropomorfismo-o-universo-a-nossa">Antropomorfismo: O Universo à Nossa Imagem e Semelhança</a></h3>
+  <p class="byline">por <strong>Cacau</strong> em 17 de dezembro de 2025 · 2 min de leitura</p><p class="resumo">Sabe quando você bate o dedinho do pé na quina da mesa e, além de gritar, xinga a mesa de “estúpida”? Ou quando jura que seu cachorro está fazendo “cara de culpa” porque comeu seu chinelo? Isso é…</p></article></div>
+  </div><aside class="lateral">
+  <section class="caixa autor">
+    <h2 class="caixa-tit">Sobre o autor</h2>
+    <img src="img/509d80dae681.jpg" alt="Foto de Marcos Vinicius, o Cacau">
+    <p>Examino a realidade onde a física encontra símbolos, a teologia encontra estruturas e a ficção expõe possibilidades. Busco uma linguagem que una cálculo, imaginação e transcendência para compreender o invisível no real.</p>
+    <a class="mais" href="#sobre">Conheça o Cacau →</a>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Siga e assine</h2>
+    <a class="rede" href="https://marcoscacau.substack.com" target="_blank" rel="noopener"><span class="rede-ic">S</span>Substack<span class="seta">→</span></a>
+    <a class="rede" href="https://marcoscacau.substack.com/subscribe" target="_blank" rel="noopener"><span class="rede-ic">@</span>Receber por e-mail<span class="seta">→</span></a>
+    <a class="rede" href="https://marcoscacau.substack.com/feed" target="_blank" rel="noopener"><span class="rede-ic">≋</span>RSS<span class="seta">→</span></a>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Comece por aqui</h2>
+    <ol class="numerada"><li><span class="num">1.</span><a href="#sejam-bem-vindos">Sejam Bem vindos</a></li><li><span class="num">2.</span><a href="#o-silencio-e-o-barulho-mais-insuportavel">O silêncio é o barulho mais insuportável deste século</a></li><li><span class="num">3.</span><a href="#a-liturgia-do-invisivel-o-amor-e">A Liturgia do Invisível: O Amor e o Átomo em Vozes de Tchernóbil</a></li><li><span class="num">4.</span><a href="#a-miopia-dos-adultos-e-o-deserto">A Miopia dos Adultos e o Deserto em Nós</a></li><li><span class="num">5.</span><a href="#vida">VIDA</a></li></ol>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Temas</h2>
+    <ul class="temas"><li><a href="#tema-fisica">Física</a><span>5</span></li><li><a href="#tema-teologia">Teologia</a><span>3</span></li><li><a href="#tema-literatura">Literatura</a><span>3</span></li><li><a href="#tema-filosofia">Filosofia</a><span>3</span></li><li><a href="#tema-sociedade">Sociedade</a><span>3</span></li></ul>
+  </section>
+</aside></div>
+</section><section class="vista" id="v-tema-sociedade">
+  <div class="colunas"><div class="principal">
+    <h1 class="etiqueta grande"><span>Sociedade</span></h1>
+    <p class="contagem">3 textos</p>
+    <div class="cartoes"><article class="cartao">
+  <a class="cartao-img" href="#apenas-uma-visao-sobre-a-sociedade"><img src="mini/07b07b12fc8b.jpg" alt="" loading="lazy"></a>
+  <div class="tags"><a class="tag" href="#tema-sociedade">Sociedade</a><a class="tag" href="#tema-fisica">Física</a></div><h3 class="manchete-p"><a href="#apenas-uma-visao-sobre-a-sociedade">Apenas uma visão sobre a sociedade cansada</a></h3>
+  <p class="byline">por <strong>Cacau</strong> em 2 de março de 2026 · 2 min de leitura</p><p class="resumo">A Síndrome do Motor no Vácuo O esgotamento do homem moderno não é a falência por excesso de trabalho, mas a combustão por excesso de futilidade. Nós não queimamos o nosso motor tracionando peso real; nós…</p></article><article class="cartao">
+  <a class="cartao-img" href="#a-lei-do-fone-de-ouvido-ou-por-que"><img src="mini/b163a7c36747.jpg" alt="" loading="lazy"></a>
+  <div class="tags"><a class="tag" href="#tema-fisica">Física</a><a class="tag" href="#tema-sociedade">Sociedade</a></div><h3 class="manchete-p"><a href="#a-lei-do-fone-de-ouvido-ou-por-que">A Lei do Fone de Ouvido (Ou por que sua vida vira uma bagunça sozinha)</a></h3>
+  <p class="byline">por <strong>Cacau</strong> em 14 de janeiro de 2026 · 2 min de leitura</p><p class="resumo">Todo mundo conhece a “Lei do Fone de Ouvido”. Você enrola com todo o carinho, guarda no bolso e, dois minutos depois, tira um nó de marinheiro. Não foi um duende que fez aquilo. Foi a natureza. A mesma coisa…</p></article><article class="cartao">
+  <a class="cartao-img" href="#o-silencio-e-o-barulho-mais-insuportavel"><img src="mini/9afb0997a0a9.jpg" alt="" loading="lazy"></a>
+  <div class="tags"><a class="tag" href="#tema-sociedade">Sociedade</a><a class="tag" href="#tema-teologia">Teologia</a></div><h3 class="manchete-p"><a href="#o-silencio-e-o-barulho-mais-insuportavel">O silêncio é o barulho mais insuportável deste século</a></h3>
+  <p class="byline">por <strong>Cacau</strong> em 29 de dezembro de 2025 · 2 min de leitura</p><p class="resumo">Ontem, ouvi uma verdade que ecoou como um trovão: ”O silêncio é o barulho mais insuportável deste século”. Charles Chaplin, mestre da comunicação muda, já alertava que ”o barulho aniquila a beleza do…</p></article></div>
+  </div><aside class="lateral">
+  <section class="caixa autor">
+    <h2 class="caixa-tit">Sobre o autor</h2>
+    <img src="img/509d80dae681.jpg" alt="Foto de Marcos Vinicius, o Cacau">
+    <p>Examino a realidade onde a física encontra símbolos, a teologia encontra estruturas e a ficção expõe possibilidades. Busco uma linguagem que una cálculo, imaginação e transcendência para compreender o invisível no real.</p>
+    <a class="mais" href="#sobre">Conheça o Cacau →</a>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Siga e assine</h2>
+    <a class="rede" href="https://marcoscacau.substack.com" target="_blank" rel="noopener"><span class="rede-ic">S</span>Substack<span class="seta">→</span></a>
+    <a class="rede" href="https://marcoscacau.substack.com/subscribe" target="_blank" rel="noopener"><span class="rede-ic">@</span>Receber por e-mail<span class="seta">→</span></a>
+    <a class="rede" href="https://marcoscacau.substack.com/feed" target="_blank" rel="noopener"><span class="rede-ic">≋</span>RSS<span class="seta">→</span></a>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Comece por aqui</h2>
+    <ol class="numerada"><li><span class="num">1.</span><a href="#sejam-bem-vindos">Sejam Bem vindos</a></li><li><span class="num">2.</span><a href="#o-silencio-e-o-barulho-mais-insuportavel">O silêncio é o barulho mais insuportável deste século</a></li><li><span class="num">3.</span><a href="#a-liturgia-do-invisivel-o-amor-e">A Liturgia do Invisível: O Amor e o Átomo em Vozes de Tchernóbil</a></li><li><span class="num">4.</span><a href="#a-miopia-dos-adultos-e-o-deserto">A Miopia dos Adultos e o Deserto em Nós</a></li><li><span class="num">5.</span><a href="#vida">VIDA</a></li></ol>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Temas</h2>
+    <ul class="temas"><li><a href="#tema-fisica">Física</a><span>5</span></li><li><a href="#tema-teologia">Teologia</a><span>3</span></li><li><a href="#tema-literatura">Literatura</a><span>3</span></li><li><a href="#tema-filosofia">Filosofia</a><span>3</span></li><li><a href="#tema-sociedade">Sociedade</a><span>3</span></li></ul>
+  </section>
+</aside></div>
+</section>
+<section class="vista" id="v-vida">
+  <div class="colunas"><article class="principal post">
+    <div class="tags"><a class="tag" href="#tema-teologia">Teologia</a><a class="tag" href="#tema-fisica">Física</a></div>
+    <h1 class="titulo-post">VIDA</h1>
     
-  </header>
-  <figure class="capa"><img src="img/b922fb9e0062.jpg" alt=""></figure>
-  <div class="corpo">
+    <p class="byline">por <strong>Cacau</strong> em 24 de abril de 2026 · 7 min de leitura</p>
+    <figure class="capa"><img src="img/b922fb9e0062.jpg" alt=""></figure>
+    <div class="corpo">
 <h2><strong> A Mecânica do Vazio e a Termodinâmica da Inércia Hereditária</strong></h2>
 <p>A percepção do vácuo não é a ausência de substância, mas a manifestação da inércia espiritual. Frequentemente, o “vazio” parece possuir uma massa maior que a presença do Espírito. Isso não é um abandono divino, mas a operação estrita da _kenosis_: o esvaziamento necessário para que a entropia do “eu” não colapse sobre a estrutura da vontade. Deus não desorienta; o GPS interno é que sofre interferência magnética do ego. Quando nos perdemos dentro de nós mesmos, não estamos em um labirinto, mas em um sistema fechado onde a falta de atrito com o sagrado gera a ilusão de peso. A abundância não é uma saída, é um estado de fluxo que exige a quebra da autorreferencialidade.</p>
 <h4>I. A Singularidade e a Flecha Entrópica</h4>
@@ -209,18 +554,43 @@ a:focus-visible { outline: 2px solid var(--lavanda); outline-offset: 3px; border
 <p>A inércia geracional não cessa por exaustão sistêmica ou por perdão sentimental. O ciclo contínuo de colapsos estruturais — novos casamentos, abandonos iterativos — é apenas a física de um sistema tentando extrair energia limpa de novos referenciais para manter seu caos em movimento. A Inércia Epigenética só é quebrada quando encontra um objeto intransponível capaz de anular sua energia cinética. Esse objeto é a _kenosis_.</p>
 <p>A mecânica mapeada em Tiago 4 e 1 Pedro 5 opõe o Orgulho à Humildade. O Orgulho é a densidade máxima do ego: um corpo rígido que reage ao impacto devolvendo a força e propagando a entropia para a próxima geração. A Humildade teológica, por outro lado, é um sumidouro de calor perfeito. É o esvaziamento voluntário da própria estrutura de defesa. Quando o indivíduo escolhe operar no vácuo da _kenosis_, ele se recusa a ser uma superfície de reflexão para a inércia herdada.</p>
 <p>Deus resiste aos soberbos porque a soberba é um sistema fechado que se recusa a perder massa. A infusão da graça aos humildes é a aplicação de ordem externa em um espaço que foi deliberadamente esvaziado de si mesmo. Para frear o momento angular de uma linhagem corrompida, o vaso deve aceitar o peso do impacto inicial sem transferi-lo adiante. A verdadeira solidão e o verdadeiro vazio não são uma falha da realidade, mas o exato estado paramétrico necessário para absorver o caos e impedir que o futuro seja apenas a repetição mecânica do passado.</p>
-  </div>
-  <p class="origem meta">Publicado originalmente no <a href="https://marcoscacau.substack.com/p/vida" target="_blank" rel="noopener">Substack</a>.</p>
-  <nav class="navpost"><a href="#apenas-uma-visao-sobre-a-sociedade"><span class="meta">Anterior</span>Apenas uma visão sobre a sociedade cansada</a><span></span></nav>
-</article><article class="post" id="apenas-uma-visao-sobre-a-sociedade">
-  <a class="voltar" href="#inicio">← Todos os textos</a>
-  <header class="post-cab">
-    <p class="meta">Nº 10 · 2 de março de 2026 · 417 palavras · 2 min de leitura</p>
-    <h1>Apenas uma visão sobre a sociedade cansada</h1>
-    <p class="post-sub">A Síndrome do Motor no Vácuo</p>
-  </header>
-  <figure class="capa"><img src="img/07b07b12fc8b.jpg" alt=""></figure>
-  <div class="corpo">
+    </div>
+    <p class="origem">Publicado originalmente no <a href="https://marcoscacau.substack.com/p/vida" target="_blank" rel="noopener">Substack</a> em 24 de abril de 2026.</p>
+    <nav class="navpost"><a href="#apenas-uma-visao-sobre-a-sociedade"><span>← Anterior</span>Apenas uma visão sobre a sociedade cansada</a><span></span></nav>
+    <section class="bloco relacionados"><h2 class="etiqueta"><span>Leia também</span></h2><ul class="lista"><li class="item"><a class="item-img" href="#apenas-uma-visao-sobre-a-sociedade" tabindex="-1" aria-hidden="true"><img src="mini/07b07b12fc8b.jpg" alt="" loading="lazy"></a>
+  <div class="item-txt"><div class="tags"><a class="tag" href="#tema-sociedade">Sociedade</a><a class="tag" href="#tema-fisica">Física</a></div><h4 class="manchete-p"><a href="#apenas-uma-visao-sobre-a-sociedade">Apenas uma visão sobre a sociedade cansada</a></h4></div></li><li class="item"><a class="item-img" href="#para-meu-eu-do-futuro-parte-1" tabindex="-1" aria-hidden="true"><img src="mini/943ff53d100f.jpg" alt="" loading="lazy"></a>
+  <div class="item-txt"><div class="tags"><a class="tag" href="#tema-teologia">Teologia</a></div><h4 class="manchete-p"><a href="#para-meu-eu-do-futuro-parte-1">Para Meu Eu do futuro (Parte 1)</a></h4></div></li><li class="item"><a class="item-img" href="#a-liturgia-do-invisivel-o-amor-e" tabindex="-1" aria-hidden="true"><img src="mini/0140b8a95d8f.jpg" alt="" loading="lazy"></a>
+  <div class="item-txt"><div class="tags"><a class="tag" href="#tema-literatura">Literatura</a><a class="tag" href="#tema-fisica">Física</a></div><h4 class="manchete-p"><a href="#a-liturgia-do-invisivel-o-amor-e">A Liturgia do Invisível: O Amor e o Átomo em Vozes de Tchernóbil</a></h4></div></li></ul></section>
+  </article><aside class="lateral">
+  <section class="caixa autor">
+    <h2 class="caixa-tit">Sobre o autor</h2>
+    <img src="img/509d80dae681.jpg" alt="Foto de Marcos Vinicius, o Cacau">
+    <p>Examino a realidade onde a física encontra símbolos, a teologia encontra estruturas e a ficção expõe possibilidades. Busco uma linguagem que una cálculo, imaginação e transcendência para compreender o invisível no real.</p>
+    <a class="mais" href="#sobre">Conheça o Cacau →</a>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Siga e assine</h2>
+    <a class="rede" href="https://marcoscacau.substack.com" target="_blank" rel="noopener"><span class="rede-ic">S</span>Substack<span class="seta">→</span></a>
+    <a class="rede" href="https://marcoscacau.substack.com/subscribe" target="_blank" rel="noopener"><span class="rede-ic">@</span>Receber por e-mail<span class="seta">→</span></a>
+    <a class="rede" href="https://marcoscacau.substack.com/feed" target="_blank" rel="noopener"><span class="rede-ic">≋</span>RSS<span class="seta">→</span></a>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Comece por aqui</h2>
+    <ol class="numerada"><li><span class="num">1.</span><a href="#sejam-bem-vindos">Sejam Bem vindos</a></li><li><span class="num">2.</span><a href="#o-silencio-e-o-barulho-mais-insuportavel">O silêncio é o barulho mais insuportável deste século</a></li><li><span class="num">3.</span><a href="#a-liturgia-do-invisivel-o-amor-e">A Liturgia do Invisível: O Amor e o Átomo em Vozes de Tchernóbil</a></li><li><span class="num">4.</span><a href="#a-miopia-dos-adultos-e-o-deserto">A Miopia dos Adultos e o Deserto em Nós</a></li><li><span class="num">5.</span><a href="#vida">VIDA</a></li></ol>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Temas</h2>
+    <ul class="temas"><li><a href="#tema-fisica">Física</a><span>5</span></li><li><a href="#tema-teologia">Teologia</a><span>3</span></li><li><a href="#tema-literatura">Literatura</a><span>3</span></li><li><a href="#tema-filosofia">Filosofia</a><span>3</span></li><li><a href="#tema-sociedade">Sociedade</a><span>3</span></li></ul>
+  </section>
+</aside></div>
+</section><section class="vista" id="v-apenas-uma-visao-sobre-a-sociedade">
+  <div class="colunas"><article class="principal post">
+    <div class="tags"><a class="tag" href="#tema-sociedade">Sociedade</a><a class="tag" href="#tema-fisica">Física</a></div>
+    <h1 class="titulo-post">Apenas uma visão sobre a sociedade cansada</h1>
+    <p class="linha-fina">A Síndrome do Motor no Vácuo</p>
+    <p class="byline">por <strong>Cacau</strong> em 2 de março de 2026 · 2 min de leitura</p>
+    <figure class="capa"><img src="img/07b07b12fc8b.jpg" alt=""></figure>
+    <div class="corpo">
 <p><strong>A Síndrome do Motor no Vácuo</strong></p>
 <p>O esgotamento do homem moderno não é a falência por excesso de trabalho, mas a combustão por excesso de futilidade. Nós não queimamos o nosso motor tracionando peso real; nós fundimos a máquina girando no vácuo.</p>
 <p>A tragédia da nossa espécie se revela na fobia absoluta à mecânica da realidade. O sistema corporativo atual exige rigor não na técnica, mas na manutenção das aparências. Quando a conexão colapsa e ordeno a execução de um comando primário na raiz do sistema (’ncpa.cpl’), o usuário civil entra em pânico. Ele exige a anestesia da interface gráfica porque o código-fonte o apavora. O trabalhador queima a sua energia vital correndo contra o relógio para resolver problemas estéticos, com o único objetivo de ‘poupar tempo’ e retornar correndo ao nada absoluto que o aguarda.</p>
@@ -228,18 +598,43 @@ a:focus-visible { outline: 2px solid var(--lavanda); outline-offset: 3px; border
 <p>Sem o lastro do conhecimento, a estrutura moral também desmorona. O ecossistema corporativo treinou o indivíduo para ser um especialista em transferência de inércia. Ele não opera para solucionar a falha da máquina; ele gasta a sua pouca energia forjando um álibi preventivo. Quando o sistema fatalmente cai, o reflexo instintivo não é assumir a responsabilidade, mas apontar a falha alheia para garantir a própria blindagem. É o antigo reflexo do Éden operando sob o disfarce de protocolo corporativo: o indivíduo prefere a degradação do próprio caráter a suportar a gravidade das consequências.</p>
 <p>O limite inferior dessa degradação culmina no parasitismo cognitivo. Quando a realidade exige a leitura de um manual — o esforço bruto de decodificar a engrenagem —, a reação do organismo atrofiado é terceirizar o atrito: <em>‘Cacau, suporte a carga de aprendizado e me entregue a resposta mastigada’</em>.</p>
 <p>O peso que carrego ao observar essa dinâmica não é pessimismo. É a constatação empírica e letal de que a falha estrutural primária permanece operando em altíssima rotação: o homem abomina o esforço da descoberta, recusa a massa da própria ignorância e escolhe sobreviver como um parasita no intelecto alheio.</p>
-  </div>
-  <p class="origem meta">Publicado originalmente no <a href="https://marcoscacau.substack.com/p/apenas-uma-visao-sobre-a-sociedade" target="_blank" rel="noopener">Substack</a>.</p>
-  <nav class="navpost"><a href="#para-meu-eu-do-futuro-parte-1"><span class="meta">Anterior</span>Para Meu Eu do futuro (Parte 1)</a><a class="dir" href="#vida"><span class="meta">Próximo</span>VIDA</a></nav>
-</article><article class="post" id="para-meu-eu-do-futuro-parte-1">
-  <a class="voltar" href="#inicio">← Todos os textos</a>
-  <header class="post-cab">
-    <p class="meta">Nº 09 · 26 de fevereiro de 2026 · 1665 palavras · 8 min de leitura</p>
-    <h1>Para Meu Eu do futuro (Parte 1)</h1>
+    </div>
+    <p class="origem">Publicado originalmente no <a href="https://marcoscacau.substack.com/p/apenas-uma-visao-sobre-a-sociedade" target="_blank" rel="noopener">Substack</a> em 2 de março de 2026.</p>
+    <nav class="navpost"><a href="#para-meu-eu-do-futuro-parte-1"><span>← Anterior</span>Para Meu Eu do futuro (Parte 1)</a><a class="dir" href="#vida"><span>Próximo →</span>VIDA</a></nav>
+    <section class="bloco relacionados"><h2 class="etiqueta"><span>Leia também</span></h2><ul class="lista"><li class="item"><a class="item-img" href="#vida" tabindex="-1" aria-hidden="true"><img src="mini/b922fb9e0062.jpg" alt="" loading="lazy"></a>
+  <div class="item-txt"><div class="tags"><a class="tag" href="#tema-teologia">Teologia</a><a class="tag" href="#tema-fisica">Física</a></div><h4 class="manchete-p"><a href="#vida">VIDA</a></h4></div></li><li class="item"><a class="item-img" href="#a-liturgia-do-invisivel-o-amor-e" tabindex="-1" aria-hidden="true"><img src="mini/0140b8a95d8f.jpg" alt="" loading="lazy"></a>
+  <div class="item-txt"><div class="tags"><a class="tag" href="#tema-literatura">Literatura</a><a class="tag" href="#tema-fisica">Física</a></div><h4 class="manchete-p"><a href="#a-liturgia-do-invisivel-o-amor-e">A Liturgia do Invisível: O Amor e o Átomo em Vozes de Tchernóbil</a></h4></div></li><li class="item"><a class="item-img" href="#a-lei-do-fone-de-ouvido-ou-por-que" tabindex="-1" aria-hidden="true"><img src="mini/b163a7c36747.jpg" alt="" loading="lazy"></a>
+  <div class="item-txt"><div class="tags"><a class="tag" href="#tema-fisica">Física</a><a class="tag" href="#tema-sociedade">Sociedade</a></div><h4 class="manchete-p"><a href="#a-lei-do-fone-de-ouvido-ou-por-que">A Lei do Fone de Ouvido (Ou por que sua vida vira uma bagunça sozinha)</a></h4></div></li></ul></section>
+  </article><aside class="lateral">
+  <section class="caixa autor">
+    <h2 class="caixa-tit">Sobre o autor</h2>
+    <img src="img/509d80dae681.jpg" alt="Foto de Marcos Vinicius, o Cacau">
+    <p>Examino a realidade onde a física encontra símbolos, a teologia encontra estruturas e a ficção expõe possibilidades. Busco uma linguagem que una cálculo, imaginação e transcendência para compreender o invisível no real.</p>
+    <a class="mais" href="#sobre">Conheça o Cacau →</a>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Siga e assine</h2>
+    <a class="rede" href="https://marcoscacau.substack.com" target="_blank" rel="noopener"><span class="rede-ic">S</span>Substack<span class="seta">→</span></a>
+    <a class="rede" href="https://marcoscacau.substack.com/subscribe" target="_blank" rel="noopener"><span class="rede-ic">@</span>Receber por e-mail<span class="seta">→</span></a>
+    <a class="rede" href="https://marcoscacau.substack.com/feed" target="_blank" rel="noopener"><span class="rede-ic">≋</span>RSS<span class="seta">→</span></a>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Comece por aqui</h2>
+    <ol class="numerada"><li><span class="num">1.</span><a href="#sejam-bem-vindos">Sejam Bem vindos</a></li><li><span class="num">2.</span><a href="#o-silencio-e-o-barulho-mais-insuportavel">O silêncio é o barulho mais insuportável deste século</a></li><li><span class="num">3.</span><a href="#a-liturgia-do-invisivel-o-amor-e">A Liturgia do Invisível: O Amor e o Átomo em Vozes de Tchernóbil</a></li><li><span class="num">4.</span><a href="#a-miopia-dos-adultos-e-o-deserto">A Miopia dos Adultos e o Deserto em Nós</a></li><li><span class="num">5.</span><a href="#vida">VIDA</a></li></ol>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Temas</h2>
+    <ul class="temas"><li><a href="#tema-fisica">Física</a><span>5</span></li><li><a href="#tema-teologia">Teologia</a><span>3</span></li><li><a href="#tema-literatura">Literatura</a><span>3</span></li><li><a href="#tema-filosofia">Filosofia</a><span>3</span></li><li><a href="#tema-sociedade">Sociedade</a><span>3</span></li></ul>
+  </section>
+</aside></div>
+</section><section class="vista" id="v-para-meu-eu-do-futuro-parte-1">
+  <div class="colunas"><article class="principal post">
+    <div class="tags"><a class="tag" href="#tema-teologia">Teologia</a></div>
+    <h1 class="titulo-post">Para Meu Eu do futuro (Parte 1)</h1>
     
-  </header>
-  <figure class="capa"><img src="img/943ff53d100f.jpg" alt=""></figure>
-  <div class="corpo">
+    <p class="byline">por <strong>Cacau</strong> em 26 de fevereiro de 2026 · 8 min de leitura</p>
+    <figure class="capa"><img src="img/943ff53d100f.jpg" alt=""></figure>
+    <div class="corpo">
 <p>A adoração sem a alma é uma anomalia de presença. É o equivalente biológico de gerar filhos e atravessar o tempo sem nunca observá-los crescer, com a cognição sequestrada por estímulos paralelos, enquanto o corpo apenas ocupa espaço. De que serve a arquitetura das palavras mais belas, ou a precisão de um discurso aparentemente sincero, se a minha essência não está ancorada em Ti? Sem a submissão do intelecto, a oração deixa de ser conexão e retrocede à pura termodinâmica: ar empurrado por cordas vocais, gerando ruído acústico em vez de sentido espiritual.</p>
 <p>A entropia não foi inaugurada na termodinâmica; ela é, na sua essência, uma falha ontológica primária. No primeiro dia de faculdade, o professor a definiu através da frieza das equações: a medida da energia que se dissipa de forma irreversível, incapaz de gerar trabalho em um sistema isolado. A física chama isso de caos natural. A teologia chama de Queda. Lembrei-me do diagnóstico severo do meu pastor sobre homens que operam no mundo como se a Soberania fosse uma mera sugestão. Essa é a exata mecânica de Lúcifer. Ele foi o primeiro sistema fechado do universo. Ao isolar a própria vontade da Fonte original de ordem, ele não precisou ser expulso para experimentar o inferno; o inferno tornou-se o seu estado termodinâmico imediato. O mal não é uma força ativa. O mal é a privação. É o distanciamento absoluto que gera a morte térmica do espírito — uma anomalia de cálculo que o próprio Adão, cercado pela ordem do Éden, falhou em observar.</p>
 <p>Mas o que dizer da entropia que toleramos no próprio peito? O mal interno não opera necessariamente através da barbárie; ele age pela degradação silenciosa do nosso sinal. São as orações esvaziadas de agência e as palavras de arquitetura magnífica que não carregam peso ontológico algum — ruído puro mascarado de devoção. O objetivo da existência humana não é acumular uma biblioteca de grandes significados cósmicos. O imperativo real é resistir à morte térmica do cotidiano: recusar-se a dissolver a ordem da nossa consciência na força gravitacional do supérfluo. O imperativo real é resistir à morte térmica do cotidiano: recusar-se a dissolver a ordem da nossa consciência na força gravitacional do supérfluo. Como um intelecto que outrora operou na órbita do Absoluto consegue, instantes depois, tratá-lo como um completo estranho? Essa amnésia voluntária — a capacidade de experimentar a proximidade divina e logo em seguida exilar-se na própria ignorância — é a anomalia final do nosso sistema. Um colapso de memória existencial que apenas o Arquiteto de toda a matéria compreende por completo.</p>
@@ -254,18 +649,42 @@ a:focus-visible { outline: 2px solid var(--lavanda); outline-offset: 3px; border
 <p>Werner Heisenberg postulou que o primeiro gole do copo das ciências naturais transforma o homem em um ateu, mas no fundo da taça, o Criador o aguarda. A minha vivência na academia de ciências exatas não foi o refúgio do meu ateísmo; foi o seu matadouro. Quando a cosmologia recua até as condições iniciais e o Gênesis afirma que a terra era sem forma e vazia, a mente civil falha em compreender o peso desse vazio. Não se trata de um vácuo quântico borbulhando com flutuações. É o nada absoluto ontológico — a ausência de espaço-tempo e matéria. A probabilidade de que a ordem tenha emergido dessa anulação total e se organizado na complexidade da biosfera por puro acidente estatístico é de aproximadamente 10^134. Um limite matemático que torna o acaso uma impossibilidade termodinâmica e exige, obrigatoriamente, um Arquiteto de baixa entropia no instante zero.</p>
 <p>Mas a invasão mais violenta desse Arquiteto na malha da realidade material não ocorreu apenas no Big Bang; ela foi documentada nas bodas de Caná. O evento, comumente reduzido a folclore, é uma anomalia assustadora sob a lente da física teórica. Transformar seiscentos litros de água <strong>H2O</strong> em vinho <strong>C2H6O</strong> exige a introdução de carbono molecular. Sem fontes externas, Cristo realizou uma nucleossíntese localizada, vencendo a Barreira de Coulomb à temperatura ambiente — um processo de fusão nuclear que exige o núcleo de uma estrela em colapso —, e o fez sem emitir a radiação térmica que teria vaporizado a região.</p>
 <p>Diante da quantidade de energia manipulada para reescrever as leis da matéria mantendo o sistema fechado perfeitamente estável, a minha máquina de cerco intelectual falhou. A rendição não foi um recuo emocional ou um salto cego no escuro; foi a capitulação de uma mente exausta diante da evidência bruta. O Deus que eu tentava ferir não apenas obedece à física; Ele codificou a própria linguagem matemática que eu usava para atacá-lo. Negá-Lo deixou de ser uma postura filosófica e tornou-se, simplesmente, um erro de cálculo.</p>
-  </div>
-  <p class="origem meta">Publicado originalmente no <a href="https://marcoscacau.substack.com/p/para-meu-eu-do-futuro-parte-1" target="_blank" rel="noopener">Substack</a>.</p>
-  <nav class="navpost"><a href="#a-liturgia-do-invisivel-o-amor-e"><span class="meta">Anterior</span>A Liturgia do Invisível: O Amor e o Átomo em Vozes de Tchernóbil</a><a class="dir" href="#apenas-uma-visao-sobre-a-sociedade"><span class="meta">Próximo</span>Apenas uma visão sobre a sociedade cansada</a></nav>
-</article><article class="post" id="a-liturgia-do-invisivel-o-amor-e">
-  <a class="voltar" href="#inicio">← Todos os textos</a>
-  <header class="post-cab">
-    <p class="meta">Nº 08 · 22 de janeiro de 2026 · 583 palavras · 3 min de leitura</p>
-    <h1>A Liturgia do Invisível: O Amor e o Átomo em Vozes de Tchernóbil</h1>
-    <p class="post-sub">Quando a Fé ocupa o espaço que a Física nega</p>
-  </header>
-  <figure class="capa"><img src="img/0140b8a95d8f.jpg" alt=""></figure>
-  <div class="corpo">
+    </div>
+    <p class="origem">Publicado originalmente no <a href="https://marcoscacau.substack.com/p/para-meu-eu-do-futuro-parte-1" target="_blank" rel="noopener">Substack</a> em 26 de fevereiro de 2026.</p>
+    <nav class="navpost"><a href="#a-liturgia-do-invisivel-o-amor-e"><span>← Anterior</span>A Liturgia do Invisível: O Amor e o Átomo em Vozes de Tchernóbil</a><a class="dir" href="#apenas-uma-visao-sobre-a-sociedade"><span>Próximo →</span>Apenas uma visão sobre a sociedade cansada</a></nav>
+    <section class="bloco relacionados"><h2 class="etiqueta"><span>Leia também</span></h2><ul class="lista"><li class="item"><a class="item-img" href="#vida" tabindex="-1" aria-hidden="true"><img src="mini/b922fb9e0062.jpg" alt="" loading="lazy"></a>
+  <div class="item-txt"><div class="tags"><a class="tag" href="#tema-teologia">Teologia</a><a class="tag" href="#tema-fisica">Física</a></div><h4 class="manchete-p"><a href="#vida">VIDA</a></h4></div></li><li class="item"><a class="item-img" href="#o-silencio-e-o-barulho-mais-insuportavel" tabindex="-1" aria-hidden="true"><img src="mini/9afb0997a0a9.jpg" alt="" loading="lazy"></a>
+  <div class="item-txt"><div class="tags"><a class="tag" href="#tema-sociedade">Sociedade</a><a class="tag" href="#tema-teologia">Teologia</a></div><h4 class="manchete-p"><a href="#o-silencio-e-o-barulho-mais-insuportavel">O silêncio é o barulho mais insuportável deste século</a></h4></div></li></ul></section>
+  </article><aside class="lateral">
+  <section class="caixa autor">
+    <h2 class="caixa-tit">Sobre o autor</h2>
+    <img src="img/509d80dae681.jpg" alt="Foto de Marcos Vinicius, o Cacau">
+    <p>Examino a realidade onde a física encontra símbolos, a teologia encontra estruturas e a ficção expõe possibilidades. Busco uma linguagem que una cálculo, imaginação e transcendência para compreender o invisível no real.</p>
+    <a class="mais" href="#sobre">Conheça o Cacau →</a>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Siga e assine</h2>
+    <a class="rede" href="https://marcoscacau.substack.com" target="_blank" rel="noopener"><span class="rede-ic">S</span>Substack<span class="seta">→</span></a>
+    <a class="rede" href="https://marcoscacau.substack.com/subscribe" target="_blank" rel="noopener"><span class="rede-ic">@</span>Receber por e-mail<span class="seta">→</span></a>
+    <a class="rede" href="https://marcoscacau.substack.com/feed" target="_blank" rel="noopener"><span class="rede-ic">≋</span>RSS<span class="seta">→</span></a>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Comece por aqui</h2>
+    <ol class="numerada"><li><span class="num">1.</span><a href="#sejam-bem-vindos">Sejam Bem vindos</a></li><li><span class="num">2.</span><a href="#o-silencio-e-o-barulho-mais-insuportavel">O silêncio é o barulho mais insuportável deste século</a></li><li><span class="num">3.</span><a href="#a-liturgia-do-invisivel-o-amor-e">A Liturgia do Invisível: O Amor e o Átomo em Vozes de Tchernóbil</a></li><li><span class="num">4.</span><a href="#a-miopia-dos-adultos-e-o-deserto">A Miopia dos Adultos e o Deserto em Nós</a></li><li><span class="num">5.</span><a href="#vida">VIDA</a></li></ol>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Temas</h2>
+    <ul class="temas"><li><a href="#tema-fisica">Física</a><span>5</span></li><li><a href="#tema-teologia">Teologia</a><span>3</span></li><li><a href="#tema-literatura">Literatura</a><span>3</span></li><li><a href="#tema-filosofia">Filosofia</a><span>3</span></li><li><a href="#tema-sociedade">Sociedade</a><span>3</span></li></ul>
+  </section>
+</aside></div>
+</section><section class="vista" id="v-a-liturgia-do-invisivel-o-amor-e">
+  <div class="colunas"><article class="principal post">
+    <div class="tags"><a class="tag" href="#tema-literatura">Literatura</a><a class="tag" href="#tema-fisica">Física</a></div>
+    <h1 class="titulo-post">A Liturgia do Invisível: O Amor e o Átomo em Vozes de Tchernóbil</h1>
+    <p class="linha-fina">Quando a Fé ocupa o espaço que a Física nega</p>
+    <p class="byline">por <strong>Cacau</strong> em 22 de janeiro de 2026 · 3 min de leitura</p>
+    <figure class="capa"><img src="img/0140b8a95d8f.jpg" alt=""></figure>
+    <div class="corpo">
 <p>Nós fomos criados acreditando que o inimigo tem rosto. Que o mal empunha uma espada, uma arma, ou grita uma ofensa. Mas Tchernóbil nos ensinou a lição teológica mais aterrorizante do século XX: o mal mais destrutivo é aquele que opera em silêncio absoluto. É uma <strong>entropia acelerada</strong> que desmancha o DNA sem fazer barulho.</p>
 <p>A história de Lyudmilla Ignatenko não é sobre um acidente nuclear. É sobre a redefinição do sacrifício.</p>
 <p>Quando ela entrou no Hospital Número 6, a medicina lhe deu uma ordem lógica: <em>“Afaste-se. Ele é um objeto radioativo de alta atividade. Se você tocá-lo, você morre.”</em></p>
@@ -282,18 +701,43 @@ a:focus-visible { outline: 2px solid var(--lavanda); outline-offset: 3px; border
 <p>Lyudmilla segurou a mão de um homem que era fogo puro. Nikolai carregou uma casa nas costas. Eles amaram com a urgência de um isótopo instável.</p>
 <p>A pergunta que fica não é se sobreviveríamos a um reator explodindo. A pergunta é: <strong>será que nós, protegidos e confortáveis, ainda somos capazes de executar esse algoritmo de sacrifício? Ou nosso sistema trava assim que a temperatura sobe?</strong></p>
 <p>Tchernóbil nos ensina que o oposto do amor não é o ódio. O oposto do amor é a segurança de achar que o amanhã está garantido.</p>
-  </div>
-  <p class="origem meta">Publicado originalmente no <a href="https://marcoscacau.substack.com/p/a-liturgia-do-invisivel-o-amor-e" target="_blank" rel="noopener">Substack</a>.</p>
-  <nav class="navpost"><a href="#a-lei-do-fone-de-ouvido-ou-por-que"><span class="meta">Anterior</span>A Lei do Fone de Ouvido (Ou por que sua vida vira uma bagunça sozinha)</a><a class="dir" href="#para-meu-eu-do-futuro-parte-1"><span class="meta">Próximo</span>Para Meu Eu do futuro (Parte 1)</a></nav>
-</article><article class="post" id="a-lei-do-fone-de-ouvido-ou-por-que">
-  <a class="voltar" href="#inicio">← Todos os textos</a>
-  <header class="post-cab">
-    <p class="meta">Nº 07 · 14 de janeiro de 2026 · 487 palavras · 2 min de leitura</p>
-    <h1>A Lei do Fone de Ouvido (Ou por que sua vida vira uma bagunça sozinha)</h1>
-    <p class="post-sub">Conversa de Boteco</p>
-  </header>
-  <figure class="capa"><img src="img/b163a7c36747.jpg" alt=""></figure>
-  <div class="corpo">
+    </div>
+    <p class="origem">Publicado originalmente no <a href="https://marcoscacau.substack.com/p/a-liturgia-do-invisivel-o-amor-e" target="_blank" rel="noopener">Substack</a> em 22 de janeiro de 2026.</p>
+    <nav class="navpost"><a href="#a-lei-do-fone-de-ouvido-ou-por-que"><span>← Anterior</span>A Lei do Fone de Ouvido (Ou por que sua vida vira uma bagunça sozinha)</a><a class="dir" href="#para-meu-eu-do-futuro-parte-1"><span>Próximo →</span>Para Meu Eu do futuro (Parte 1)</a></nav>
+    <section class="bloco relacionados"><h2 class="etiqueta"><span>Leia também</span></h2><ul class="lista"><li class="item"><a class="item-img" href="#vida" tabindex="-1" aria-hidden="true"><img src="mini/b922fb9e0062.jpg" alt="" loading="lazy"></a>
+  <div class="item-txt"><div class="tags"><a class="tag" href="#tema-teologia">Teologia</a><a class="tag" href="#tema-fisica">Física</a></div><h4 class="manchete-p"><a href="#vida">VIDA</a></h4></div></li><li class="item"><a class="item-img" href="#apenas-uma-visao-sobre-a-sociedade" tabindex="-1" aria-hidden="true"><img src="mini/07b07b12fc8b.jpg" alt="" loading="lazy"></a>
+  <div class="item-txt"><div class="tags"><a class="tag" href="#tema-sociedade">Sociedade</a><a class="tag" href="#tema-fisica">Física</a></div><h4 class="manchete-p"><a href="#apenas-uma-visao-sobre-a-sociedade">Apenas uma visão sobre a sociedade cansada</a></h4></div></li><li class="item"><a class="item-img" href="#a-lei-do-fone-de-ouvido-ou-por-que" tabindex="-1" aria-hidden="true"><img src="mini/b163a7c36747.jpg" alt="" loading="lazy"></a>
+  <div class="item-txt"><div class="tags"><a class="tag" href="#tema-fisica">Física</a><a class="tag" href="#tema-sociedade">Sociedade</a></div><h4 class="manchete-p"><a href="#a-lei-do-fone-de-ouvido-ou-por-que">A Lei do Fone de Ouvido (Ou por que sua vida vira uma bagunça sozinha)</a></h4></div></li></ul></section>
+  </article><aside class="lateral">
+  <section class="caixa autor">
+    <h2 class="caixa-tit">Sobre o autor</h2>
+    <img src="img/509d80dae681.jpg" alt="Foto de Marcos Vinicius, o Cacau">
+    <p>Examino a realidade onde a física encontra símbolos, a teologia encontra estruturas e a ficção expõe possibilidades. Busco uma linguagem que una cálculo, imaginação e transcendência para compreender o invisível no real.</p>
+    <a class="mais" href="#sobre">Conheça o Cacau →</a>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Siga e assine</h2>
+    <a class="rede" href="https://marcoscacau.substack.com" target="_blank" rel="noopener"><span class="rede-ic">S</span>Substack<span class="seta">→</span></a>
+    <a class="rede" href="https://marcoscacau.substack.com/subscribe" target="_blank" rel="noopener"><span class="rede-ic">@</span>Receber por e-mail<span class="seta">→</span></a>
+    <a class="rede" href="https://marcoscacau.substack.com/feed" target="_blank" rel="noopener"><span class="rede-ic">≋</span>RSS<span class="seta">→</span></a>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Comece por aqui</h2>
+    <ol class="numerada"><li><span class="num">1.</span><a href="#sejam-bem-vindos">Sejam Bem vindos</a></li><li><span class="num">2.</span><a href="#o-silencio-e-o-barulho-mais-insuportavel">O silêncio é o barulho mais insuportável deste século</a></li><li><span class="num">3.</span><a href="#a-liturgia-do-invisivel-o-amor-e">A Liturgia do Invisível: O Amor e o Átomo em Vozes de Tchernóbil</a></li><li><span class="num">4.</span><a href="#a-miopia-dos-adultos-e-o-deserto">A Miopia dos Adultos e o Deserto em Nós</a></li><li><span class="num">5.</span><a href="#vida">VIDA</a></li></ol>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Temas</h2>
+    <ul class="temas"><li><a href="#tema-fisica">Física</a><span>5</span></li><li><a href="#tema-teologia">Teologia</a><span>3</span></li><li><a href="#tema-literatura">Literatura</a><span>3</span></li><li><a href="#tema-filosofia">Filosofia</a><span>3</span></li><li><a href="#tema-sociedade">Sociedade</a><span>3</span></li></ul>
+  </section>
+</aside></div>
+</section><section class="vista" id="v-a-lei-do-fone-de-ouvido-ou-por-que">
+  <div class="colunas"><article class="principal post">
+    <div class="tags"><a class="tag" href="#tema-fisica">Física</a><a class="tag" href="#tema-sociedade">Sociedade</a></div>
+    <h1 class="titulo-post">A Lei do Fone de Ouvido (Ou por que sua vida vira uma bagunça sozinha)</h1>
+    <p class="linha-fina">Conversa de Boteco</p>
+    <p class="byline">por <strong>Cacau</strong> em 14 de janeiro de 2026 · 2 min de leitura</p>
+    <figure class="capa"><img src="img/b163a7c36747.jpg" alt=""></figure>
+    <div class="corpo">
 <p>Todo mundo conhece a “Lei do Fone de Ouvido”. Você enrola com todo o carinho, guarda no bolso e, dois minutos depois, tira um nó de marinheiro. Não foi um duende que fez aquilo. Foi a natureza.</p>
 <p>A mesma coisa acontece na sua pia. Você lava a louça no domingo à noite, a pia brilha. Segunda de manhã, já tem um copo sujo brotando do nada. Isso não é maldição, é física.</p>
 <p>A verdade brutal é esta: <strong>a bagunça não precisa de motivação.</strong> Ela é o estado natural das coisas. O fone quer dar nó. O quarto quer empoeirar. A equipe quer se desalinhar.</p>
@@ -304,18 +748,43 @@ a:focus-visible { outline: 2px solid var(--lavanda); outline-offset: 3px; border
 <p><strong>II. A Válvula de Panela de Pressão</strong> Tentar ser “zen” o tempo todo é perigoso. Quem guarda tudo, explode. Você precisa de rituais para soltar a pressão de forma controlada, antes que a panela voe pelos ares. Pode ser academia, escrever ou xingar o trânsito (de vidro fechado). O importante é ter um lugar seguro para descarregar a entropia sem machucar quem você ama.</p>
 <p><strong>III. O Disjuntor (A Regra de Ouro)</strong> Sabe o disjuntor do chuveiro? Quando esquenta demais, ele cai para a casa não pegar fogo. Você precisa de um disjuntor social. Se a discussão com o chefe ou com o cônjuge passou de 10 minutos e virou gritaria, o disjuntor cai. “Parou. Amanhã a gente continua”. Isso não é fugir da briga. É evitar o incêndio. Melhor um banho frio agora do que uma casa queimada depois.</p>
 <p><strong>Resumo da ópera:</strong> O Mal social não se vence com virtude, mas com arquitetura. Não confie na sua bondade em dias ruins; confie nos seus sistemas. Amanhã, não tente ser um herói moral. Tente ser um engenheiro eficiente. A bagunça vai estar lá te esperando, mas você não precisa ser o combustível dela.</p>
-  </div>
-  <p class="origem meta">Publicado originalmente no <a href="https://marcoscacau.substack.com/p/a-lei-do-fone-de-ouvido-ou-por-que" target="_blank" rel="noopener">Substack</a>.</p>
-  <nav class="navpost"><a href="#a-miopia-dos-adultos-e-o-deserto"><span class="meta">Anterior</span>A Miopia dos Adultos e o Deserto em Nós</a><a class="dir" href="#a-liturgia-do-invisivel-o-amor-e"><span class="meta">Próximo</span>A Liturgia do Invisível: O Amor e o Átomo em Vozes de Tchernóbil</a></nav>
-</article><article class="post" id="a-miopia-dos-adultos-e-o-deserto">
-  <a class="voltar" href="#inicio">← Todos os textos</a>
-  <header class="post-cab">
-    <p class="meta">Nº 06 · 8 de janeiro de 2026 · 1430 palavras · 7 min de leitura</p>
-    <h1>A Miopia dos Adultos e o Deserto em Nós</h1>
+    </div>
+    <p class="origem">Publicado originalmente no <a href="https://marcoscacau.substack.com/p/a-lei-do-fone-de-ouvido-ou-por-que" target="_blank" rel="noopener">Substack</a> em 14 de janeiro de 2026.</p>
+    <nav class="navpost"><a href="#a-miopia-dos-adultos-e-o-deserto"><span>← Anterior</span>A Miopia dos Adultos e o Deserto em Nós</a><a class="dir" href="#a-liturgia-do-invisivel-o-amor-e"><span>Próximo →</span>A Liturgia do Invisível: O Amor e o Átomo em Vozes de Tchernóbil</a></nav>
+    <section class="bloco relacionados"><h2 class="etiqueta"><span>Leia também</span></h2><ul class="lista"><li class="item"><a class="item-img" href="#vida" tabindex="-1" aria-hidden="true"><img src="mini/b922fb9e0062.jpg" alt="" loading="lazy"></a>
+  <div class="item-txt"><div class="tags"><a class="tag" href="#tema-teologia">Teologia</a><a class="tag" href="#tema-fisica">Física</a></div><h4 class="manchete-p"><a href="#vida">VIDA</a></h4></div></li><li class="item"><a class="item-img" href="#apenas-uma-visao-sobre-a-sociedade" tabindex="-1" aria-hidden="true"><img src="mini/07b07b12fc8b.jpg" alt="" loading="lazy"></a>
+  <div class="item-txt"><div class="tags"><a class="tag" href="#tema-sociedade">Sociedade</a><a class="tag" href="#tema-fisica">Física</a></div><h4 class="manchete-p"><a href="#apenas-uma-visao-sobre-a-sociedade">Apenas uma visão sobre a sociedade cansada</a></h4></div></li><li class="item"><a class="item-img" href="#a-liturgia-do-invisivel-o-amor-e" tabindex="-1" aria-hidden="true"><img src="mini/0140b8a95d8f.jpg" alt="" loading="lazy"></a>
+  <div class="item-txt"><div class="tags"><a class="tag" href="#tema-literatura">Literatura</a><a class="tag" href="#tema-fisica">Física</a></div><h4 class="manchete-p"><a href="#a-liturgia-do-invisivel-o-amor-e">A Liturgia do Invisível: O Amor e o Átomo em Vozes de Tchernóbil</a></h4></div></li></ul></section>
+  </article><aside class="lateral">
+  <section class="caixa autor">
+    <h2 class="caixa-tit">Sobre o autor</h2>
+    <img src="img/509d80dae681.jpg" alt="Foto de Marcos Vinicius, o Cacau">
+    <p>Examino a realidade onde a física encontra símbolos, a teologia encontra estruturas e a ficção expõe possibilidades. Busco uma linguagem que una cálculo, imaginação e transcendência para compreender o invisível no real.</p>
+    <a class="mais" href="#sobre">Conheça o Cacau →</a>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Siga e assine</h2>
+    <a class="rede" href="https://marcoscacau.substack.com" target="_blank" rel="noopener"><span class="rede-ic">S</span>Substack<span class="seta">→</span></a>
+    <a class="rede" href="https://marcoscacau.substack.com/subscribe" target="_blank" rel="noopener"><span class="rede-ic">@</span>Receber por e-mail<span class="seta">→</span></a>
+    <a class="rede" href="https://marcoscacau.substack.com/feed" target="_blank" rel="noopener"><span class="rede-ic">≋</span>RSS<span class="seta">→</span></a>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Comece por aqui</h2>
+    <ol class="numerada"><li><span class="num">1.</span><a href="#sejam-bem-vindos">Sejam Bem vindos</a></li><li><span class="num">2.</span><a href="#o-silencio-e-o-barulho-mais-insuportavel">O silêncio é o barulho mais insuportável deste século</a></li><li><span class="num">3.</span><a href="#a-liturgia-do-invisivel-o-amor-e">A Liturgia do Invisível: O Amor e o Átomo em Vozes de Tchernóbil</a></li><li><span class="num">4.</span><a href="#a-miopia-dos-adultos-e-o-deserto">A Miopia dos Adultos e o Deserto em Nós</a></li><li><span class="num">5.</span><a href="#vida">VIDA</a></li></ol>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Temas</h2>
+    <ul class="temas"><li><a href="#tema-fisica">Física</a><span>5</span></li><li><a href="#tema-teologia">Teologia</a><span>3</span></li><li><a href="#tema-literatura">Literatura</a><span>3</span></li><li><a href="#tema-filosofia">Filosofia</a><span>3</span></li><li><a href="#tema-sociedade">Sociedade</a><span>3</span></li></ul>
+  </section>
+</aside></div>
+</section><section class="vista" id="v-a-miopia-dos-adultos-e-o-deserto">
+  <div class="colunas"><article class="principal post">
+    <div class="tags"><a class="tag" href="#tema-literatura">Literatura</a><a class="tag" href="#tema-filosofia">Filosofia</a></div>
+    <h1 class="titulo-post">A Miopia dos Adultos e o Deserto em Nós</h1>
     
-  </header>
-  <figure class="capa"><img src="img/1b6e0477c3bc.jpg" alt=""></figure>
-  <div class="corpo">
+    <p class="byline">por <strong>Cacau</strong> em 8 de janeiro de 2026 · 7 min de leitura</p>
+    <figure class="capa"><img src="img/1b6e0477c3bc.jpg" alt=""></figure>
+    <div class="corpo">
 <p><strong>Antoine de Saint-Exupéry, nós aceitamos as suas desculpas.</strong></p>
 <p>Você pediu perdão logo na dedicatória por oferecer esta obra a uma “pessoa grande”, justificando que se tratava de um livro destinado à criança que esse adulto foi um dia. Mas permita-me discordar com carinho, e com uma suspeita antiga: livros rotulados como “infantis” quase nunca são feitos apenas para crianças.</p>
 <p>A verdade é que a criança sente, mas ainda não carrega o peso. Ela percebe a beleza, o espanto, a estranheza, mas quem compreende a ferida somos nós, os adultos disfarçados. Somos nós que já perdemos algo e, justamente por isso, reconhecemos a dor do que foi esquecido.</p>
@@ -367,18 +836,43 @@ a:focus-visible { outline: 2px solid var(--lavanda); outline-offset: 3px; border
 <p>O desfecho é melancólico, silencioso e profundo. O Pequeno Príncipe compreende que seu corpo é pesado demais para a viagem de volta. E permite que a serpente o morda.</p>
 <p>Não é apenas sobre morte.<br> É sobre sacrifício.<br> Sobre abandonar o supérfluo para retornar ao essencial.</p>
 <p>Para o adulto, o ensinamento é claro e doloroso: as coisas mais valiosas não podem ser possuídas, medidas ou explicadas. E toda experiência de amor verdadeiro inclui despedida.</p>
-  </div>
-  <p class="origem meta">Publicado originalmente no <a href="https://marcoscacau.substack.com/p/a-miopia-dos-adultos-e-o-deserto" target="_blank" rel="noopener">Substack</a>.</p>
-  <nav class="navpost"><a href="#socrates-o-despertar-da-consciencia"><span class="meta">Anterior</span>Sócrates: O Despertar da Consciência Humana</a><a class="dir" href="#a-lei-do-fone-de-ouvido-ou-por-que"><span class="meta">Próximo</span>A Lei do Fone de Ouvido (Ou por que sua vida vira uma bagunça sozinha)</a></nav>
-</article><article class="post" id="socrates-o-despertar-da-consciencia">
-  <a class="voltar" href="#inicio">← Todos os textos</a>
-  <header class="post-cab">
-    <p class="meta">Nº 05 · 30 de dezembro de 2025 · 594 palavras · 3 min de leitura</p>
-    <h1>Sócrates: O Despertar da Consciência Humana</h1>
-    <p class="post-sub">Parte I</p>
-  </header>
-  <figure class="capa"><img src="img/e1c76d38df61.jpg" alt=""></figure>
-  <div class="corpo">
+    </div>
+    <p class="origem">Publicado originalmente no <a href="https://marcoscacau.substack.com/p/a-miopia-dos-adultos-e-o-deserto" target="_blank" rel="noopener">Substack</a> em 8 de janeiro de 2026.</p>
+    <nav class="navpost"><a href="#socrates-o-despertar-da-consciencia"><span>← Anterior</span>Sócrates: O Despertar da Consciência Humana</a><a class="dir" href="#a-lei-do-fone-de-ouvido-ou-por-que"><span>Próximo →</span>A Lei do Fone de Ouvido (Ou por que sua vida vira uma bagunça sozinha)</a></nav>
+    <section class="bloco relacionados"><h2 class="etiqueta"><span>Leia também</span></h2><ul class="lista"><li class="item"><a class="item-img" href="#a-liturgia-do-invisivel-o-amor-e" tabindex="-1" aria-hidden="true"><img src="mini/0140b8a95d8f.jpg" alt="" loading="lazy"></a>
+  <div class="item-txt"><div class="tags"><a class="tag" href="#tema-literatura">Literatura</a><a class="tag" href="#tema-fisica">Física</a></div><h4 class="manchete-p"><a href="#a-liturgia-do-invisivel-o-amor-e">A Liturgia do Invisível: O Amor e o Átomo em Vozes de Tchernóbil</a></h4></div></li><li class="item"><a class="item-img" href="#socrates-o-despertar-da-consciencia" tabindex="-1" aria-hidden="true"><img src="mini/e1c76d38df61.jpg" alt="" loading="lazy"></a>
+  <div class="item-txt"><div class="tags"><a class="tag" href="#tema-filosofia">Filosofia</a></div><h4 class="manchete-p"><a href="#socrates-o-despertar-da-consciencia">Sócrates: O Despertar da Consciência Humana</a></h4></div></li><li class="item"><a class="item-img" href="#a-anatomia-do-abismo-o-que-gogol" tabindex="-1" aria-hidden="true"><img src="mini/197214479671.jpg" alt="" loading="lazy"></a>
+  <div class="item-txt"><div class="tags"><a class="tag" href="#tema-literatura">Literatura</a></div><h4 class="manchete-p"><a href="#a-anatomia-do-abismo-o-que-gogol">A Anatomia do Abismo: O Que Gogol nos Ensina Sobre Perder o Chão</a></h4></div></li></ul></section>
+  </article><aside class="lateral">
+  <section class="caixa autor">
+    <h2 class="caixa-tit">Sobre o autor</h2>
+    <img src="img/509d80dae681.jpg" alt="Foto de Marcos Vinicius, o Cacau">
+    <p>Examino a realidade onde a física encontra símbolos, a teologia encontra estruturas e a ficção expõe possibilidades. Busco uma linguagem que una cálculo, imaginação e transcendência para compreender o invisível no real.</p>
+    <a class="mais" href="#sobre">Conheça o Cacau →</a>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Siga e assine</h2>
+    <a class="rede" href="https://marcoscacau.substack.com" target="_blank" rel="noopener"><span class="rede-ic">S</span>Substack<span class="seta">→</span></a>
+    <a class="rede" href="https://marcoscacau.substack.com/subscribe" target="_blank" rel="noopener"><span class="rede-ic">@</span>Receber por e-mail<span class="seta">→</span></a>
+    <a class="rede" href="https://marcoscacau.substack.com/feed" target="_blank" rel="noopener"><span class="rede-ic">≋</span>RSS<span class="seta">→</span></a>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Comece por aqui</h2>
+    <ol class="numerada"><li><span class="num">1.</span><a href="#sejam-bem-vindos">Sejam Bem vindos</a></li><li><span class="num">2.</span><a href="#o-silencio-e-o-barulho-mais-insuportavel">O silêncio é o barulho mais insuportável deste século</a></li><li><span class="num">3.</span><a href="#a-liturgia-do-invisivel-o-amor-e">A Liturgia do Invisível: O Amor e o Átomo em Vozes de Tchernóbil</a></li><li><span class="num">4.</span><a href="#a-miopia-dos-adultos-e-o-deserto">A Miopia dos Adultos e o Deserto em Nós</a></li><li><span class="num">5.</span><a href="#vida">VIDA</a></li></ol>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Temas</h2>
+    <ul class="temas"><li><a href="#tema-fisica">Física</a><span>5</span></li><li><a href="#tema-teologia">Teologia</a><span>3</span></li><li><a href="#tema-literatura">Literatura</a><span>3</span></li><li><a href="#tema-filosofia">Filosofia</a><span>3</span></li><li><a href="#tema-sociedade">Sociedade</a><span>3</span></li></ul>
+  </section>
+</aside></div>
+</section><section class="vista" id="v-socrates-o-despertar-da-consciencia">
+  <div class="colunas"><article class="principal post">
+    <div class="tags"><a class="tag" href="#tema-filosofia">Filosofia</a></div>
+    <h1 class="titulo-post">Sócrates: O Despertar da Consciência Humana</h1>
+    <p class="linha-fina">Parte I</p>
+    <p class="byline">por <strong>Cacau</strong> em 30 de dezembro de 2025 · 3 min de leitura</p>
+    <figure class="capa"><img src="img/e1c76d38df61.jpg" alt=""></figure>
+    <div class="corpo">
 <p>Sócrates (470 a.C. – 399 a.C.) não foi apenas um homem de seu tempo, mas o “divisor de águas” da alma ocidental. Sua vida em Atenas representa a transição da curiosidade sobre o mundo exterior para a investigação profunda do mundo interior.</p>
 <h4>I. A Herança Simbólica: O Escultor e a Parteira</h4>
 <p>A biografia de Sócrates carrega um simbolismo que moldou sua filosofia. Filho de <strong>Sofronisco</strong>, um escultor, e <strong>Fenareta</strong>, uma parteira, Sócrates herdou de ambos a sua metodologia:</p>
@@ -402,18 +896,42 @@ a:focus-visible { outline: 2px solid var(--lavanda); outline-offset: 3px; border
 <p>A busca socrática não era um ensino passivo, mas um processo de dois estágios:</p>
 <ol><li><p><strong>Ironia (Destruição):</strong> Sócrates fingia ignorância e bombardeava o interlocutor com perguntas até que este entrasse em contradição, percebendo que o que julgava saber era apenas um preconceito.</p></li><li><p><strong>Maiêutica (Construção):</strong> Uma vez limpo das falsas certezas, o indivíduo era guiado a “dar à luz” conceitos universais sobre a Virtude (<em>Arete</em>), o Bem e a Justiça.</p></li></ol>
 <p>Sócrates acreditava que o erro era fruto da ignorância: ninguém faz o mal voluntariamente; faz o mal porque desconhece o que é o Bem. Portanto, educar o pensamento era o mesmo que curar a alma.</p>
-  </div>
-  <p class="origem meta">Publicado originalmente no <a href="https://marcoscacau.substack.com/p/socrates-o-despertar-da-consciencia" target="_blank" rel="noopener">Substack</a>.</p>
-  <nav class="navpost"><a href="#o-silencio-e-o-barulho-mais-insuportavel"><span class="meta">Anterior</span>O silêncio é o barulho mais insuportável deste século</a><a class="dir" href="#a-miopia-dos-adultos-e-o-deserto"><span class="meta">Próximo</span>A Miopia dos Adultos e o Deserto em Nós</a></nav>
-</article><article class="post" id="o-silencio-e-o-barulho-mais-insuportavel">
-  <a class="voltar" href="#inicio">← Todos os textos</a>
-  <header class="post-cab">
-    <p class="meta">Nº 04 · 29 de dezembro de 2025 · 471 palavras · 2 min de leitura</p>
-    <h1>O silêncio é o barulho mais insuportável deste século</h1>
+    </div>
+    <p class="origem">Publicado originalmente no <a href="https://marcoscacau.substack.com/p/socrates-o-despertar-da-consciencia" target="_blank" rel="noopener">Substack</a> em 30 de dezembro de 2025.</p>
+    <nav class="navpost"><a href="#o-silencio-e-o-barulho-mais-insuportavel"><span>← Anterior</span>O silêncio é o barulho mais insuportável deste século</a><a class="dir" href="#a-miopia-dos-adultos-e-o-deserto"><span>Próximo →</span>A Miopia dos Adultos e o Deserto em Nós</a></nav>
+    <section class="bloco relacionados"><h2 class="etiqueta"><span>Leia também</span></h2><ul class="lista"><li class="item"><a class="item-img" href="#a-miopia-dos-adultos-e-o-deserto" tabindex="-1" aria-hidden="true"><img src="mini/1b6e0477c3bc.jpg" alt="" loading="lazy"></a>
+  <div class="item-txt"><div class="tags"><a class="tag" href="#tema-literatura">Literatura</a><a class="tag" href="#tema-filosofia">Filosofia</a></div><h4 class="manchete-p"><a href="#a-miopia-dos-adultos-e-o-deserto">A Miopia dos Adultos e o Deserto em Nós</a></h4></div></li><li class="item"><a class="item-img" href="#antropomorfismo-o-universo-a-nossa" tabindex="-1" aria-hidden="true"><img src="mini/29e467d4136d.jpg" alt="" loading="lazy"></a>
+  <div class="item-txt"><div class="tags"><a class="tag" href="#tema-fisica">Física</a><a class="tag" href="#tema-filosofia">Filosofia</a></div><h4 class="manchete-p"><a href="#antropomorfismo-o-universo-a-nossa">Antropomorfismo: O Universo à Nossa Imagem e Semelhança</a></h4></div></li></ul></section>
+  </article><aside class="lateral">
+  <section class="caixa autor">
+    <h2 class="caixa-tit">Sobre o autor</h2>
+    <img src="img/509d80dae681.jpg" alt="Foto de Marcos Vinicius, o Cacau">
+    <p>Examino a realidade onde a física encontra símbolos, a teologia encontra estruturas e a ficção expõe possibilidades. Busco uma linguagem que una cálculo, imaginação e transcendência para compreender o invisível no real.</p>
+    <a class="mais" href="#sobre">Conheça o Cacau →</a>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Siga e assine</h2>
+    <a class="rede" href="https://marcoscacau.substack.com" target="_blank" rel="noopener"><span class="rede-ic">S</span>Substack<span class="seta">→</span></a>
+    <a class="rede" href="https://marcoscacau.substack.com/subscribe" target="_blank" rel="noopener"><span class="rede-ic">@</span>Receber por e-mail<span class="seta">→</span></a>
+    <a class="rede" href="https://marcoscacau.substack.com/feed" target="_blank" rel="noopener"><span class="rede-ic">≋</span>RSS<span class="seta">→</span></a>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Comece por aqui</h2>
+    <ol class="numerada"><li><span class="num">1.</span><a href="#sejam-bem-vindos">Sejam Bem vindos</a></li><li><span class="num">2.</span><a href="#o-silencio-e-o-barulho-mais-insuportavel">O silêncio é o barulho mais insuportável deste século</a></li><li><span class="num">3.</span><a href="#a-liturgia-do-invisivel-o-amor-e">A Liturgia do Invisível: O Amor e o Átomo em Vozes de Tchernóbil</a></li><li><span class="num">4.</span><a href="#a-miopia-dos-adultos-e-o-deserto">A Miopia dos Adultos e o Deserto em Nós</a></li><li><span class="num">5.</span><a href="#vida">VIDA</a></li></ol>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Temas</h2>
+    <ul class="temas"><li><a href="#tema-fisica">Física</a><span>5</span></li><li><a href="#tema-teologia">Teologia</a><span>3</span></li><li><a href="#tema-literatura">Literatura</a><span>3</span></li><li><a href="#tema-filosofia">Filosofia</a><span>3</span></li><li><a href="#tema-sociedade">Sociedade</a><span>3</span></li></ul>
+  </section>
+</aside></div>
+</section><section class="vista" id="v-o-silencio-e-o-barulho-mais-insuportavel">
+  <div class="colunas"><article class="principal post">
+    <div class="tags"><a class="tag" href="#tema-sociedade">Sociedade</a><a class="tag" href="#tema-teologia">Teologia</a></div>
+    <h1 class="titulo-post">O silêncio é o barulho mais insuportável deste século</h1>
     
-  </header>
-  <figure class="capa"><img src="img/9afb0997a0a9.jpg" alt=""></figure>
-  <div class="corpo">
+    <p class="byline">por <strong>Cacau</strong> em 29 de dezembro de 2025 · 2 min de leitura</p>
+    <figure class="capa"><img src="img/9afb0997a0a9.jpg" alt=""></figure>
+    <div class="corpo">
 <p>Ontem, ouvi uma verdade que ecoou como um trovão: ”O silêncio é o barulho mais insuportável deste século”.</p>
 <p>Charles Chaplin, mestre da comunicação muda, já alertava que ”o barulho aniquila a beleza do silêncio”. Mas a profecia de Chaplin evoluiu. O “barulho” do século 21 deixou de ser apenas sonoro para se tornar neuroquímico e existencial.</p>
 <p><strong>I. A Biologia da Fuga:</strong></p>
@@ -430,18 +948,43 @@ a:focus-visible { outline: 2px solid var(--lavanda); outline-offset: 3px; border
 <p><strong>Conclusão: O Sinal e o Ruído</strong></p>
 <p>A beleza do silêncio não é estética, é funcional. É no silêncio que o “sinal” (a Voz de Deus, a intuição, a estratégia) se separa do “ruído” (o medo, o ego, a opinião alheia).</p>
 <p>Enquanto continuarmos trocando a eternidade do silêncio pela euforia barata do próximo clique, continuaremos enchendo nossa alma de vazio, destruindo o mundo real para alimentar nossas ilusões digitais. O verdadeiro poder, hoje, não pertence a quem grita mais alto, mas a quem consegue suportar o estrondo ensurdecedor de ficar em paz consigo mesmo.</p>
-  </div>
-  <p class="origem meta">Publicado originalmente no <a href="https://marcoscacau.substack.com/p/o-silencio-e-o-barulho-mais-insuportavel" target="_blank" rel="noopener">Substack</a>.</p>
-  <nav class="navpost"><a href="#a-anatomia-do-abismo-o-que-gogol"><span class="meta">Anterior</span>A Anatomia do Abismo: O Que Gogol nos Ensina Sobre Perder o Chão</a><a class="dir" href="#socrates-o-despertar-da-consciencia"><span class="meta">Próximo</span>Sócrates: O Despertar da Consciência Humana</a></nav>
-</article><article class="post" id="a-anatomia-do-abismo-o-que-gogol">
-  <a class="voltar" href="#inicio">← Todos os textos</a>
-  <header class="post-cab">
-    <p class="meta">Nº 03 · 26 de dezembro de 2025 · 609 palavras · 3 min de leitura</p>
-    <h1>A Anatomia do Abismo: O Que Gogol nos Ensina Sobre Perder o Chão</h1>
+    </div>
+    <p class="origem">Publicado originalmente no <a href="https://marcoscacau.substack.com/p/o-silencio-e-o-barulho-mais-insuportavel" target="_blank" rel="noopener">Substack</a> em 29 de dezembro de 2025.</p>
+    <nav class="navpost"><a href="#a-anatomia-do-abismo-o-que-gogol"><span>← Anterior</span>A Anatomia do Abismo: O Que Gogol nos Ensina Sobre Perder o Chão</a><a class="dir" href="#socrates-o-despertar-da-consciencia"><span>Próximo →</span>Sócrates: O Despertar da Consciência Humana</a></nav>
+    <section class="bloco relacionados"><h2 class="etiqueta"><span>Leia também</span></h2><ul class="lista"><li class="item"><a class="item-img" href="#vida" tabindex="-1" aria-hidden="true"><img src="mini/b922fb9e0062.jpg" alt="" loading="lazy"></a>
+  <div class="item-txt"><div class="tags"><a class="tag" href="#tema-teologia">Teologia</a><a class="tag" href="#tema-fisica">Física</a></div><h4 class="manchete-p"><a href="#vida">VIDA</a></h4></div></li><li class="item"><a class="item-img" href="#apenas-uma-visao-sobre-a-sociedade" tabindex="-1" aria-hidden="true"><img src="mini/07b07b12fc8b.jpg" alt="" loading="lazy"></a>
+  <div class="item-txt"><div class="tags"><a class="tag" href="#tema-sociedade">Sociedade</a><a class="tag" href="#tema-fisica">Física</a></div><h4 class="manchete-p"><a href="#apenas-uma-visao-sobre-a-sociedade">Apenas uma visão sobre a sociedade cansada</a></h4></div></li><li class="item"><a class="item-img" href="#para-meu-eu-do-futuro-parte-1" tabindex="-1" aria-hidden="true"><img src="mini/943ff53d100f.jpg" alt="" loading="lazy"></a>
+  <div class="item-txt"><div class="tags"><a class="tag" href="#tema-teologia">Teologia</a></div><h4 class="manchete-p"><a href="#para-meu-eu-do-futuro-parte-1">Para Meu Eu do futuro (Parte 1)</a></h4></div></li></ul></section>
+  </article><aside class="lateral">
+  <section class="caixa autor">
+    <h2 class="caixa-tit">Sobre o autor</h2>
+    <img src="img/509d80dae681.jpg" alt="Foto de Marcos Vinicius, o Cacau">
+    <p>Examino a realidade onde a física encontra símbolos, a teologia encontra estruturas e a ficção expõe possibilidades. Busco uma linguagem que una cálculo, imaginação e transcendência para compreender o invisível no real.</p>
+    <a class="mais" href="#sobre">Conheça o Cacau →</a>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Siga e assine</h2>
+    <a class="rede" href="https://marcoscacau.substack.com" target="_blank" rel="noopener"><span class="rede-ic">S</span>Substack<span class="seta">→</span></a>
+    <a class="rede" href="https://marcoscacau.substack.com/subscribe" target="_blank" rel="noopener"><span class="rede-ic">@</span>Receber por e-mail<span class="seta">→</span></a>
+    <a class="rede" href="https://marcoscacau.substack.com/feed" target="_blank" rel="noopener"><span class="rede-ic">≋</span>RSS<span class="seta">→</span></a>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Comece por aqui</h2>
+    <ol class="numerada"><li><span class="num">1.</span><a href="#sejam-bem-vindos">Sejam Bem vindos</a></li><li><span class="num">2.</span><a href="#o-silencio-e-o-barulho-mais-insuportavel">O silêncio é o barulho mais insuportável deste século</a></li><li><span class="num">3.</span><a href="#a-liturgia-do-invisivel-o-amor-e">A Liturgia do Invisível: O Amor e o Átomo em Vozes de Tchernóbil</a></li><li><span class="num">4.</span><a href="#a-miopia-dos-adultos-e-o-deserto">A Miopia dos Adultos e o Deserto em Nós</a></li><li><span class="num">5.</span><a href="#vida">VIDA</a></li></ol>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Temas</h2>
+    <ul class="temas"><li><a href="#tema-fisica">Física</a><span>5</span></li><li><a href="#tema-teologia">Teologia</a><span>3</span></li><li><a href="#tema-literatura">Literatura</a><span>3</span></li><li><a href="#tema-filosofia">Filosofia</a><span>3</span></li><li><a href="#tema-sociedade">Sociedade</a><span>3</span></li></ul>
+  </section>
+</aside></div>
+</section><section class="vista" id="v-a-anatomia-do-abismo-o-que-gogol">
+  <div class="colunas"><article class="principal post">
+    <div class="tags"><a class="tag" href="#tema-literatura">Literatura</a></div>
+    <h1 class="titulo-post">A Anatomia do Abismo: O Que Gogol nos Ensina Sobre Perder o Chão</h1>
     
-  </header>
-  <figure class="capa"><img src="img/197214479671.jpg" alt=""></figure>
-  <div class="corpo">
+    <p class="byline">por <strong>Cacau</strong> em 26 de dezembro de 2025 · 3 min de leitura</p>
+    <figure class="capa"><img src="img/197214479671.jpg" alt=""></figure>
+    <div class="corpo">
 <h4>I. A Armadilha da Mediocridade: O Tédio como Prólogo</h4>
 <p>Quando abrimos as primeiras páginas de <em>Diário de um Louco</em>, de Nikolai Gogol, o sentimento imediato é de uma estranha resistência. Para o leitor moderno, acostumado a estímulos constantes, o cotidiano de Aksenty Ivanovich Poprishchin parece, à primeira vista, um deserto de relevância. Ele é um funcionário público de baixo escalão na Rússia czarista, um homem cuja maior preocupação é apontar lápis para o seu diretor e nutrir uma paixão platônica e patética pela filha do chefe.</p>
 <p>Nesta primeira etapa, o livro é deliberadamente “tedioso”. Mas há uma genialidade cruel nesse tédio. Gogol nos força a habitar a mente de um homem que é invisível para a sociedade. O tédio aqui não é um erro de narrativa; é a representação da asfixia burocrática. Poprishchin tenta se convencer de sua importância, mas a realidade o esmaga.</p>
@@ -456,18 +999,42 @@ a:focus-visible { outline: 2px solid var(--lavanda); outline-offset: 3px; border
 <p>O clímax de <em>Diário de um Louco</em> é onde o tédio inicial é definitivamente enterrado por uma beleza trágica e visceral. Quando Poprishchin é levado para o hospício, acreditando estar sendo recebido pela corte espanhola, a violência da realidade choca-se frontalmente com o seu delírio.</p>
 <p>A “Espanha” dele é um lugar de frio, pancadas e cabeças raspadas. É aqui que o livro atinge o patamar de obra-prima. A desintegração total da identidade do personagem nos despoja de qualquer superioridade que pudéssemos sentir em relação a ele. Não rimos mais do louco; sofremos com o homem.</p>
 <p>A frase final, aquele apelo desesperado pela mãe e pela casa na aldeia, é o momento em que o chão desaparece por completo. Percebemos que a loucura de Poprishchin não foi uma escolha, mas uma fuga de uma realidade insuportável. Gogol nos mostra que, por baixo das camadas de status, cargos e sanidade, existe uma fragilidade humana que todos compartilhamos. Terminamos a leitura exaustos, sem chão, mas com uma compreensão muito mais profunda, e terrível, do que significa ser humano em um mundo que, muitas vezes, parece não fazer sentido nenhum.</p>
-  </div>
-  <p class="origem meta">Publicado originalmente no <a href="https://marcoscacau.substack.com/p/a-anatomia-do-abismo-o-que-gogol" target="_blank" rel="noopener">Substack</a>.</p>
-  <nav class="navpost"><a href="#antropomorfismo-o-universo-a-nossa"><span class="meta">Anterior</span>Antropomorfismo: O Universo à Nossa Imagem e Semelhança</a><a class="dir" href="#o-silencio-e-o-barulho-mais-insuportavel"><span class="meta">Próximo</span>O silêncio é o barulho mais insuportável deste século</a></nav>
-</article><article class="post" id="antropomorfismo-o-universo-a-nossa">
-  <a class="voltar" href="#inicio">← Todos os textos</a>
-  <header class="post-cab">
-    <p class="meta">Nº 02 · 17 de dezembro de 2025 · 463 palavras · 2 min de leitura</p>
-    <h1>Antropomorfismo: O Universo à Nossa Imagem e Semelhança</h1>
-    <p class="post-sub">Você já pediu desculpas para um objeto depois de esbarrar nele? Ou jurou que seu cachorro estava te julgando com o olhar? 🐶</p>
-  </header>
-  <figure class="capa"><img src="img/29e467d4136d.jpg" alt=""></figure>
-  <div class="corpo">
+    </div>
+    <p class="origem">Publicado originalmente no <a href="https://marcoscacau.substack.com/p/a-anatomia-do-abismo-o-que-gogol" target="_blank" rel="noopener">Substack</a> em 26 de dezembro de 2025.</p>
+    <nav class="navpost"><a href="#antropomorfismo-o-universo-a-nossa"><span>← Anterior</span>Antropomorfismo: O Universo à Nossa Imagem e Semelhança</a><a class="dir" href="#o-silencio-e-o-barulho-mais-insuportavel"><span>Próximo →</span>O silêncio é o barulho mais insuportável deste século</a></nav>
+    <section class="bloco relacionados"><h2 class="etiqueta"><span>Leia também</span></h2><ul class="lista"><li class="item"><a class="item-img" href="#a-liturgia-do-invisivel-o-amor-e" tabindex="-1" aria-hidden="true"><img src="mini/0140b8a95d8f.jpg" alt="" loading="lazy"></a>
+  <div class="item-txt"><div class="tags"><a class="tag" href="#tema-literatura">Literatura</a><a class="tag" href="#tema-fisica">Física</a></div><h4 class="manchete-p"><a href="#a-liturgia-do-invisivel-o-amor-e">A Liturgia do Invisível: O Amor e o Átomo em Vozes de Tchernóbil</a></h4></div></li><li class="item"><a class="item-img" href="#a-miopia-dos-adultos-e-o-deserto" tabindex="-1" aria-hidden="true"><img src="mini/1b6e0477c3bc.jpg" alt="" loading="lazy"></a>
+  <div class="item-txt"><div class="tags"><a class="tag" href="#tema-literatura">Literatura</a><a class="tag" href="#tema-filosofia">Filosofia</a></div><h4 class="manchete-p"><a href="#a-miopia-dos-adultos-e-o-deserto">A Miopia dos Adultos e o Deserto em Nós</a></h4></div></li></ul></section>
+  </article><aside class="lateral">
+  <section class="caixa autor">
+    <h2 class="caixa-tit">Sobre o autor</h2>
+    <img src="img/509d80dae681.jpg" alt="Foto de Marcos Vinicius, o Cacau">
+    <p>Examino a realidade onde a física encontra símbolos, a teologia encontra estruturas e a ficção expõe possibilidades. Busco uma linguagem que una cálculo, imaginação e transcendência para compreender o invisível no real.</p>
+    <a class="mais" href="#sobre">Conheça o Cacau →</a>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Siga e assine</h2>
+    <a class="rede" href="https://marcoscacau.substack.com" target="_blank" rel="noopener"><span class="rede-ic">S</span>Substack<span class="seta">→</span></a>
+    <a class="rede" href="https://marcoscacau.substack.com/subscribe" target="_blank" rel="noopener"><span class="rede-ic">@</span>Receber por e-mail<span class="seta">→</span></a>
+    <a class="rede" href="https://marcoscacau.substack.com/feed" target="_blank" rel="noopener"><span class="rede-ic">≋</span>RSS<span class="seta">→</span></a>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Comece por aqui</h2>
+    <ol class="numerada"><li><span class="num">1.</span><a href="#sejam-bem-vindos">Sejam Bem vindos</a></li><li><span class="num">2.</span><a href="#o-silencio-e-o-barulho-mais-insuportavel">O silêncio é o barulho mais insuportável deste século</a></li><li><span class="num">3.</span><a href="#a-liturgia-do-invisivel-o-amor-e">A Liturgia do Invisível: O Amor e o Átomo em Vozes de Tchernóbil</a></li><li><span class="num">4.</span><a href="#a-miopia-dos-adultos-e-o-deserto">A Miopia dos Adultos e o Deserto em Nós</a></li><li><span class="num">5.</span><a href="#vida">VIDA</a></li></ol>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Temas</h2>
+    <ul class="temas"><li><a href="#tema-fisica">Física</a><span>5</span></li><li><a href="#tema-teologia">Teologia</a><span>3</span></li><li><a href="#tema-literatura">Literatura</a><span>3</span></li><li><a href="#tema-filosofia">Filosofia</a><span>3</span></li><li><a href="#tema-sociedade">Sociedade</a><span>3</span></li></ul>
+  </section>
+</aside></div>
+</section><section class="vista" id="v-antropomorfismo-o-universo-a-nossa">
+  <div class="colunas"><article class="principal post">
+    <div class="tags"><a class="tag" href="#tema-fisica">Física</a><a class="tag" href="#tema-filosofia">Filosofia</a></div>
+    <h1 class="titulo-post">Antropomorfismo: O Universo à Nossa Imagem e Semelhança</h1>
+    <p class="linha-fina">Você já pediu desculpas para um objeto depois de esbarrar nele? Ou jurou que seu cachorro estava te julgando com o olhar? 🐶</p>
+    <p class="byline">por <strong>Cacau</strong> em 17 de dezembro de 2025 · 2 min de leitura</p>
+    <figure class="capa"><img src="img/29e467d4136d.jpg" alt=""></figure>
+    <div class="corpo">
 <p>Sabe quando você bate o dedinho do pé na quina da mesa e, além de gritar, xinga a mesa de “estúpida”? Ou quando jura que seu cachorro está fazendo “cara de culpa” porque comeu seu chinelo?</p>
 <p>Isso é <strong>Antropomorfismo</strong>.</p>
 <p>É uma característica filosófica e psicológica fascinante onde projetamos nossa “humanidade” — qualidades, emoções, intenções — em tudo aquilo que <strong>não é humano</strong>. Basicamente, é a nossa teimosia em tentar enxergar o universo através do único espelho que conhecemos: nós mesmos.</p>
@@ -484,18 +1051,43 @@ a:focus-visible { outline: 2px solid var(--lavanda); outline-offset: 3px; border
 <p>Juntando tudo, temos literalmente a “tendência de atribuir forma humana”. O termo afrancesado <em>anthropomorphisme</em> foi documentado a partir de 1749, mas a prática é tão antiga quanto a primeira vez que um humano olhou para a Lua e viu um rosto nela.</p>
 <h4>Reflexão Final</h4>
 <p>No fim das contas, o antropomorfismo talvez revele menos sobre os objetos e animais, e muito mais sobre a nossa profunda <strong>solidão existencial</strong>. Procuramos humanidade nas pedras, nas nuvens e nas máquinas porque, no fundo, buscamos conexão em tudo o que tocamos.</p>
-  </div>
-  <p class="origem meta">Publicado originalmente no <a href="https://marcoscacau.substack.com/p/antropomorfismo-o-universo-a-nossa" target="_blank" rel="noopener">Substack</a>.</p>
-  <nav class="navpost"><a href="#sejam-bem-vindos"><span class="meta">Anterior</span>Sejam Bem vindos</a><a class="dir" href="#a-anatomia-do-abismo-o-que-gogol"><span class="meta">Próximo</span>A Anatomia do Abismo: O Que Gogol nos Ensina Sobre Perder o Chão</a></nav>
-</article><article class="post" id="sejam-bem-vindos">
-  <a class="voltar" href="#inicio">← Todos os textos</a>
-  <header class="post-cab">
-    <p class="meta">Nº 01 · 15 de dezembro de 2025 · 458 palavras · 2 min de leitura</p>
-    <h1>Sejam Bem vindos</h1>
+    </div>
+    <p class="origem">Publicado originalmente no <a href="https://marcoscacau.substack.com/p/antropomorfismo-o-universo-a-nossa" target="_blank" rel="noopener">Substack</a> em 17 de dezembro de 2025.</p>
+    <nav class="navpost"><a href="#sejam-bem-vindos"><span>← Anterior</span>Sejam Bem vindos</a><a class="dir" href="#a-anatomia-do-abismo-o-que-gogol"><span>Próximo →</span>A Anatomia do Abismo: O Que Gogol nos Ensina Sobre Perder o Chão</a></nav>
+    <section class="bloco relacionados"><h2 class="etiqueta"><span>Leia também</span></h2><ul class="lista"><li class="item"><a class="item-img" href="#vida" tabindex="-1" aria-hidden="true"><img src="mini/b922fb9e0062.jpg" alt="" loading="lazy"></a>
+  <div class="item-txt"><div class="tags"><a class="tag" href="#tema-teologia">Teologia</a><a class="tag" href="#tema-fisica">Física</a></div><h4 class="manchete-p"><a href="#vida">VIDA</a></h4></div></li><li class="item"><a class="item-img" href="#apenas-uma-visao-sobre-a-sociedade" tabindex="-1" aria-hidden="true"><img src="mini/07b07b12fc8b.jpg" alt="" loading="lazy"></a>
+  <div class="item-txt"><div class="tags"><a class="tag" href="#tema-sociedade">Sociedade</a><a class="tag" href="#tema-fisica">Física</a></div><h4 class="manchete-p"><a href="#apenas-uma-visao-sobre-a-sociedade">Apenas uma visão sobre a sociedade cansada</a></h4></div></li><li class="item"><a class="item-img" href="#a-liturgia-do-invisivel-o-amor-e" tabindex="-1" aria-hidden="true"><img src="mini/0140b8a95d8f.jpg" alt="" loading="lazy"></a>
+  <div class="item-txt"><div class="tags"><a class="tag" href="#tema-literatura">Literatura</a><a class="tag" href="#tema-fisica">Física</a></div><h4 class="manchete-p"><a href="#a-liturgia-do-invisivel-o-amor-e">A Liturgia do Invisível: O Amor e o Átomo em Vozes de Tchernóbil</a></h4></div></li></ul></section>
+  </article><aside class="lateral">
+  <section class="caixa autor">
+    <h2 class="caixa-tit">Sobre o autor</h2>
+    <img src="img/509d80dae681.jpg" alt="Foto de Marcos Vinicius, o Cacau">
+    <p>Examino a realidade onde a física encontra símbolos, a teologia encontra estruturas e a ficção expõe possibilidades. Busco uma linguagem que una cálculo, imaginação e transcendência para compreender o invisível no real.</p>
+    <a class="mais" href="#sobre">Conheça o Cacau →</a>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Siga e assine</h2>
+    <a class="rede" href="https://marcoscacau.substack.com" target="_blank" rel="noopener"><span class="rede-ic">S</span>Substack<span class="seta">→</span></a>
+    <a class="rede" href="https://marcoscacau.substack.com/subscribe" target="_blank" rel="noopener"><span class="rede-ic">@</span>Receber por e-mail<span class="seta">→</span></a>
+    <a class="rede" href="https://marcoscacau.substack.com/feed" target="_blank" rel="noopener"><span class="rede-ic">≋</span>RSS<span class="seta">→</span></a>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Comece por aqui</h2>
+    <ol class="numerada"><li><span class="num">1.</span><a href="#sejam-bem-vindos">Sejam Bem vindos</a></li><li><span class="num">2.</span><a href="#o-silencio-e-o-barulho-mais-insuportavel">O silêncio é o barulho mais insuportável deste século</a></li><li><span class="num">3.</span><a href="#a-liturgia-do-invisivel-o-amor-e">A Liturgia do Invisível: O Amor e o Átomo em Vozes de Tchernóbil</a></li><li><span class="num">4.</span><a href="#a-miopia-dos-adultos-e-o-deserto">A Miopia dos Adultos e o Deserto em Nós</a></li><li><span class="num">5.</span><a href="#vida">VIDA</a></li></ol>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Temas</h2>
+    <ul class="temas"><li><a href="#tema-fisica">Física</a><span>5</span></li><li><a href="#tema-teologia">Teologia</a><span>3</span></li><li><a href="#tema-literatura">Literatura</a><span>3</span></li><li><a href="#tema-filosofia">Filosofia</a><span>3</span></li><li><a href="#tema-sociedade">Sociedade</a><span>3</span></li></ul>
+  </section>
+</aside></div>
+</section><section class="vista" id="v-sejam-bem-vindos">
+  <div class="colunas"><article class="principal post">
+    <div class="tags"><span class="tag">Apresentação</span></div>
+    <h1 class="titulo-post">Sejam Bem vindos</h1>
     
-  </header>
-  <figure class="capa"><img src="img/91e31778dd0c.jpg" alt=""></figure>
-  <div class="corpo">
+    <p class="byline">por <strong>Cacau</strong> em 15 de dezembro de 2025 · 2 min de leitura</p>
+    <figure class="capa"><img src="img/91e31778dd0c.jpg" alt=""></figure>
+    <div class="corpo">
 <p>Sou Marcos Vinicius, mas também conhecido como Cacau, físico em formação, programador, pesquisador e leitor que não sabe existir sem perguntas. Minha vida intelectual nasceu no encontro improvável entre três mundos que raramente convivem em paz: a física, a ficção e a teologia. Em cada um deles encontrei uma forma diferente de olhar para o real, mas nunca consegui separar completamente suas linguagens. É aqui, neste espaço, que tento costurar essas três vozes em uma só.</p>
 <p>Estudo materiais magnetocalóricos e modelos de regressão, mas considero que nenhum algoritmo descreve tão bem o ser humano quanto uma boa história. Codifico sistemas, mas descubro que boa parte do universo parece ter sido escrito em um dialeto antigo de equações. Creio na estrutura matemática da realidade, mas também na intuição silenciosa que sopra significados quando a lógica esgota seus mapas. Vivo entre essas margens, a exatidão que a física exige, a abertura que a ficção permite e o mistério que a teologia desperta.</p>
 <p>Neste Substack escrevo para quem sente que o mundo visível nunca é o mundo inteiro. Para quem intui que existe algo no interstício entre o cálculo e o espírito, entre a imaginação e o experimento. Para quem percebe que a ciência descreve como somos, mas a teologia pergunta por que somos, enquanto a literatura tenta lembrar quem poderíamos ser. Aqui não há respostas prontas, mas há uma busca honesta, por sentido, estrutura, beleza e precisão.</p>
@@ -503,27 +1095,117 @@ a:focus-visible { outline: 2px solid var(--lavanda); outline-offset: 3px; border
 <p>Entre uma linha de código e outra, leio filosofia; entre uma prova de física e outra, escrevo sobre teologia; entre uma madrugada insone e outra, imagino realidades que talvez só existam no intervalo entre um pensamento e o próximo. Este espaço é o depósito dessas interseções, notas de laboratório misturadas com diário espiritual, ficção especulativa com fundamentos matemáticos, reflexões pessoais com rigor científico.</p>
 <p>Se você se interessa por um tipo de pensamento que reconhece tanto a grandeza do universo quanto a vulnerabilidade humana; se prefere perguntas que abrem portas a respostas que fecham capítulos; se gosta de ver ciência, fé e imaginação conversando sem pedir licença aos puristas, então este Substack é também seu.</p>
 <p>Bem-vindo ao lugar onde a física encontra o mito, onde a teologia encontra o cálculo, e onde a ficção encontra a possibilidade de se tornar real.</p>
-  </div>
-  <p class="origem meta">Publicado originalmente no <a href="https://marcoscacau.substack.com/p/sejam-bem-vindos" target="_blank" rel="noopener">Substack</a>.</p>
-  <nav class="navpost"><span></span><a class="dir" href="#antropomorfismo-o-universo-a-nossa"><span class="meta">Próximo</span>Antropomorfismo: O Universo à Nossa Imagem e Semelhança</a></nav>
-</article>
-</div>
+    </div>
+    <p class="origem">Publicado originalmente no <a href="https://marcoscacau.substack.com/p/sejam-bem-vindos" target="_blank" rel="noopener">Substack</a> em 15 de dezembro de 2025.</p>
+    <nav class="navpost"><span></span><a class="dir" href="#antropomorfismo-o-universo-a-nossa"><span>Próximo →</span>Antropomorfismo: O Universo à Nossa Imagem e Semelhança</a></nav>
+    
+  </article><aside class="lateral">
+  <section class="caixa autor">
+    <h2 class="caixa-tit">Sobre o autor</h2>
+    <img src="img/509d80dae681.jpg" alt="Foto de Marcos Vinicius, o Cacau">
+    <p>Examino a realidade onde a física encontra símbolos, a teologia encontra estruturas e a ficção expõe possibilidades. Busco uma linguagem que una cálculo, imaginação e transcendência para compreender o invisível no real.</p>
+    <a class="mais" href="#sobre">Conheça o Cacau →</a>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Siga e assine</h2>
+    <a class="rede" href="https://marcoscacau.substack.com" target="_blank" rel="noopener"><span class="rede-ic">S</span>Substack<span class="seta">→</span></a>
+    <a class="rede" href="https://marcoscacau.substack.com/subscribe" target="_blank" rel="noopener"><span class="rede-ic">@</span>Receber por e-mail<span class="seta">→</span></a>
+    <a class="rede" href="https://marcoscacau.substack.com/feed" target="_blank" rel="noopener"><span class="rede-ic">≋</span>RSS<span class="seta">→</span></a>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Comece por aqui</h2>
+    <ol class="numerada"><li><span class="num">1.</span><a href="#sejam-bem-vindos">Sejam Bem vindos</a></li><li><span class="num">2.</span><a href="#o-silencio-e-o-barulho-mais-insuportavel">O silêncio é o barulho mais insuportável deste século</a></li><li><span class="num">3.</span><a href="#a-liturgia-do-invisivel-o-amor-e">A Liturgia do Invisível: O Amor e o Átomo em Vozes de Tchernóbil</a></li><li><span class="num">4.</span><a href="#a-miopia-dos-adultos-e-o-deserto">A Miopia dos Adultos e o Deserto em Nós</a></li><li><span class="num">5.</span><a href="#vida">VIDA</a></li></ol>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Temas</h2>
+    <ul class="temas"><li><a href="#tema-fisica">Física</a><span>5</span></li><li><a href="#tema-teologia">Teologia</a><span>3</span></li><li><a href="#tema-literatura">Literatura</a><span>3</span></li><li><a href="#tema-filosofia">Filosofia</a><span>3</span></li><li><a href="#tema-sociedade">Sociedade</a><span>3</span></li></ul>
+  </section>
+</aside></div>
+</section>
+<section class="vista" id="v-sobre">
+  <div class="colunas"><article class="principal post">
+    <h1 class="etiqueta grande"><span>Sobre</span></h1>
+    <div class="sobre-cab"><img src="img/509d80dae681.jpg" alt="Foto de Marcos Vinicius, o Cacau"><div>
+      <h2 class="titulo-post">Marcos Vinicius, o Cacau</h2><p class="linha-fina">Examino a realidade onde a física encontra símbolos, a teologia encontra estruturas e a ficção expõe possibilidades. Busco uma linguagem que una cálculo, imaginação e transcendência para compreender o invisível no real.</p></div></div>
+    <div class="corpo"><p>Sou Marcos Vinicius, mas também conhecido como Cacau, físico em formação, programador, pesquisador e leitor que não sabe existir sem perguntas. Minha vida intelectual nasceu no encontro improvável entre três mundos que raramente convivem em paz: a física, a ficção e a teologia. Em cada um deles encontrei uma forma diferente de olhar para o real, mas nunca consegui separar completamente suas linguagens. É aqui, neste espaço, que tento costurar essas três vozes em uma só.</p>
+<p>Estudo materiais magnetocalóricos e modelos de regressão, mas considero que nenhum algoritmo descreve tão bem o ser humano quanto uma boa história. Codifico sistemas, mas descubro que boa parte do universo parece ter sido escrito em um dialeto antigo de equações. Creio na estrutura matemática da realidade, mas também na intuição silenciosa que sopra significados quando a lógica esgota seus mapas. Vivo entre essas margens, a exatidão que a física exige, a abertura que a ficção permite e o mistério que a teologia desperta.</p>
+<p>Neste Substack escrevo para quem sente que o mundo visível nunca é o mundo inteiro. Para quem intui que existe algo no interstício entre o cálculo e o espírito, entre a imaginação e o experimento. Para quem percebe que a ciência descreve como somos, mas a teologia pergunta por que somos, enquanto a literatura tenta lembrar quem poderíamos ser. Aqui não há respostas prontas, mas há uma busca honesta, por sentido, estrutura, beleza e precisão.</p>
+<p>Minha curiosidade é sistemática, quase teimosa. Sempre penso que, se um fenômeno existe, ele merece ser compreendido; e se não existe, merece ser imaginado. A fronteira entre conhecimento e criação é, para mim, menos um limite e mais um laboratório. Acredito que o ser humano é uma espécie de antena para o infinito: capta fragmentos de verdade, traduz em símbolos, e chama isso de ciência, fé ou arte. No fundo, todas essas coisas são tentativas diferentes de decifrar o mesmo silêncio primordial.</p>
+<p>Entre uma linha de código e outra, leio filosofia; entre uma prova de física e outra, escrevo sobre teologia; entre uma madrugada insone e outra, imagino realidades que talvez só existam no intervalo entre um pensamento e o próximo. Este espaço é o depósito dessas interseções, notas de laboratório misturadas com diário espiritual, ficção especulativa com fundamentos matemáticos, reflexões pessoais com rigor científico.</p>
+<p>Se você se interessa por um tipo de pensamento que reconhece tanto a grandeza do universo quanto a vulnerabilidade humana; se prefere perguntas que abrem portas a respostas que fecham capítulos; se gosta de ver ciência, fé e imaginação conversando sem pedir licença aos puristas, então este Substack é também seu.</p>
+<p>Bem-vindo ao lugar onde a física encontra o mito, onde a teologia encontra o cálculo, e onde a ficção encontra a possibilidade de se tornar real.</p></div>
+    <p class="origem">Texto de apresentação publicado em 15 de dezembro de 2025. Todos os textos: <a href="https://marcoscacau.substack.com" target="_blank" rel="noopener">marcoscacau.substack.com</a>.</p>
+  </article><aside class="lateral">
+  <section class="caixa autor">
+    <h2 class="caixa-tit">Sobre o autor</h2>
+    <img src="img/509d80dae681.jpg" alt="Foto de Marcos Vinicius, o Cacau">
+    <p>Examino a realidade onde a física encontra símbolos, a teologia encontra estruturas e a ficção expõe possibilidades. Busco uma linguagem que una cálculo, imaginação e transcendência para compreender o invisível no real.</p>
+    <a class="mais" href="#sobre">Conheça o Cacau →</a>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Siga e assine</h2>
+    <a class="rede" href="https://marcoscacau.substack.com" target="_blank" rel="noopener"><span class="rede-ic">S</span>Substack<span class="seta">→</span></a>
+    <a class="rede" href="https://marcoscacau.substack.com/subscribe" target="_blank" rel="noopener"><span class="rede-ic">@</span>Receber por e-mail<span class="seta">→</span></a>
+    <a class="rede" href="https://marcoscacau.substack.com/feed" target="_blank" rel="noopener"><span class="rede-ic">≋</span>RSS<span class="seta">→</span></a>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Comece por aqui</h2>
+    <ol class="numerada"><li><span class="num">1.</span><a href="#sejam-bem-vindos">Sejam Bem vindos</a></li><li><span class="num">2.</span><a href="#o-silencio-e-o-barulho-mais-insuportavel">O silêncio é o barulho mais insuportável deste século</a></li><li><span class="num">3.</span><a href="#a-liturgia-do-invisivel-o-amor-e">A Liturgia do Invisível: O Amor e o Átomo em Vozes de Tchernóbil</a></li><li><span class="num">4.</span><a href="#a-miopia-dos-adultos-e-o-deserto">A Miopia dos Adultos e o Deserto em Nós</a></li><li><span class="num">5.</span><a href="#vida">VIDA</a></li></ol>
+  </section>
+  <section class="caixa">
+    <h2 class="caixa-tit">Temas</h2>
+    <ul class="temas"><li><a href="#tema-fisica">Física</a><span>5</span></li><li><a href="#tema-teologia">Teologia</a><span>3</span></li><li><a href="#tema-literatura">Literatura</a><span>3</span></li><li><a href="#tema-filosofia">Filosofia</a><span>3</span></li><li><a href="#tema-sociedade">Sociedade</a><span>3</span></li></ul>
+  </section>
+</aside></div>
+</section>
+</main>
+<footer class="rodape"><div class="rodape-dentro">
+  <span class="logo-nome">CACAU</span>
+  <p>Textos de <a href="https://marcoscacau.substack.com" target="_blank" rel="noopener">marcoscacau.substack.com</a> · 11 textos · arquivo copiado em 9 de outubro de 2026</p>
+</div></footer>
 <script>
-// Uma página só: o endereço #nome-do-texto mostra aquele texto; sem nada, mostra a lista.
+// Navegação por endereço (#texto, #tema-fisica, #sobre) e carrossel de destaques.
 (function () {
   var base = document.title;
-  var secoes = Array.prototype.slice.call(document.querySelectorAll("#inicio, .post"));
+  var vistas = Array.prototype.slice.call(document.querySelectorAll(".vista"));
+  var links = Array.prototype.slice.call(document.querySelectorAll(".menu a"));
   function mostrar() {
     var id = (location.hash || "").slice(1);
-    var alvo = document.getElementById(id);
-    if (!alvo || secoes.indexOf(alvo) < 0) alvo = document.getElementById("inicio");
-    secoes.forEach(function (s) { s.hidden = s !== alvo; });
-    var h = alvo.querySelector(".post-cab h1");
-    document.title = h ? h.textContent + " · Cacau" : base;
+    var alvo = document.getElementById("v-" + id);
+    if (!alvo || !alvo.classList.contains("vista")) { alvo = document.getElementById("v-inicio"); id = "inicio"; }
+    vistas.forEach(function (v) { v.hidden = v !== alvo; });
+    links.forEach(function (a) { a.classList.toggle("atual", a.getAttribute("href") === "#" + id); });
+    var h = alvo.querySelector(".titulo-post, .etiqueta.grande span");
+    document.title = id === "inicio" || !h ? base : h.textContent + " · Cacau";
     window.scrollTo(0, 0);
   }
   window.addEventListener("hashchange", mostrar);
   mostrar();
+
+  var slides = Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var pontos = Array.prototype.slice.call(document.querySelectorAll(".ponto"));
+  if (!slides.length) return;
+  var atual = 0, timer = null;
+  var calmo = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function ir(i) {
+    atual = (i + slides.length) % slides.length;
+    slides.forEach(function (s, k) {
+      var on = k === atual;
+      s.classList.toggle("ativo", on);
+      if (on) { s.removeAttribute("aria-hidden"); s.removeAttribute("tabindex"); }
+      else { s.setAttribute("aria-hidden", "true"); s.setAttribute("tabindex", "-1"); }
+    });
+    pontos.forEach(function (p, k) { p.classList.toggle("ativo", k === atual); });
+  }
+  function auto() { if (calmo) return; clearInterval(timer); timer = setInterval(function () { ir(atual + 1); }, 6000); }
+  pontos.forEach(function (p) { p.addEventListener("click", function () { ir(+p.dataset.i); auto(); }); });
+  var ant = document.querySelector(".seta-c.ant"), prox = document.querySelector(".seta-c.prox");
+  if (ant) ant.addEventListener("click", function () { ir(atual - 1); auto(); });
+  if (prox) prox.addEventListener("click", function () { ir(atual + 1); auto(); });
+  var c = document.querySelector(".carrossel");
+  c.addEventListener("mouseenter", function () { clearInterval(timer); });
+  c.addEventListener("mouseleave", auto);
+  auto();
 })();
 
 </script>
