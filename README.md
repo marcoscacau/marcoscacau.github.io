@@ -1,2 +1,3 @@
-# marcoscacau.github.io
-Textos de Cacau — física, ficção e teologia
+# Cacau
+
+Textos de [marcoscacau.substack.com](https://marcoscacau.substack.com), publicados em https://marcoscacau.github.io
