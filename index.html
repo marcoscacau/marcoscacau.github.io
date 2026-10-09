@@ -158,6 +158,23 @@ a.tag:hover { color: var(--tinta); }
 .sobre-cab img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; flex: none; box-shadow: 0 0 0 6px var(--pessego); }
 .sobre-cab > div { min-width: 0; }
 
+/* curtir */
+.linha-byline { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem 1rem; margin-bottom: .9rem; }
+.linha-byline .byline { margin: 0; }
+.curtir { display: inline-flex; align-items: center; gap: .45rem; border: 1.5px solid var(--lavanda); background: var(--cartao); color: var(--tinta); border-radius: 999px; padding: .5rem 1.1rem; font-family: var(--cond); text-transform: uppercase; letter-spacing: .05em; font-size: .9rem; cursor: pointer; transition: background .2s ease, transform .15s ease; }
+.curtir:hover { background: var(--lavanda); color: #23263a; }
+.curtir .coracao { font-size: 1.1rem; line-height: 1; color: var(--suave); transition: transform .25s ease, color .2s ease; }
+.curtir .n { font-family: var(--ui); font-variant-numeric: tabular-nums; font-size: .85rem; min-width: 1.2em; text-align: left; }
+.curtir.pequeno { padding: .3rem .75rem; font-size: .76rem; }
+.curtir.pequeno .rotulo { display: none; }
+.curtir[aria-pressed="true"] { background: var(--pessego); border-color: var(--pessego); color: #23263a; cursor: default; }
+.curtir[aria-pressed="true"] .coracao { color: #c9748a; transform: scale(1.15); }
+.curtir.pulsa .coracao { animation: pulsa .45s ease; }
+@keyframes pulsa { 0% { transform: scale(1); } 40% { transform: scale(1.5); } 100% { transform: scale(1.15); } }
+.curtir-fim { display: flex; flex-wrap: wrap; align-items: center; gap: .8rem 1.2rem; margin: 2.2rem 0 0; padding: 1.2rem 1.4rem; background: var(--ceu); max-width: 42rem; }
+.curtir-fim p { margin: 0; font-family: var(--serif); font-style: italic; font-size: 1.05rem; }
+@media (prefers-reduced-motion: reduce) { .curtir, .curtir .coracao { transition: none; } .curtir.pulsa .coracao { animation: none; } }
+
 /* rodapé */
 .rodape { background: var(--barra); color: var(--barra-tinta); margin-top: 2rem; }
 .rodape-dentro { max-width: 1160px; margin: 0 auto; padding-inline: 16px; padding-block: 1.6rem; display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 2rem; }
@@ -530,7 +547,7 @@ a.tag:hover { color: var(--tinta); }
     <div class="tags"><a class="tag" href="#tema-teologia">Teologia</a><a class="tag" href="#tema-fisica">Física</a></div>
     <h1 class="titulo-post">VIDA</h1>
     
-    <p class="byline">por <strong>Cacau</strong> em 24 de abril de 2026 · 7 min de leitura</p>
+    <div class="linha-byline"><p class="byline">por <strong>Cacau</strong> em 24 de abril de 2026 · 7 min de leitura</p><button class="curtir pequeno" type="button" data-slug="vida" data-base="0" aria-pressed="false"><span class="coracao" aria-hidden="true">♥</span><span class="rotulo">Curtir</span><span class="n">0</span></button></div>
     <figure class="capa"><img src="img/b922fb9e0062.jpg" alt=""></figure>
     <div class="corpo">
 <h2><strong> A Mecânica do Vazio e a Termodinâmica da Inércia Hereditária</strong></h2>
@@ -555,6 +572,7 @@ a.tag:hover { color: var(--tinta); }
 <p>A mecânica mapeada em Tiago 4 e 1 Pedro 5 opõe o Orgulho à Humildade. O Orgulho é a densidade máxima do ego: um corpo rígido que reage ao impacto devolvendo a força e propagando a entropia para a próxima geração. A Humildade teológica, por outro lado, é um sumidouro de calor perfeito. É o esvaziamento voluntário da própria estrutura de defesa. Quando o indivíduo escolhe operar no vácuo da _kenosis_, ele se recusa a ser uma superfície de reflexão para a inércia herdada.</p>
 <p>Deus resiste aos soberbos porque a soberba é um sistema fechado que se recusa a perder massa. A infusão da graça aos humildes é a aplicação de ordem externa em um espaço que foi deliberadamente esvaziado de si mesmo. Para frear o momento angular de uma linhagem corrompida, o vaso deve aceitar o peso do impacto inicial sem transferi-lo adiante. A verdadeira solidão e o verdadeiro vazio não são uma falha da realidade, mas o exato estado paramétrico necessário para absorver o caos e impedir que o futuro seja apenas a repetição mecânica do passado.</p>
     </div>
+    <div class="curtir-fim"><p>Gostou deste texto?</p><button class="curtir " type="button" data-slug="vida" data-base="0" aria-pressed="false"><span class="coracao" aria-hidden="true">♥</span><span class="rotulo">Curtir</span><span class="n">0</span></button></div>
     <p class="origem">Publicado originalmente no <a href="https://marcoscacau.substack.com/p/vida" target="_blank" rel="noopener">Substack</a> em 24 de abril de 2026.</p>
     <nav class="navpost"><a href="#apenas-uma-visao-sobre-a-sociedade"><span>← Anterior</span>Apenas uma visão sobre a sociedade cansada</a><span></span></nav>
     <section class="bloco relacionados"><h2 class="etiqueta"><span>Leia também</span></h2><ul class="lista"><li class="item"><a class="item-img" href="#apenas-uma-visao-sobre-a-sociedade" tabindex="-1" aria-hidden="true"><img src="mini/07b07b12fc8b.jpg" alt="" loading="lazy"></a>
@@ -588,7 +606,7 @@ a.tag:hover { color: var(--tinta); }
     <div class="tags"><a class="tag" href="#tema-sociedade">Sociedade</a><a class="tag" href="#tema-fisica">Física</a></div>
     <h1 class="titulo-post">Apenas uma visão sobre a sociedade cansada</h1>
     <p class="linha-fina">A Síndrome do Motor no Vácuo</p>
-    <p class="byline">por <strong>Cacau</strong> em 2 de março de 2026 · 2 min de leitura</p>
+    <div class="linha-byline"><p class="byline">por <strong>Cacau</strong> em 2 de março de 2026 · 2 min de leitura</p><button class="curtir pequeno" type="button" data-slug="apenas-uma-visao-sobre-a-sociedade" data-base="2" aria-pressed="false"><span class="coracao" aria-hidden="true">♥</span><span class="rotulo">Curtir</span><span class="n">2</span></button></div>
     <figure class="capa"><img src="img/07b07b12fc8b.jpg" alt=""></figure>
     <div class="corpo">
 <p><strong>A Síndrome do Motor no Vácuo</strong></p>
@@ -599,6 +617,7 @@ a.tag:hover { color: var(--tinta); }
 <p>O limite inferior dessa degradação culmina no parasitismo cognitivo. Quando a realidade exige a leitura de um manual — o esforço bruto de decodificar a engrenagem —, a reação do organismo atrofiado é terceirizar o atrito: <em>‘Cacau, suporte a carga de aprendizado e me entregue a resposta mastigada’</em>.</p>
 <p>O peso que carrego ao observar essa dinâmica não é pessimismo. É a constatação empírica e letal de que a falha estrutural primária permanece operando em altíssima rotação: o homem abomina o esforço da descoberta, recusa a massa da própria ignorância e escolhe sobreviver como um parasita no intelecto alheio.</p>
     </div>
+    <div class="curtir-fim"><p>Gostou deste texto?</p><button class="curtir " type="button" data-slug="apenas-uma-visao-sobre-a-sociedade" data-base="2" aria-pressed="false"><span class="coracao" aria-hidden="true">♥</span><span class="rotulo">Curtir</span><span class="n">2</span></button></div>
     <p class="origem">Publicado originalmente no <a href="https://marcoscacau.substack.com/p/apenas-uma-visao-sobre-a-sociedade" target="_blank" rel="noopener">Substack</a> em 2 de março de 2026.</p>
     <nav class="navpost"><a href="#para-meu-eu-do-futuro-parte-1"><span>← Anterior</span>Para Meu Eu do futuro (Parte 1)</a><a class="dir" href="#vida"><span>Próximo →</span>VIDA</a></nav>
     <section class="bloco relacionados"><h2 class="etiqueta"><span>Leia também</span></h2><ul class="lista"><li class="item"><a class="item-img" href="#vida" tabindex="-1" aria-hidden="true"><img src="mini/b922fb9e0062.jpg" alt="" loading="lazy"></a>
@@ -632,7 +651,7 @@ a.tag:hover { color: var(--tinta); }
     <div class="tags"><a class="tag" href="#tema-teologia">Teologia</a></div>
     <h1 class="titulo-post">Para Meu Eu do futuro (Parte 1)</h1>
     
-    <p class="byline">por <strong>Cacau</strong> em 26 de fevereiro de 2026 · 8 min de leitura</p>
+    <div class="linha-byline"><p class="byline">por <strong>Cacau</strong> em 26 de fevereiro de 2026 · 8 min de leitura</p><button class="curtir pequeno" type="button" data-slug="para-meu-eu-do-futuro-parte-1" data-base="2" aria-pressed="false"><span class="coracao" aria-hidden="true">♥</span><span class="rotulo">Curtir</span><span class="n">2</span></button></div>
     <figure class="capa"><img src="img/943ff53d100f.jpg" alt=""></figure>
     <div class="corpo">
 <p>A adoração sem a alma é uma anomalia de presença. É o equivalente biológico de gerar filhos e atravessar o tempo sem nunca observá-los crescer, com a cognição sequestrada por estímulos paralelos, enquanto o corpo apenas ocupa espaço. De que serve a arquitetura das palavras mais belas, ou a precisão de um discurso aparentemente sincero, se a minha essência não está ancorada em Ti? Sem a submissão do intelecto, a oração deixa de ser conexão e retrocede à pura termodinâmica: ar empurrado por cordas vocais, gerando ruído acústico em vez de sentido espiritual.</p>
@@ -650,6 +669,7 @@ a.tag:hover { color: var(--tinta); }
 <p>Mas a invasão mais violenta desse Arquiteto na malha da realidade material não ocorreu apenas no Big Bang; ela foi documentada nas bodas de Caná. O evento, comumente reduzido a folclore, é uma anomalia assustadora sob a lente da física teórica. Transformar seiscentos litros de água <strong>H2O</strong> em vinho <strong>C2H6O</strong> exige a introdução de carbono molecular. Sem fontes externas, Cristo realizou uma nucleossíntese localizada, vencendo a Barreira de Coulomb à temperatura ambiente — um processo de fusão nuclear que exige o núcleo de uma estrela em colapso —, e o fez sem emitir a radiação térmica que teria vaporizado a região.</p>
 <p>Diante da quantidade de energia manipulada para reescrever as leis da matéria mantendo o sistema fechado perfeitamente estável, a minha máquina de cerco intelectual falhou. A rendição não foi um recuo emocional ou um salto cego no escuro; foi a capitulação de uma mente exausta diante da evidência bruta. O Deus que eu tentava ferir não apenas obedece à física; Ele codificou a própria linguagem matemática que eu usava para atacá-lo. Negá-Lo deixou de ser uma postura filosófica e tornou-se, simplesmente, um erro de cálculo.</p>
     </div>
+    <div class="curtir-fim"><p>Gostou deste texto?</p><button class="curtir " type="button" data-slug="para-meu-eu-do-futuro-parte-1" data-base="2" aria-pressed="false"><span class="coracao" aria-hidden="true">♥</span><span class="rotulo">Curtir</span><span class="n">2</span></button></div>
     <p class="origem">Publicado originalmente no <a href="https://marcoscacau.substack.com/p/para-meu-eu-do-futuro-parte-1" target="_blank" rel="noopener">Substack</a> em 26 de fevereiro de 2026.</p>
     <nav class="navpost"><a href="#a-liturgia-do-invisivel-o-amor-e"><span>← Anterior</span>A Liturgia do Invisível: O Amor e o Átomo em Vozes de Tchernóbil</a><a class="dir" href="#apenas-uma-visao-sobre-a-sociedade"><span>Próximo →</span>Apenas uma visão sobre a sociedade cansada</a></nav>
     <section class="bloco relacionados"><h2 class="etiqueta"><span>Leia também</span></h2><ul class="lista"><li class="item"><a class="item-img" href="#vida" tabindex="-1" aria-hidden="true"><img src="mini/b922fb9e0062.jpg" alt="" loading="lazy"></a>
@@ -682,7 +702,7 @@ a.tag:hover { color: var(--tinta); }
     <div class="tags"><a class="tag" href="#tema-literatura">Literatura</a><a class="tag" href="#tema-fisica">Física</a></div>
     <h1 class="titulo-post">A Liturgia do Invisível: O Amor e o Átomo em Vozes de Tchernóbil</h1>
     <p class="linha-fina">Quando a Fé ocupa o espaço que a Física nega</p>
-    <p class="byline">por <strong>Cacau</strong> em 22 de janeiro de 2026 · 3 min de leitura</p>
+    <div class="linha-byline"><p class="byline">por <strong>Cacau</strong> em 22 de janeiro de 2026 · 3 min de leitura</p><button class="curtir pequeno" type="button" data-slug="a-liturgia-do-invisivel-o-amor-e" data-base="6" aria-pressed="false"><span class="coracao" aria-hidden="true">♥</span><span class="rotulo">Curtir</span><span class="n">6</span></button></div>
     <figure class="capa"><img src="img/0140b8a95d8f.jpg" alt=""></figure>
     <div class="corpo">
 <p>Nós fomos criados acreditando que o inimigo tem rosto. Que o mal empunha uma espada, uma arma, ou grita uma ofensa. Mas Tchernóbil nos ensinou a lição teológica mais aterrorizante do século XX: o mal mais destrutivo é aquele que opera em silêncio absoluto. É uma <strong>entropia acelerada</strong> que desmancha o DNA sem fazer barulho.</p>
@@ -702,6 +722,7 @@ a.tag:hover { color: var(--tinta); }
 <p>A pergunta que fica não é se sobreviveríamos a um reator explodindo. A pergunta é: <strong>será que nós, protegidos e confortáveis, ainda somos capazes de executar esse algoritmo de sacrifício? Ou nosso sistema trava assim que a temperatura sobe?</strong></p>
 <p>Tchernóbil nos ensina que o oposto do amor não é o ódio. O oposto do amor é a segurança de achar que o amanhã está garantido.</p>
     </div>
+    <div class="curtir-fim"><p>Gostou deste texto?</p><button class="curtir " type="button" data-slug="a-liturgia-do-invisivel-o-amor-e" data-base="6" aria-pressed="false"><span class="coracao" aria-hidden="true">♥</span><span class="rotulo">Curtir</span><span class="n">6</span></button></div>
     <p class="origem">Publicado originalmente no <a href="https://marcoscacau.substack.com/p/a-liturgia-do-invisivel-o-amor-e" target="_blank" rel="noopener">Substack</a> em 22 de janeiro de 2026.</p>
     <nav class="navpost"><a href="#a-lei-do-fone-de-ouvido-ou-por-que"><span>← Anterior</span>A Lei do Fone de Ouvido (Ou por que sua vida vira uma bagunça sozinha)</a><a class="dir" href="#para-meu-eu-do-futuro-parte-1"><span>Próximo →</span>Para Meu Eu do futuro (Parte 1)</a></nav>
     <section class="bloco relacionados"><h2 class="etiqueta"><span>Leia também</span></h2><ul class="lista"><li class="item"><a class="item-img" href="#vida" tabindex="-1" aria-hidden="true"><img src="mini/b922fb9e0062.jpg" alt="" loading="lazy"></a>
@@ -735,7 +756,7 @@ a.tag:hover { color: var(--tinta); }
     <div class="tags"><a class="tag" href="#tema-fisica">Física</a><a class="tag" href="#tema-sociedade">Sociedade</a></div>
     <h1 class="titulo-post">A Lei do Fone de Ouvido (Ou por que sua vida vira uma bagunça sozinha)</h1>
     <p class="linha-fina">Conversa de Boteco</p>
-    <p class="byline">por <strong>Cacau</strong> em 14 de janeiro de 2026 · 2 min de leitura</p>
+    <div class="linha-byline"><p class="byline">por <strong>Cacau</strong> em 14 de janeiro de 2026 · 2 min de leitura</p><button class="curtir pequeno" type="button" data-slug="a-lei-do-fone-de-ouvido-ou-por-que" data-base="2" aria-pressed="false"><span class="coracao" aria-hidden="true">♥</span><span class="rotulo">Curtir</span><span class="n">2</span></button></div>
     <figure class="capa"><img src="img/b163a7c36747.jpg" alt=""></figure>
     <div class="corpo">
 <p>Todo mundo conhece a “Lei do Fone de Ouvido”. Você enrola com todo o carinho, guarda no bolso e, dois minutos depois, tira um nó de marinheiro. Não foi um duende que fez aquilo. Foi a natureza.</p>
@@ -749,6 +770,7 @@ a.tag:hover { color: var(--tinta); }
 <p><strong>III. O Disjuntor (A Regra de Ouro)</strong> Sabe o disjuntor do chuveiro? Quando esquenta demais, ele cai para a casa não pegar fogo. Você precisa de um disjuntor social. Se a discussão com o chefe ou com o cônjuge passou de 10 minutos e virou gritaria, o disjuntor cai. “Parou. Amanhã a gente continua”. Isso não é fugir da briga. É evitar o incêndio. Melhor um banho frio agora do que uma casa queimada depois.</p>
 <p><strong>Resumo da ópera:</strong> O Mal social não se vence com virtude, mas com arquitetura. Não confie na sua bondade em dias ruins; confie nos seus sistemas. Amanhã, não tente ser um herói moral. Tente ser um engenheiro eficiente. A bagunça vai estar lá te esperando, mas você não precisa ser o combustível dela.</p>
     </div>
+    <div class="curtir-fim"><p>Gostou deste texto?</p><button class="curtir " type="button" data-slug="a-lei-do-fone-de-ouvido-ou-por-que" data-base="2" aria-pressed="false"><span class="coracao" aria-hidden="true">♥</span><span class="rotulo">Curtir</span><span class="n">2</span></button></div>
     <p class="origem">Publicado originalmente no <a href="https://marcoscacau.substack.com/p/a-lei-do-fone-de-ouvido-ou-por-que" target="_blank" rel="noopener">Substack</a> em 14 de janeiro de 2026.</p>
     <nav class="navpost"><a href="#a-miopia-dos-adultos-e-o-deserto"><span>← Anterior</span>A Miopia dos Adultos e o Deserto em Nós</a><a class="dir" href="#a-liturgia-do-invisivel-o-amor-e"><span>Próximo →</span>A Liturgia do Invisível: O Amor e o Átomo em Vozes de Tchernóbil</a></nav>
     <section class="bloco relacionados"><h2 class="etiqueta"><span>Leia também</span></h2><ul class="lista"><li class="item"><a class="item-img" href="#vida" tabindex="-1" aria-hidden="true"><img src="mini/b922fb9e0062.jpg" alt="" loading="lazy"></a>
@@ -782,7 +804,7 @@ a.tag:hover { color: var(--tinta); }
     <div class="tags"><a class="tag" href="#tema-literatura">Literatura</a><a class="tag" href="#tema-filosofia">Filosofia</a></div>
     <h1 class="titulo-post">A Miopia dos Adultos e o Deserto em Nós</h1>
     
-    <p class="byline">por <strong>Cacau</strong> em 8 de janeiro de 2026 · 7 min de leitura</p>
+    <div class="linha-byline"><p class="byline">por <strong>Cacau</strong> em 8 de janeiro de 2026 · 7 min de leitura</p><button class="curtir pequeno" type="button" data-slug="a-miopia-dos-adultos-e-o-deserto" data-base="3" aria-pressed="false"><span class="coracao" aria-hidden="true">♥</span><span class="rotulo">Curtir</span><span class="n">3</span></button></div>
     <figure class="capa"><img src="img/1b6e0477c3bc.jpg" alt=""></figure>
     <div class="corpo">
 <p><strong>Antoine de Saint-Exupéry, nós aceitamos as suas desculpas.</strong></p>
@@ -837,6 +859,7 @@ a.tag:hover { color: var(--tinta); }
 <p>Não é apenas sobre morte.<br> É sobre sacrifício.<br> Sobre abandonar o supérfluo para retornar ao essencial.</p>
 <p>Para o adulto, o ensinamento é claro e doloroso: as coisas mais valiosas não podem ser possuídas, medidas ou explicadas. E toda experiência de amor verdadeiro inclui despedida.</p>
     </div>
+    <div class="curtir-fim"><p>Gostou deste texto?</p><button class="curtir " type="button" data-slug="a-miopia-dos-adultos-e-o-deserto" data-base="3" aria-pressed="false"><span class="coracao" aria-hidden="true">♥</span><span class="rotulo">Curtir</span><span class="n">3</span></button></div>
     <p class="origem">Publicado originalmente no <a href="https://marcoscacau.substack.com/p/a-miopia-dos-adultos-e-o-deserto" target="_blank" rel="noopener">Substack</a> em 8 de janeiro de 2026.</p>
     <nav class="navpost"><a href="#socrates-o-despertar-da-consciencia"><span>← Anterior</span>Sócrates: O Despertar da Consciência Humana</a><a class="dir" href="#a-lei-do-fone-de-ouvido-ou-por-que"><span>Próximo →</span>A Lei do Fone de Ouvido (Ou por que sua vida vira uma bagunça sozinha)</a></nav>
     <section class="bloco relacionados"><h2 class="etiqueta"><span>Leia também</span></h2><ul class="lista"><li class="item"><a class="item-img" href="#a-liturgia-do-invisivel-o-amor-e" tabindex="-1" aria-hidden="true"><img src="mini/0140b8a95d8f.jpg" alt="" loading="lazy"></a>
@@ -870,7 +893,7 @@ a.tag:hover { color: var(--tinta); }
     <div class="tags"><a class="tag" href="#tema-filosofia">Filosofia</a></div>
     <h1 class="titulo-post">Sócrates: O Despertar da Consciência Humana</h1>
     <p class="linha-fina">Parte I</p>
-    <p class="byline">por <strong>Cacau</strong> em 30 de dezembro de 2025 · 3 min de leitura</p>
+    <div class="linha-byline"><p class="byline">por <strong>Cacau</strong> em 30 de dezembro de 2025 · 3 min de leitura</p><button class="curtir pequeno" type="button" data-slug="socrates-o-despertar-da-consciencia" data-base="2" aria-pressed="false"><span class="coracao" aria-hidden="true">♥</span><span class="rotulo">Curtir</span><span class="n">2</span></button></div>
     <figure class="capa"><img src="img/e1c76d38df61.jpg" alt=""></figure>
     <div class="corpo">
 <p>Sócrates (470 a.C. – 399 a.C.) não foi apenas um homem de seu tempo, mas o “divisor de águas” da alma ocidental. Sua vida em Atenas representa a transição da curiosidade sobre o mundo exterior para a investigação profunda do mundo interior.</p>
@@ -897,6 +920,7 @@ a.tag:hover { color: var(--tinta); }
 <ol><li><p><strong>Ironia (Destruição):</strong> Sócrates fingia ignorância e bombardeava o interlocutor com perguntas até que este entrasse em contradição, percebendo que o que julgava saber era apenas um preconceito.</p></li><li><p><strong>Maiêutica (Construção):</strong> Uma vez limpo das falsas certezas, o indivíduo era guiado a “dar à luz” conceitos universais sobre a Virtude (<em>Arete</em>), o Bem e a Justiça.</p></li></ol>
 <p>Sócrates acreditava que o erro era fruto da ignorância: ninguém faz o mal voluntariamente; faz o mal porque desconhece o que é o Bem. Portanto, educar o pensamento era o mesmo que curar a alma.</p>
     </div>
+    <div class="curtir-fim"><p>Gostou deste texto?</p><button class="curtir " type="button" data-slug="socrates-o-despertar-da-consciencia" data-base="2" aria-pressed="false"><span class="coracao" aria-hidden="true">♥</span><span class="rotulo">Curtir</span><span class="n">2</span></button></div>
     <p class="origem">Publicado originalmente no <a href="https://marcoscacau.substack.com/p/socrates-o-despertar-da-consciencia" target="_blank" rel="noopener">Substack</a> em 30 de dezembro de 2025.</p>
     <nav class="navpost"><a href="#o-silencio-e-o-barulho-mais-insuportavel"><span>← Anterior</span>O silêncio é o barulho mais insuportável deste século</a><a class="dir" href="#a-miopia-dos-adultos-e-o-deserto"><span>Próximo →</span>A Miopia dos Adultos e o Deserto em Nós</a></nav>
     <section class="bloco relacionados"><h2 class="etiqueta"><span>Leia também</span></h2><ul class="lista"><li class="item"><a class="item-img" href="#a-miopia-dos-adultos-e-o-deserto" tabindex="-1" aria-hidden="true"><img src="mini/1b6e0477c3bc.jpg" alt="" loading="lazy"></a>
@@ -929,7 +953,7 @@ a.tag:hover { color: var(--tinta); }
     <div class="tags"><a class="tag" href="#tema-sociedade">Sociedade</a><a class="tag" href="#tema-teologia">Teologia</a></div>
     <h1 class="titulo-post">O silêncio é o barulho mais insuportável deste século</h1>
     
-    <p class="byline">por <strong>Cacau</strong> em 29 de dezembro de 2025 · 2 min de leitura</p>
+    <div class="linha-byline"><p class="byline">por <strong>Cacau</strong> em 29 de dezembro de 2025 · 2 min de leitura</p><button class="curtir pequeno" type="button" data-slug="o-silencio-e-o-barulho-mais-insuportavel" data-base="4" aria-pressed="false"><span class="coracao" aria-hidden="true">♥</span><span class="rotulo">Curtir</span><span class="n">4</span></button></div>
     <figure class="capa"><img src="img/9afb0997a0a9.jpg" alt=""></figure>
     <div class="corpo">
 <p>Ontem, ouvi uma verdade que ecoou como um trovão: ”O silêncio é o barulho mais insuportável deste século”.</p>
@@ -949,6 +973,7 @@ a.tag:hover { color: var(--tinta); }
 <p>A beleza do silêncio não é estética, é funcional. É no silêncio que o “sinal” (a Voz de Deus, a intuição, a estratégia) se separa do “ruído” (o medo, o ego, a opinião alheia).</p>
 <p>Enquanto continuarmos trocando a eternidade do silêncio pela euforia barata do próximo clique, continuaremos enchendo nossa alma de vazio, destruindo o mundo real para alimentar nossas ilusões digitais. O verdadeiro poder, hoje, não pertence a quem grita mais alto, mas a quem consegue suportar o estrondo ensurdecedor de ficar em paz consigo mesmo.</p>
     </div>
+    <div class="curtir-fim"><p>Gostou deste texto?</p><button class="curtir " type="button" data-slug="o-silencio-e-o-barulho-mais-insuportavel" data-base="4" aria-pressed="false"><span class="coracao" aria-hidden="true">♥</span><span class="rotulo">Curtir</span><span class="n">4</span></button></div>
     <p class="origem">Publicado originalmente no <a href="https://marcoscacau.substack.com/p/o-silencio-e-o-barulho-mais-insuportavel" target="_blank" rel="noopener">Substack</a> em 29 de dezembro de 2025.</p>
     <nav class="navpost"><a href="#a-anatomia-do-abismo-o-que-gogol"><span>← Anterior</span>A Anatomia do Abismo: O Que Gogol nos Ensina Sobre Perder o Chão</a><a class="dir" href="#socrates-o-despertar-da-consciencia"><span>Próximo →</span>Sócrates: O Despertar da Consciência Humana</a></nav>
     <section class="bloco relacionados"><h2 class="etiqueta"><span>Leia também</span></h2><ul class="lista"><li class="item"><a class="item-img" href="#vida" tabindex="-1" aria-hidden="true"><img src="mini/b922fb9e0062.jpg" alt="" loading="lazy"></a>
@@ -982,7 +1007,7 @@ a.tag:hover { color: var(--tinta); }
     <div class="tags"><a class="tag" href="#tema-literatura">Literatura</a></div>
     <h1 class="titulo-post">A Anatomia do Abismo: O Que Gogol nos Ensina Sobre Perder o Chão</h1>
     
-    <p class="byline">por <strong>Cacau</strong> em 26 de dezembro de 2025 · 3 min de leitura</p>
+    <div class="linha-byline"><p class="byline">por <strong>Cacau</strong> em 26 de dezembro de 2025 · 3 min de leitura</p><button class="curtir pequeno" type="button" data-slug="a-anatomia-do-abismo-o-que-gogol" data-base="4" aria-pressed="false"><span class="coracao" aria-hidden="true">♥</span><span class="rotulo">Curtir</span><span class="n">4</span></button></div>
     <figure class="capa"><img src="img/197214479671.jpg" alt=""></figure>
     <div class="corpo">
 <h4>I. A Armadilha da Mediocridade: O Tédio como Prólogo</h4>
@@ -1000,6 +1025,7 @@ a.tag:hover { color: var(--tinta); }
 <p>A “Espanha” dele é um lugar de frio, pancadas e cabeças raspadas. É aqui que o livro atinge o patamar de obra-prima. A desintegração total da identidade do personagem nos despoja de qualquer superioridade que pudéssemos sentir em relação a ele. Não rimos mais do louco; sofremos com o homem.</p>
 <p>A frase final, aquele apelo desesperado pela mãe e pela casa na aldeia, é o momento em que o chão desaparece por completo. Percebemos que a loucura de Poprishchin não foi uma escolha, mas uma fuga de uma realidade insuportável. Gogol nos mostra que, por baixo das camadas de status, cargos e sanidade, existe uma fragilidade humana que todos compartilhamos. Terminamos a leitura exaustos, sem chão, mas com uma compreensão muito mais profunda, e terrível, do que significa ser humano em um mundo que, muitas vezes, parece não fazer sentido nenhum.</p>
     </div>
+    <div class="curtir-fim"><p>Gostou deste texto?</p><button class="curtir " type="button" data-slug="a-anatomia-do-abismo-o-que-gogol" data-base="4" aria-pressed="false"><span class="coracao" aria-hidden="true">♥</span><span class="rotulo">Curtir</span><span class="n">4</span></button></div>
     <p class="origem">Publicado originalmente no <a href="https://marcoscacau.substack.com/p/a-anatomia-do-abismo-o-que-gogol" target="_blank" rel="noopener">Substack</a> em 26 de dezembro de 2025.</p>
     <nav class="navpost"><a href="#antropomorfismo-o-universo-a-nossa"><span>← Anterior</span>Antropomorfismo: O Universo à Nossa Imagem e Semelhança</a><a class="dir" href="#o-silencio-e-o-barulho-mais-insuportavel"><span>Próximo →</span>O silêncio é o barulho mais insuportável deste século</a></nav>
     <section class="bloco relacionados"><h2 class="etiqueta"><span>Leia também</span></h2><ul class="lista"><li class="item"><a class="item-img" href="#a-liturgia-do-invisivel-o-amor-e" tabindex="-1" aria-hidden="true"><img src="mini/0140b8a95d8f.jpg" alt="" loading="lazy"></a>
@@ -1032,7 +1058,7 @@ a.tag:hover { color: var(--tinta); }
     <div class="tags"><a class="tag" href="#tema-fisica">Física</a><a class="tag" href="#tema-filosofia">Filosofia</a></div>
     <h1 class="titulo-post">Antropomorfismo: O Universo à Nossa Imagem e Semelhança</h1>
     <p class="linha-fina">Você já pediu desculpas para um objeto depois de esbarrar nele? Ou jurou que seu cachorro estava te julgando com o olhar? 🐶</p>
-    <p class="byline">por <strong>Cacau</strong> em 17 de dezembro de 2025 · 2 min de leitura</p>
+    <div class="linha-byline"><p class="byline">por <strong>Cacau</strong> em 17 de dezembro de 2025 · 2 min de leitura</p><button class="curtir pequeno" type="button" data-slug="antropomorfismo-o-universo-a-nossa" data-base="2" aria-pressed="false"><span class="coracao" aria-hidden="true">♥</span><span class="rotulo">Curtir</span><span class="n">2</span></button></div>
     <figure class="capa"><img src="img/29e467d4136d.jpg" alt=""></figure>
     <div class="corpo">
 <p>Sabe quando você bate o dedinho do pé na quina da mesa e, além de gritar, xinga a mesa de “estúpida”? Ou quando jura que seu cachorro está fazendo “cara de culpa” porque comeu seu chinelo?</p>
@@ -1052,6 +1078,7 @@ a.tag:hover { color: var(--tinta); }
 <h4>Reflexão Final</h4>
 <p>No fim das contas, o antropomorfismo talvez revele menos sobre os objetos e animais, e muito mais sobre a nossa profunda <strong>solidão existencial</strong>. Procuramos humanidade nas pedras, nas nuvens e nas máquinas porque, no fundo, buscamos conexão em tudo o que tocamos.</p>
     </div>
+    <div class="curtir-fim"><p>Gostou deste texto?</p><button class="curtir " type="button" data-slug="antropomorfismo-o-universo-a-nossa" data-base="2" aria-pressed="false"><span class="coracao" aria-hidden="true">♥</span><span class="rotulo">Curtir</span><span class="n">2</span></button></div>
     <p class="origem">Publicado originalmente no <a href="https://marcoscacau.substack.com/p/antropomorfismo-o-universo-a-nossa" target="_blank" rel="noopener">Substack</a> em 17 de dezembro de 2025.</p>
     <nav class="navpost"><a href="#sejam-bem-vindos"><span>← Anterior</span>Sejam Bem vindos</a><a class="dir" href="#a-anatomia-do-abismo-o-que-gogol"><span>Próximo →</span>A Anatomia do Abismo: O Que Gogol nos Ensina Sobre Perder o Chão</a></nav>
     <section class="bloco relacionados"><h2 class="etiqueta"><span>Leia também</span></h2><ul class="lista"><li class="item"><a class="item-img" href="#vida" tabindex="-1" aria-hidden="true"><img src="mini/b922fb9e0062.jpg" alt="" loading="lazy"></a>
@@ -1085,7 +1112,7 @@ a.tag:hover { color: var(--tinta); }
     <div class="tags"><span class="tag">Apresentação</span></div>
     <h1 class="titulo-post">Sejam Bem vindos</h1>
     
-    <p class="byline">por <strong>Cacau</strong> em 15 de dezembro de 2025 · 2 min de leitura</p>
+    <div class="linha-byline"><p class="byline">por <strong>Cacau</strong> em 15 de dezembro de 2025 · 2 min de leitura</p><button class="curtir pequeno" type="button" data-slug="sejam-bem-vindos" data-base="3" aria-pressed="false"><span class="coracao" aria-hidden="true">♥</span><span class="rotulo">Curtir</span><span class="n">3</span></button></div>
     <figure class="capa"><img src="img/91e31778dd0c.jpg" alt=""></figure>
     <div class="corpo">
 <p>Sou Marcos Vinicius, mas também conhecido como Cacau, físico em formação, programador, pesquisador e leitor que não sabe existir sem perguntas. Minha vida intelectual nasceu no encontro improvável entre três mundos que raramente convivem em paz: a física, a ficção e a teologia. Em cada um deles encontrei uma forma diferente de olhar para o real, mas nunca consegui separar completamente suas linguagens. É aqui, neste espaço, que tento costurar essas três vozes em uma só.</p>
@@ -1096,6 +1123,7 @@ a.tag:hover { color: var(--tinta); }
 <p>Se você se interessa por um tipo de pensamento que reconhece tanto a grandeza do universo quanto a vulnerabilidade humana; se prefere perguntas que abrem portas a respostas que fecham capítulos; se gosta de ver ciência, fé e imaginação conversando sem pedir licença aos puristas, então este Substack é também seu.</p>
 <p>Bem-vindo ao lugar onde a física encontra o mito, onde a teologia encontra o cálculo, e onde a ficção encontra a possibilidade de se tornar real.</p>
     </div>
+    <div class="curtir-fim"><p>Gostou deste texto?</p><button class="curtir " type="button" data-slug="sejam-bem-vindos" data-base="3" aria-pressed="false"><span class="coracao" aria-hidden="true">♥</span><span class="rotulo">Curtir</span><span class="n">3</span></button></div>
     <p class="origem">Publicado originalmente no <a href="https://marcoscacau.substack.com/p/sejam-bem-vindos" target="_blank" rel="noopener">Substack</a> em 15 de dezembro de 2025.</p>
     <nav class="navpost"><span></span><a class="dir" href="#antropomorfismo-o-universo-a-nossa"><span>Próximo →</span>Antropomorfismo: O Universo à Nossa Imagem e Semelhança</a></nav>
     
@@ -1164,6 +1192,47 @@ a.tag:hover { color: var(--tinta); }
   <p>Textos de <a href="https://marcoscacau.substack.com" target="_blank" rel="noopener">marcoscacau.substack.com</a> · 11 textos · arquivo copiado em 9 de outubro de 2026</p>
 </div></footer>
 <script>
+// Curtidas: o número = curtidas que o post já tinha no Substack (data-base) + curtidas dadas aqui no site.
+// As do site ficam num contador gratuito (abacus.jasoncameron.dev); cada navegador curte uma vez (guardado no próprio navegador).
+var Curtidas = (function () {
+  var API = "https://abacus.jasoncameron.dev", NS = "marcoscacau-site";
+  var site = {}, carregado = {};
+  function ja(slug) { try { return localStorage.getItem("curtiu:" + slug) === "1"; } catch (e) { return false; } }
+  function marcar(slug) { try { localStorage.setItem("curtiu:" + slug, "1"); } catch (e) {} }
+  function botoes(slug) { return Array.prototype.slice.call(document.querySelectorAll('.curtir[data-slug="' + slug + '"]')); }
+  function pintar(slug) {
+    botoes(slug).forEach(function (b) {
+      var n = (+b.dataset.base || 0) + (site[slug] || 0), feito = ja(slug);
+      b.querySelector(".n").textContent = n;
+      b.setAttribute("aria-pressed", feito ? "true" : "false");
+      b.querySelector(".rotulo").textContent = feito ? "Curtido" : "Curtir";
+      b.setAttribute("aria-label", (feito ? "Você curtiu este texto. " : "Curtir este texto. ") + n + " curtida" + (n === 1 ? "" : "s"));
+    });
+  }
+  function carregar(slug) {
+    pintar(slug);
+    if (carregado[slug]) return;
+    carregado[slug] = true;
+    fetch(API + "/get/" + NS + "/" + slug).then(function (r) { return r.ok ? r.json() : { value: 0 }; })
+      .then(function (d) { site[slug] = Math.max(site[slug] || 0, d.value || 0); pintar(slug); })
+      .catch(function () { pintar(slug); });
+  }
+  document.addEventListener("click", function (ev) {
+    var b = ev.target.closest && ev.target.closest(".curtir");
+    if (!b) return;
+    var slug = b.dataset.slug;
+    if (ja(slug)) return;
+    marcar(slug);
+    site[slug] = (site[slug] || 0) + 1;
+    pintar(slug);
+    botoes(slug).forEach(function (x) { x.classList.remove("pulsa"); void x.offsetWidth; x.classList.add("pulsa"); });
+    fetch(API + "/hit/" + NS + "/" + slug).then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) { if (d && typeof d.value === "number") { site[slug] = d.value; pintar(slug); } })
+      .catch(function () {});
+  });
+  return { carregar: carregar };
+})();
+
 // Navegação por endereço (#texto, #tema-fisica, #sobre) e carrossel de destaques.
 (function () {
   var base = document.title;
@@ -1177,6 +1246,8 @@ a.tag:hover { color: var(--tinta); }
     links.forEach(function (a) { a.classList.toggle("atual", a.getAttribute("href") === "#" + id); });
     var h = alvo.querySelector(".titulo-post, .etiqueta.grande span");
     document.title = id === "inicio" || !h ? base : h.textContent + " · Cacau";
+    var c = alvo.querySelector(".curtir");
+    if (c) Curtidas.carregar(c.dataset.slug);
     window.scrollTo(0, 0);
   }
   window.addEventListener("hashchange", mostrar);
