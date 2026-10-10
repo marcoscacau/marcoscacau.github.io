@@ -123,7 +123,8 @@ def textos(img):
         h = img.no_html(corpo)
         temas = [t for t in lista(m.get("temas")) if t]
         res.append(dict(slug=nome, titulo=str(m.get("titulo") or nome), sub=str(m.get("subtitulo") or ""),
-                        data=data_str(m.get("data")), url=m.get("substack") or "", temas=temas,
+                        data=data_str(m.get("data")), temas=temas,
+                        url=m["substack"] if str(m.get("substack") or "").startswith("http") else "",
                         curtidas=int(m.get("curtidas_substack") or 0), capa=img(m.get("capa")), html=h,
                         palavras=len(texto_puro(h).split()), resumo=texto_puro(re.sub(r"<(figure|h[1-6])[\s\S]*?</\1>", " ", h))))
     return res

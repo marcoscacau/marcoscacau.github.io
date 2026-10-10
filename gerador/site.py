@@ -15,6 +15,27 @@ os.makedirs(SITE, exist_ok=True)
 img = conteudo.Imagens(SITE)
 CFG = conteudo.config()
 FOTO = img(CFG.get("foto"))
+
+
+def icones(foto):
+    """Ícone da aba do navegador (e do atalho no celular): a foto do perfil, recortada em círculo."""
+    from PIL import Image, ImageDraw
+    if not foto:
+        return ""
+    im = Image.open(os.path.join(SITE, "img", foto)).convert("RGBA")
+    lado = min(im.size)
+    im = im.crop(((im.width - lado) // 2, (im.height - lado) // 2, (im.width + lado) // 2, (im.height + lado) // 2))
+    for nome, tam, redondo in (("favicon.png", 64, True), ("apple-touch-icon.png", 180, False)):
+        c = im.resize((tam, tam), Image.LANCZOS)
+        if redondo:
+            mascara = Image.new("L", (tam * 4, tam * 4), 0)
+            ImageDraw.Draw(mascara).ellipse((0, 0, tam * 4 - 1, tam * 4 - 1), fill=255)
+            c.putalpha(mascara.resize((tam, tam), Image.LANCZOS))
+        c.save(os.path.join(SITE, nome))
+    return '<link rel="icon" type="image/png" href="favicon.png">\n<link rel="apple-touch-icon" href="apple-touch-icon.png">'
+
+
+ICONES = icones(FOTO)
 BIO = str(CFG.get("bio") or "")
 HOJE = datetime.date.today().isoformat()
 
@@ -351,6 +372,7 @@ doc = f'''<!doctype html>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Cacau — Física, Ficção e Teologia</title>
 <meta name="description" content="{e(BIO)}">
+{ICONES}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,700;1,8..60,400&family=Roboto:wght@300;400;500;700&display=swap">
