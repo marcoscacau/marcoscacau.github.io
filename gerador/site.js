@@ -38,6 +38,49 @@ var Curtidas = (function () {
   return { carregar: carregar };
 })();
 
+// Compartilhar: no celular usa a janela de compartilhar do aparelho; no computador abre as redes e o "copiar link".
+(function () {
+  var nativo = !!navigator.share && window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
+  function antigo(url) {
+    var t = document.createElement("textarea"), deu = false;
+    t.value = url; t.setAttribute("readonly", ""); t.style.position = "fixed"; t.style.opacity = "0";
+    document.body.appendChild(t); t.select();
+    try { deu = document.execCommand("copy"); } catch (e) {}
+    document.body.removeChild(t);
+    return deu;
+  }
+  function copiar(url, pronto) {
+    if (navigator.clipboard && window.isSecureContext)
+      navigator.clipboard.writeText(url).then(function () { pronto(true); }, function () { pronto(antigo(url)); });
+    else pronto(antigo(url));
+  }
+  function partilhar(url, titulo, senao) {
+    if (nativo) { navigator.share({ title: titulo, url: url }).catch(function () {}); return; }
+    senao();
+  }
+  document.addEventListener("click", function (ev) {
+    var alvo = ev.target.closest ? ev.target : null;
+    if (!alvo) return;
+    var b = alvo.closest(".cp-botao"), c = alvo.closest(".cp-copiar"), m = alvo.closest(".cp-mini");
+    if (b) {
+      var cp = b.closest(".cp");
+      partilhar(cp.dataset.url, cp.dataset.titulo, function () { cp.classList.toggle("aberto"); });
+    } else if (c) {
+      var cp2 = c.closest(".cp"), aviso = cp2.querySelector(".cp-aviso");
+      copiar(cp2.dataset.url, function (ok) { aviso.textContent = ok ? "Link copiado!" : "Não deu para copiar"; setTimeout(function () { aviso.textContent = ""; }, 2200); });
+    } else if (m) {
+      partilhar(m.dataset.url, m.dataset.titulo, function () {
+        copiar(m.dataset.url, function (ok) {
+          m.classList.add("ok"); m.setAttribute("aria-label", ok ? "Link copiado" : "Não deu para copiar"); m.title = ok ? "Link copiado!" : "Não deu para copiar";
+          setTimeout(function () { m.classList.remove("ok"); m.setAttribute("aria-label", "Compartilhar"); m.title = ""; }, 2200);
+        });
+      });
+    } else if (!alvo.closest(".cp")) {
+      Array.prototype.forEach.call(document.querySelectorAll(".cp.aberto"), function (x) { x.classList.remove("aberto"); });
+    }
+  });
+})();
+
 // Frase-manifesto: a palavra em negrito troca a cada 2,6 s (parada para quem prefere menos movimento).
 (function () {
   var b = document.querySelector(".manifesto .giro");

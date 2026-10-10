@@ -6,7 +6,7 @@ Tudo vem da pasta conteudo/ (ver conteudo.py). Biblioteca e Notas só aparecem q
 uso: python gerador/site.py [pasta de saída]     (padrão: _site)
 O GitHub roda isto sozinho a cada alteração (.github/workflows/site.yml).
 """
-import os, re, sys, html, json, hashlib, datetime
+import os, re, sys, html, json, hashlib, datetime, urllib.parse
 import conteudo
 
 S = os.path.dirname(os.path.abspath(__file__))
@@ -50,6 +50,53 @@ IC = {
 }
 REDES = [("instagram", "Instagram", arroba(INSTAGRAM), INSTAGRAM), ("x", "X", arroba(X_URL), X_URL),
          ("substack", "Substack", SUBSTACK.split("//")[-1].split(".")[0], SUBSTACK)]
+ENDERECO = str(CFG.get("endereco") or "https://marcoscacau.github.io").rstrip("/")
+
+
+def rota(i):
+    """Endereço de cada página do site."""
+    if i == "inicio":
+        return "/"
+    if i.startswith("tema-"):
+        return f"/tema/{i[5:]}/"
+    if i in ("notas", "biblioteca", "sobre", "links"):
+        return f"/{i}/"
+    if i.startswith("livro-"):
+        return f"/biblioteca/{i[6:]}/"
+    if i.startswith("nota-"):
+        return f"/notas/#{i}"
+    return f"/textos/{i}/"
+
+
+# ---------- compartilhar ----------
+ICS = {
+    "whatsapp": '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 0 0-7.8 13.5L3 21l4.6-1.2A9 9 0 1 0 12 3z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M8.8 8.2c.2-.4.4-.4.7-.4h.5c.2 0 .4 0 .5.4l.7 1.7c.1.2 0 .4-.1.6l-.5.6c-.1.1-.2.3 0 .5.4.7 1 1.4 1.7 1.9.5.3.9.5 1.1.6.2.1.4 0 .5-.1l.6-.7c.2-.2.4-.2.6-.1l1.6.8c.2.1.4.2.4.4 0 .5-.2 1.2-.7 1.5-.5.4-1.4.6-2.5.2a10 10 0 0 1-5.5-5.1c-.5-1.1-.2-2 .2-2.6z" fill="currentColor"/></svg>',
+    "x": IC["x"],
+    "facebook": '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 8H16V5h-2a4 4 0 0 0-4 4v2H8v3h2v7h3v-7h2.3l.7-3h-3V9.2c0-.7.4-1.2 1.5-1.2z" fill="currentColor"/></svg>',
+    "telegram": '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 4 3 11l6 2 2 6 3-4 5 4z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="m9 13 8-6" stroke="currentColor" stroke-width="1.7"/></svg>',
+    "link": '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+    "partilha": '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3m0 0L7.5 7.5M12 3l4.5 4.5M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+}
+
+
+def compartilhar(i, titulo, rotulo="Compartilhar", pequeno=False):
+    """Botão de compartilhar: no celular abre a janela do aparelho; no computador mostra as redes e "copiar link"."""
+    url = ENDERECO + rota(i)
+    q = lambda s: urllib.parse.quote(s, safe="")
+    texto = f"{titulo} — Cacau"
+    redes = [("whatsapp", "WhatsApp", f"https://wa.me/?text={q(texto + ' ' + url)}"),
+             ("x", "X", f"https://x.com/intent/post?text={q(texto)}&url={q(url)}"),
+             ("facebook", "Facebook", f"https://www.facebook.com/sharer/sharer.php?u={q(url)}"),
+             ("telegram", "Telegram", f"https://t.me/share/url?url={q(url)}&text={q(texto)}")]
+    itens = "".join(f'<a class="cp-rede" href="{e(u)}" target="_blank" rel="noopener" aria-label="Compartilhar no {n}">{ICS[k]}</a>' for k, n, u in redes)
+    if pequeno:
+        return (f'<button class="cp-mini" type="button" data-url="{e(url)}" data-titulo="{e(texto)}" aria-label="Compartilhar">'
+                f'{ICS["partilha"]}</button>')
+    return f'''<div class="cp" data-url="{e(url)}" data-titulo="{e(texto)}">
+  <button class="cp-botao" type="button">{ICS["partilha"]}<span>{e(rotulo)}</span></button>
+  <div class="cp-redes">{itens}<button class="cp-rede cp-copiar" type="button" aria-label="Copiar o link">{ICS["link"]}</button></div>
+  <span class="cp-aviso" role="status" aria-live="polite"></span>
+</div>'''
 
 # Os temas de cada texto ficam no próprio texto (campo "temas"; o primeiro é o principal).
 ORDEM_TEMAS = ["Física", "Teologia", "Literatura", "Filosofia", "Sociedade"]
@@ -165,6 +212,7 @@ perfil_card = f'''<aside class="perfil-card" aria-label="Sobre o autor">
   <p>{e(BIO)}</p>
   <div class="perfil-acoes"><a class="botao-principal" href="{SUBSTACK}/subscribe" target="_blank" rel="noopener">Assinar grátis</a>
     <a class="perfil-sobre" href="#sobre">Sobre mim →</a></div>
+  <div class="perfil-cp">{compartilhar("inicio", "Física, ficção e teologia", "Compartilhar o site")}</div>
 </aside>'''
 comece = "".join(f'<li><span class="num">{i}</span><a href="#{s}">{e(porslug[s]["titulo"])}</a></li>'
                  for i, s in enumerate(COMECE, 1) if s in porslug)
@@ -230,8 +278,10 @@ def cartao_nota(n):
                  '<button class="continuar" type="button" aria-expanded="false">Continuar lendo</button>')
     ig = (f'<a class="nota-ig" href="{e(n["url"])}" target="_blank" rel="noopener" aria-label="Ver no Instagram">{IC["instagram"]}</a>'
           if n.get("instagram") and n.get("url") else "")
-    return f'''<article class="{classe}">{img}{texto}
-  <footer><span class="kicker">{data}{tema}</span><span class="nota-acoes">{ig}{curtir(n, "pequeno")}</span></footer></article>'''
+    trecho = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", n["html"])).strip()
+    trecho = html.unescape(trecho[:70].rsplit(" ", 1)[0] + "…" if len(trecho) > 70 else trecho)
+    return f'''<article class="{classe}" id="{n["slug"]}">{img}{texto}
+  <footer><span class="kicker">{data}{tema}</span><span class="nota-acoes">{ig}{compartilhar(n["slug"], trecho, pequeno=True)}{curtir(n, "pequeno")}</span></footer></article>'''
 
 
 fileiras = "".join(f'''<section class="fileira">
@@ -290,11 +340,11 @@ if TEM_LIVROS:
         <p class="livro-meta">{e(meta)}</p>
         {estrelas(l["nota"]) if l["nota"] else ""}
         {f'<p class="livro-frase">{e(l["frase"])}</p>' if l["frase"] else ""}
-        {curtir(l, "pequeno")}
+        <div class="acoes-mini">{curtir(l, "pequeno")}{compartilhar(l["slug"], l["titulo"], pequeno=True)}</div>
       </div>
     </div>
     <div class="corpo">{l["html"]}</div>
-    <div class="curtir-fim"><p>Este resumo te ajudou?</p>{curtir(l)}</div>
+    <div class="curtir-fim"><p>Este resumo te ajudou?</p>{curtir(l)}{compartilhar(l["slug"], l["titulo"])}</div>
   </article>
   {assinar()}
 </section>'''
@@ -334,12 +384,12 @@ for k, p in enumerate(recentes):
     {tags(p)}
     <h1 class="titulo-post">{e(p["titulo"])}</h1>
     {f'<p class="linha-fina">{e(p["sub"])}</p>' if p["sub"] else ""}
-    <div class="linha-byline"><p class="byline">por <strong>Cacau</strong> · {data_ext(p["data"])} · {minutos(p["palavras"])} min de leitura</p>{curtir(p, "pequeno")}</div>
+    <div class="linha-byline"><p class="byline">por <strong>Cacau</strong> · {data_ext(p["data"])} · {minutos(p["palavras"])} min de leitura</p><div class="acoes-mini">{curtir(p, "pequeno")}{compartilhar(p["slug"], p["titulo"], pequeno=True)}</div></div>
     {f'<figure class="capa"><img src="img/{p["capa"]}" alt=""></figure>' if p["capa"] else ""}
     <div class="corpo">
 {p["html"]}
     </div>
-    <div class="curtir-fim"><p>Gostou deste texto?</p>{curtir(p)}</div>
+    <div class="curtir-fim"><p>Gostou deste texto?</p>{curtir(p)}{compartilhar(p["slug"], p["titulo"])}</div>
     {f'<p class="origem">Publicado originalmente no <a href="{e(p["url"])}" target="_blank" rel="noopener">Substack</a> em {data_ext(p["data"])}.</p>' if p["url"] else ""}
     {nav}
   </article>
@@ -361,22 +411,9 @@ sobre = f'''<section class="vista" id="sobre">
 </section>'''
 
 # ---------- páginas: cada endereço vira um arquivo (bom para o Google e para a prévia no WhatsApp/Instagram) ----------
-ENDERECO = str(CFG.get("endereco") or "https://marcoscacau.github.io").rstrip("/")
 GOAT = str(CFG.get("goatcounter") or "").strip()
 CUSDIS = str(CFG.get("cusdis_app_id") or "").strip()
 GOOGLE = str(CFG.get("google_verificacao") or "").strip()
-
-
-def rota(i):
-    if i == "inicio":
-        return "/"
-    if i.startswith("tema-"):
-        return f"/tema/{i[5:]}/"
-    if i in ("notas", "biblioteca", "sobre", "links"):
-        return f"/{i}/"
-    if i.startswith("livro-"):
-        return f"/biblioteca/{i[6:]}/"
-    return f"/textos/{i}/"
 
 
 def comentarios(p):

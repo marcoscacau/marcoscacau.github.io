@@ -263,6 +263,35 @@ a.tag:hover { color: var(--tinta); }
 .curtir-fim { display: flex; flex-wrap: wrap; align-items: center; gap: .8rem 1.2rem; margin-top: 2.4rem; padding: 1.2rem 1.4rem; background: var(--ceu); border-radius: 12px; }
 .curtir-fim p { margin: 0; font-family: var(--serif); font-style: italic; font-size: 1.08rem; }
 
+/* compartilhar: no celular abre a janela do aparelho; no computador mostra as redes */
+.cp { display: inline-flex; align-items: center; flex-wrap: wrap; gap: .5rem; position: relative; }
+.cp-botao { display: inline-flex; align-items: center; gap: .45rem; border: 1.5px solid var(--lavanda); background: var(--folha); color: var(--tinta);
+  border-radius: 999px; padding: .55rem 1.15rem; font: 700 .9rem var(--ui); cursor: pointer; transition: background .2s ease; }
+.cp-botao:hover, .cp.aberto .cp-botao { background: var(--lavanda); color: #23263a; }
+.cp-botao svg, .cp-mini svg { width: 17px; height: 17px; }
+.cp-redes { display: none; gap: .4rem; }
+.cp.aberto .cp-redes { display: inline-flex; animation: cp-entra .2s ease; }
+@keyframes cp-entra { from { opacity: 0; transform: translateX(-6px); } to { opacity: 1; transform: none; } }
+.cp-rede { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; border: 0; cursor: pointer;
+  background: var(--ceu); color: var(--tinta); transition: background .2s ease, transform .15s ease; }
+.cp-rede svg { width: 18px; height: 18px; }
+.cp-rede:hover { background: var(--pessego); transform: translateY(-2px); }
+.cp-aviso { font-size: .8rem; font-weight: 700; color: var(--suave); }
+.cp-mini { display: inline-grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--lavanda);
+  background: var(--folha); color: var(--suave); cursor: pointer; padding: 0; transition: background .2s ease, color .2s ease; }
+.cp-mini:hover { background: var(--lavanda); color: #23263a; }
+.cp-mini { position: relative; }
+.cp-mini.ok { background: var(--pessego); border-color: var(--pessego); color: #23263a; }
+.cp-mini.ok::after { content: "Link copiado!"; position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); white-space: nowrap;
+  background: var(--barra); color: var(--barra-tinta); font: 700 .72rem var(--ui); padding: .3rem .55rem; border-radius: 6px; pointer-events: none; }
+.acoes-mini { display: inline-flex; align-items: center; gap: .45rem; }
+.nota { scroll-margin-top: 96px; }
+.nota:target { box-shadow: 0 0 0 3px var(--lavanda); }
+.curtir-fim .cp-botao { background: var(--folha); }
+.perfil-cp { padding-top: .9rem; border-top: 1px solid var(--linha); }
+.perfil-cp .cp-botao { padding: .45rem .95rem; font-size: .84rem; }
+.perfil-cp .cp-rede { width: 34px; height: 34px; }
+
 /* comentários (Cusdis: qualquer pessoa comenta, sem conta) */
 .comentarios { max-width: 44rem; margin: 2.4rem auto 0; }
 .comentarios #cusdis_thread { min-height: 2rem; }
