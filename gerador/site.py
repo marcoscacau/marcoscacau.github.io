@@ -6,8 +6,8 @@ Tudo vem da pasta conteudo/ (ver conteudo.py). Biblioteca e Notas só aparecem q
 uso: python gerador/site.py [pasta de saída]     (padrão: _site)
 O GitHub roda isto sozinho a cada alteração (.github/workflows/site.yml).
 """
-import os, re, sys, html, json, hashlib, datetime, urllib.parse
-import conteudo
+import os, re, sys, html, json, hashlib, datetime, unicodedata, urllib.parse
+import conteudo, indexnow
 
 S = os.path.dirname(os.path.abspath(__file__))
 SITE = os.path.abspath(sys.argv[1] if len(sys.argv) > 1 else os.path.join(conteudo.RAIZ, "_site"))
@@ -59,7 +59,7 @@ def rota(i):
         return "/"
     if i.startswith("tema-"):
         return f"/tema/{i[5:]}/"
-    if i in ("notas", "biblioteca", "sobre", "links"):
+    if i in ("notas", "biblioteca", "sobre", "links", "painel"):
         return f"/{i}/"
     if i.startswith("livro-"):
         return f"/biblioteca/{i[6:]}/"
@@ -76,7 +76,16 @@ ICS = {
     "telegram": '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 4 3 11l6 2 2 6 3-4 5 4z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="m9 13 8-6" stroke="currentColor" stroke-width="1.7"/></svg>',
     "link": '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
     "partilha": '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3m0 0L7.5 7.5M12 3l4.5 4.5M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    "lupa": '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="m15.5 15.5 5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
 }
+BUSCA = '''<dialog class="busca" aria-label="Buscar no site">
+  <form class="busca-cab" method="dialog" role="search">
+    <input class="busca-campo" type="search" placeholder="Buscar textos, livros e notas…" aria-label="O que você procura?" autocomplete="off" enterkeyhint="search">
+    <button class="busca-fechar" value="fechar" aria-label="Fechar a busca">Esc</button>
+  </form>
+  <p class="busca-info" role="status" aria-live="polite"></p>
+  <ol class="busca-lista"></ol>
+</dialog>'''
 
 
 def compartilhar(i, titulo, rotulo="Compartilhar", pequeno=False):
@@ -112,6 +121,14 @@ e = lambda s: html.escape(s, quote=True)
 slugt = lambda t: "tema-" + re.sub(r"[^a-z]", "", t.lower().replace("í", "i").replace("ç", "c").replace("ã", "a"))
 minutos = lambda w: max(1, round(w / 200))
 
+
+def sem_acento(s):
+    return "".join(c for c in unicodedata.normalize("NFD", s.lower()) if unicodedata.category(c) != "Mn")
+
+
+def corta(s, n):
+    return s if len(s) <= n else s[:n].rsplit(" ", 1)[0] + "…"
+
 posts = conteudo.textos(img)
 for p in posts:
     p["temas"] = p["temas"] or ["Textos"]
@@ -146,7 +163,8 @@ def curtir(p, classe=""):
 
 def cartao(p, cls):
     """Cartão da grade: imagem inteira com um cartão branco por cima (largo) ou uma faixa no rodapé (estreito)."""
-    img = f'<img src="img/{p["capa"]}" alt="" loading="lazy">' if p["capa"] else ""
+    tam = "(max-width: 640px) 75vw, (max-width: 960px) 50vw, " + ("370px" if cls == "b-1" else "1130px" if cls == "b-largo" else "760px")
+    img = f'<img src="img/{p["capa"]}" alt="" loading="lazy" data-tam="{tam}">' if p["capa"] else ""   # alt vazio: o título já está no cartão
     if cls == "b-1":
         sob = f'<span class="b-barra">{kicker(p, False)}<span>{e(p["titulo"])}</span></span>'
     else:
@@ -190,7 +208,7 @@ destaques = [p for p in recentes if p["capa"]][:N_DESTAQUES]
 def slide(p, i):
     oculto = "" if i == 0 else ' aria-hidden="true" tabindex="-1"'
     return f'''<a class="destaque slide{" ativo" if i == 0 else ""}" href="#{p["slug"]}"{oculto}>
-  <img src="img/{p["capa"]}" alt=""{' loading="lazy"' if i else ""}>
+  <img src="img/{p["capa"]}" alt=""{' data-adiar="1"' if i else ' fetchpriority="high"'} data-tam="(max-width: 640px) 75vw, (max-width: 1160px) 100vw, 1130px">
   <span class="destaque-card">{kicker(p)}<span class="destaque-tit">{e(p["titulo"])}</span>
     <span class="destaque-dek">{e(linha(p, 150))}</span><span class="ler">Ler o texto →</span></span>
 </a>'''
@@ -207,7 +225,7 @@ destaque = f'''<section class="carrossel" aria-roledescription="carrossel" aria-
 manifesto = (f'<p class="manifesto">Escrevo sobre <b class="giro" data-palavras="{e("|".join(GIRO))}">{GIRO[0]}</b> '
              f'para quem sente que o mundo visível nunca é o mundo inteiro.</p>')
 perfil_card = f'''<aside class="perfil-card" aria-label="Sobre o autor">
-  <div class="perfil-topo"><img src="mini/{FOTO}" alt="Foto de Marcos Vinicius, o Cacau">
+  <div class="perfil-topo"><img src="mini/{FOTO}" alt="Foto de Marcos Vinicius, o Cacau" data-tam="60px">
     <div><b>Marcos Vinicius</b><span>Cacau · no Substack</span></div></div>
   <p>{e(BIO)}</p>
   <div class="perfil-acoes"><a class="botao-principal" href="{SUBSTACK}/subscribe" target="_blank" rel="noopener">Assinar grátis</a>
@@ -241,7 +259,7 @@ def mosaico_tema(t):
     escolha = next((p for p in lista if p["capa"] not in _capas_usadas), lista[0] if lista else None)
     if escolha:
         _capas_usadas.add(escolha["capa"])
-    img = f'<img src="mini/{escolha["capa"]}" alt="" loading="lazy">' if escolha else ""
+    img = f'<img src="mini/{escolha["capa"]}" alt="" loading="lazy" data-tam="(max-width: 640px) 27vw, (max-width: 960px) 33vw, 220px">' if escolha else ""
     n = sum(t in p["temas"] for p in posts)
     return f'<a class="tema-tile" href="#{slugt(t)}">{img}<span><b>{e(t)}</b><small>{n} texto{"s" if n != 1 else ""}</small></span></a>'
 
@@ -257,15 +275,19 @@ def estrelas(n):
 
 def cartao_nota(n):
     imgs = n.get("imagens") or ([n["imagem"]] if n["imagem"] else [])
+    trecho = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", n["html"])).strip()
+    trecho = html.unescape(trecho[:70].rsplit(" ", 1)[0] + "…" if len(trecho) > 70 else trecho)
+    tam = 'data-tam="(max-width: 640px) 75vw, 380px"'
     img = ""
     if len(imgs) > 1:                                                     # carrossel: desliza como no Instagram
         img = (f'<div class="fotos" data-total="{len(imgs)}"><div class="fotos-trilho">'
-               + "".join(f'<img src="img/{i}" alt="Foto {k} de {len(imgs)}" loading="lazy">' for k, i in enumerate(imgs, 1))
+               + "".join(f'<img src="img/{i}" alt="Foto {k} de {len(imgs)}{": " + e(trecho) if trecho else ""}" loading="lazy" {tam}>'
+                         for k, i in enumerate(imgs, 1))
                + f'</div><span class="fotos-cont">1/{len(imgs)}</span>'
                '<button class="fotos-seta ant" type="button" aria-label="Foto anterior">‹</button>'
                '<button class="fotos-seta prox" type="button" aria-label="Próxima foto">›</button></div>')
     elif imgs:
-        img = f'<img src="img/{imgs[0]}" alt="" loading="lazy">'
+        img = f'<img src="img/{imgs[0]}" alt="{"Foto: " + e(trecho) if trecho else "Foto"}" loading="lazy" {tam}>'
     if img and n.get("video") and n.get("url"):
         img = (f'<a class="nota-video" href="{e(n["url"])}" target="_blank" rel="noopener" aria-label="Ver o vídeo no Instagram">{img}'
                '<span class="play" aria-hidden="true">▶</span></a>')
@@ -278,8 +300,6 @@ def cartao_nota(n):
                  '<button class="continuar" type="button" aria-expanded="false">Continuar lendo</button>')
     ig = (f'<a class="nota-ig" href="{e(n["url"])}" target="_blank" rel="noopener" aria-label="Ver no Instagram">{IC["instagram"]}</a>'
           if n.get("instagram") and n.get("url") else "")
-    trecho = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", n["html"])).strip()
-    trecho = html.unescape(trecho[:70].rsplit(" ", 1)[0] + "…" if len(trecho) > 70 else trecho)
     return f'''<article class="{classe}" id="{n["slug"]}">{img}{texto}
   <footer><span class="kicker">{data}{tema}</span><span class="nota-acoes">{ig}{compartilhar(n["slug"], trecho, pequeno=True)}{curtir(n, "pequeno")}</span></footer></article>'''
 
@@ -366,7 +386,7 @@ if TEM_LIVROS:
   <article class="folha livro-pag">
     <a class="voltar" href="#biblioteca">← Biblioteca</a>
     <div class="livro-cab">
-      <div class="livro-capa grande">{f'<img src="img/{l["capa"]}" alt="Capa de {e(l["titulo"])}">' if l["capa"] else f'<span class="sem-capa">{e(l["titulo"])}</span>'}</div>
+      <div class="livro-capa grande">{f'<img src="img/{l["capa"]}" alt="Capa de {e(l["titulo"])}" fetchpriority="high" data-tam="(max-width: 640px) 60vw, 220px">' if l["capa"] else f'<span class="sem-capa">{e(l["titulo"])}</span>'}</div>
       <div class="livro-info">
         <span class="kicker">{e(l["colecao"]) + (f" · volume {int(l['ordem'])}" if 1 <= l["ordem"] < 999 and l["colecao"] != l["autor"] and "Cury" not in l["colecao"] else "") if l["colecao"] else "Biblioteca"}{" · " + e(l["tema"]) if l["tema"] else ""}</span>
         <h1 class="titulo-post">{e(l["titulo"])}</h1>
@@ -401,6 +421,20 @@ for t in ORDEM_TEMAS:
 </section>'''
 
 # ---------- textos ----------
+def alt_corpo(h, titulo):
+    """Imagem dentro do texto sem descrição: usa a legenda da figura ou, sem legenda, o título do texto."""
+    def com_alt(tag, texto):
+        if re.search(r'\salt="[^"]+"', tag):
+            return tag
+        return "<img" + f' alt="{e(texto)}"' + re.sub(r'\salt=(""|\'\')', "", tag[4:])
+
+    def figura(m):
+        leg = conteudo.texto_puro(re.search(r"<figcaption\b.*?</figcaption>", m.group(0), re.S).group(0))[:140]
+        return re.sub(r"<img\b[^>]*>", lambda x: com_alt(x.group(0), leg), m.group(0)) if leg else m.group(0)
+    h = re.sub(r"<figure\b(?:(?!</figure>).)*?<figcaption\b.*?</figure>", figura, h, flags=re.S)
+    return re.sub(r"<img\b[^>]*>", lambda x: com_alt(x.group(0), "Imagem do texto " + titulo), h)
+
+
 artigos = ""
 for k, p in enumerate(recentes):
     ant = recentes[k + 1] if k + 1 < len(recentes) else None
@@ -418,9 +452,9 @@ for k, p in enumerate(recentes):
     <h1 class="titulo-post">{e(p["titulo"])}</h1>
     {f'<p class="linha-fina">{e(p["sub"])}</p>' if p["sub"] else ""}
     <div class="linha-byline"><p class="byline">por <strong>Cacau</strong> · {data_ext(p["data"])} · {minutos(p["palavras"])} min de leitura</p><div class="acoes-mini">{curtir(p, "pequeno")}{compartilhar(p["slug"], p["titulo"], pequeno=True)}</div></div>
-    {f'<figure class="capa"><img src="img/{p["capa"]}" alt=""></figure>' if p["capa"] else ""}
+    {f'<figure class="capa"><img src="img/{p["capa"]}" alt="{e(p["titulo"])}" fetchpriority="high" data-tam="(max-width: 640px) 75vw, (max-width: 900px) 100vw, 864px"></figure>' if p["capa"] else ""}
     <div class="corpo">
-{p["html"]}
+{alt_corpo(p["html"], p["titulo"])}
     </div>
     <div class="curtir-fim"><p>Gostou deste texto?</p>{curtir(p)}{compartilhar(p["slug"], p["titulo"])}</div>
     {f'<p class="origem">Publicado originalmente no <a href="{e(p["url"])}" target="_blank" rel="noopener">Substack</a> em {data_ext(p["data"])}.</p>' if p["url"] else ""}
@@ -435,7 +469,7 @@ boas = porslug.get("sejam-bem-vindos")
 redes_sobre = "".join(f'<a class="rede" href="{u}" target="_blank" rel="noopener">{IC[k]}<span>{e(n)} · {e(h)}</span></a>' for k, n, h, u in REDES)
 sobre = f'''<section class="vista" id="sobre">
   <article class="folha post">
-    <div class="sobre-cab"><img src="img/{FOTO}" alt="Foto de Marcos Vinicius, o Cacau"><div>
+    <div class="sobre-cab"><img src="img/{FOTO}" alt="Foto de Marcos Vinicius, o Cacau" data-tam="130px"><div>
       <span class="kicker">Sobre</span><h1 class="titulo-post">Marcos Vinicius, o Cacau</h1><p class="linha-fina">{e(BIO)}</p>
       <div class="redes">{redes_sobre}</div></div></div>
     <div class="corpo">{boas["html"] if boas else ""}</div>
@@ -472,7 +506,7 @@ for p in recentes:
 ultimo = recentes[0] if recentes else None
 links_pag = f'''<section class="vista" id="links">
   <div class="links">
-    {f'<img class="links-foto" src="mini/{FOTO}" alt="Foto de Marcos Vinicius, o Cacau">' if FOTO else ""}
+    {f'<img class="links-foto" src="mini/{FOTO}" alt="Foto de Marcos Vinicius, o Cacau" data-tam="104px">' if FOTO else ""}
     <h1>Marcos Vinicius · Cacau</h1>
     <p>{e(BIO)}</p>
     <nav class="links-lista">
@@ -486,7 +520,28 @@ links_pag = f'''<section class="vista" id="links">
   </div>
 </section>'''
 
-tudo = inicio + paginas_tema + paginas_extras + artigos + sobre + links_pag
+# painel (só para o autor; fora do menu, do mapa do site e do Google): visitas e curtidas de cada página
+chave_visita = lambda i: "v-" + i[:60]                    # contador de visitas no Abacus, o mesmo serviço das curtidas
+painel_dados = [dict(t="Página inicial", k="Página", u="/", v=chave_visita("inicio"))]
+painel_dados += [dict(t=p["titulo"], k="Texto", u=rota(p["slug"]), v=chave_visita(p["slug"]), c=p["slug"]) for p in recentes]
+painel_dados += [dict(t=l["titulo"], k="Livro", u=rota(l["slug"]), v=chave_visita(l["slug"]), c=l["slug"]) for l in LIVROS]
+painel_dados += [dict(t=corta(conteudo.texto_puro(n["html"]), 60) or "(nota só com foto)", k="Nota", u=rota(n["slug"]), c=n["slug"]) for n in NOTAS]
+painel_dados += [dict(t=t, k="Tema", u=rota(slugt(t)), v=chave_visita(slugt(t))) for t in ORDEM_TEMAS]
+painel_dados += [dict(t=t, k="Página", u=rota(i), v=chave_visita(i)) for i, t in
+                 (("biblioteca", "Biblioteca"), ("notas", "Notas curtas"), ("sobre", "Sobre"), ("links", "Links (bio do Instagram)")) if i != "notas" or TEM_NOTAS]
+painel = f'''<section class="vista" id="painel">
+  <header class="cab-tema"><h1 class="etiqueta grande"><span>Painel</span></h1>
+    <p class="contagem">Visitas e curtidas de cada página. Esta página não aparece no menu nem no Google; guarde o endereço.</p></header>
+  <div class="painel-resumo"><div><b class="painel-total" data-o="visitas">…</b><small>visitas no total</small></div>
+    <div><b class="painel-total" data-o="curtidas">…</b><small>curtidas no total</small></div></div>
+  <label class="painel-eu"><input type="checkbox" class="painel-nao-contar"> Não contar as minhas visitas neste aparelho</label>
+  <div class="painel-filtros" role="group" aria-label="Mostrar">{"".join(f'<button type="button" data-k="{k}" aria-pressed="{str(k == "Tudo").lower()}">{k}</button>' for k in ("Tudo", "Texto", "Livro", "Nota", "Tema", "Página"))}</div>
+  <table class="painel-tabela"><thead><tr><th>Página</th><th>Tipo</th><th class="n">Visitas</th><th class="n">Curtidas</th></tr></thead><tbody></tbody></table>
+  <p class="painel-nota">As visitas começaram a ser contadas em {data_ext(HOJE)}. Robôs e as suas visitas marcadas acima ficam de fora. Não guarda nada de quem visita: só soma um número por página.</p>
+  <script type="application/json" id="painel-dados">{json.dumps(painel_dados, ensure_ascii=False).replace("</", "<\\/")}</script>
+</section>'''
+
+tudo = inicio + paginas_tema + paginas_extras + artigos + sobre + links_pag + painel
 MARCA = '<section class="vista" id="'
 vistas = {}
 for parte in tudo.split(MARCA)[1:]:
@@ -495,16 +550,44 @@ for parte in tudo.split(MARCA)[1:]:
 ids = set(vistas)
 
 
+# No celular, as imagens de tela cheia dizem "75vw": num aparelho 3x isso escolhe a versão de 960 px em vez da de 1400
+# (a diferença não se vê numa foto, e o arquivo cai pela metade). No computador vale o tamanho real.
+TAMANHOS = {"img": "(max-width: 640px) 75vw, (max-width: 760px) 100vw, 704px", "mini": "(max-width: 640px) 30vw, 210px"}
+
+
+def afinar(h):
+    """Cada imagem ganha largura e altura (a página não "pula" ao carregar) e as versões WebP, para o navegador
+    baixar só o tamanho que cabe na tela. O tamanho na tela vem de data-tam (ou do padrão da pasta)."""
+    def troca(m):
+        tag = m.group(0)
+        s = re.search(r'\ssrc="/(img|mini)/([^"]+)"', tag)
+        med = img.medidas.get(s.group(2)) if s else None
+        if not med:
+            return tag
+        t = re.search(r'\sdata-tam="([^"]*)"', tag)
+        tam = t.group(1) if t else TAMANHOS[s.group(1)]
+        tag = tag.replace(t.group(0), "") if t else tag
+        l, a = med[s.group(1)]
+        extra = f' srcset="{", ".join(f"/w/{arq} {w}w" for w, arq in med["w"])}" sizes="{tam}"'
+        if "width=" not in tag:
+            extra += f' width="{l}" height="{a}"'
+        tag = tag[:-1].rstrip("/ ") + extra + ">"
+        if 'data-adiar="1"' in tag:            # slide escondido do carrossel: o site.js carrega pouco antes de aparecer
+            tag = re.sub(r'\s(src|srcset)="', r' data-\1="', tag.replace(' data-adiar="1"', ""))
+        return tag
+    return re.sub(r"<img\b[^>]*>", troca, h)
+
+
 def caminhos(h):
     h = re.sub(r'href="#([^"]+)"', lambda m: f'href="{rota(m.group(1))}"' if m.group(1) in ids else m.group(0), h)
-    return re.sub(r'(src|srcset)="(img|mini)/', r'\1="/\2/', h)
+    return afinar(re.sub(r'(src|srcset)="(img|mini)/', r'\1="/\2/', h))
 
 
 # título, resumo e imagem de cada página (o que aparece no Google e na prévia dos links)
 info = {"inicio": ("Cacau — Física, Ficção e Teologia", BIO, None), "sobre": ("Sobre · Cacau", BIO, FOTO),
         "notas": ("Notas curtas · Cacau", "Pensamentos rápidos, entre um texto e outro.", NOTAS[0]["imagem"] if NOTAS else None),
         "biblioteca": ("Biblioteca · Cacau", "Resumos de livros.", LIVROS[0]["capa"] if LIVROS else None),
-        "links": ("Cacau · links", BIO, FOTO)}
+        "links": ("Cacau · links", BIO, FOTO), "painel": ("Painel · Cacau", "Visitas e curtidas.", None)}
 for t in ORDEM_TEMAS:
     info[slugt(t)] = (f"{t} · Cacau", f"Textos de {t.lower()} de Marcos Vinicius (Cacau).", None)
 for p in posts:
@@ -524,6 +607,7 @@ cabecalho = f'''<header class="topo">
   <div class="topo-dentro">
     <a class="logo" href="#inicio"><span class="logo-nome">CACAU</span><span class="logo-sub">física · ficção · teologia</span></a>
     <nav class="menu" aria-label="Seções"><a href="#inicio">Início</a>{menu}<a href="#sobre">Sobre</a></nav>
+    <button class="topo-busca" type="button" aria-label="Buscar no site" title="Buscar (/)" hidden>{ICS["lupa"]}</button>
     <a class="topo-assinar" href="{SUBSTACK}/subscribe" target="_blank" rel="noopener">Assinar</a>
   </div>
 </header>'''
@@ -550,6 +634,13 @@ def pagina(i, corpo):
                  f'<script type="application/ld+json">{{"@context":"https://schema.org","@type":"Article","headline":{json.dumps(p["titulo"], ensure_ascii=False)},'
                  f'"datePublished":"{p["data"]}","author":{{"@type":"Person","name":"Marcos Vinicius (Cacau)"}},'
                  f'"image":"{ENDERECO}/img/{imagem}","mainEntityOfPage":"{url}"}}</script>')
+    elif i == "inicio":                                   # o Google pode mostrar uma caixa de busca do site
+        extra = (f'<script type="application/ld+json">{{"@context":"https://schema.org","@type":"WebSite","name":"Cacau","url":"{ENDERECO}/",'
+                 f'"potentialAction":{{"@type":"SearchAction","target":"{ENDERECO}/?busca={{q}}","query-input":"required name=q"}}}}</script>')
+    elif i == "painel":
+        extra = '<meta name="robots" content="noindex, nofollow">'
+    conta = "" if i in ("painel", "erro") else f' data-conta="{chave_visita(i)}"'
+    classes = ' class="so-conteudo"' if sem_moldura else ""
     return f'''<!doctype html>
 <html lang="pt-BR">
 <head>
@@ -575,12 +666,12 @@ def pagina(i, corpo):
 <link rel="stylesheet" href="/site.css?v={VER}">
 {f'<script data-goatcounter="https://{e(GOAT)}.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>' if GOAT else ""}
 </head>
-<body{' class="so-conteudo"' if sem_moldura else ""}>
+<body{classes}{conta}>
 {"" if sem_moldura else caminhos(cabecalho)}
 <main class="pagina">
 {caminhos(corpo)}
 </main>
-{"" if sem_moldura else caminhos(rodape)}
+{"" if sem_moldura else caminhos(rodape) + BUSCA}
 <script src="/site.js?v={VER}"></script>
 </body>
 </html>
@@ -602,13 +693,28 @@ nao_achou = f'''<section class="vista" id="erro"><article class="folha post"><h1
 <p class="linha-fina">O endereço pode ter mudado ou o texto saiu do site.</p><p><a class="botao-principal" href="#inicio">Ir para o início</a></p></article></section>'''
 open(os.path.join(SITE, "404.html"), "w", encoding="utf-8", newline="\n").write(pagina("erro", nao_achou.replace('href="#inicio"', 'href="/"')))
 
+# índice da busca (baixado só quando alguém abre a busca): título, tipo, endereço, uma linha, palavras-chave sem acento
+# e o texto (o navegador tira os acentos na hora; o texto original fica para mostrar o trecho)
+puro = lambda h: unicodedata.normalize("NFC", conteudo.texto_puro(h))
+indice = [dict(t=p["titulo"], k="Texto", u=rota(p["slug"]), l=linha(p, 140), b=sem_acento(" ".join([p["titulo"], p["sub"], " ".join(p["temas"])])),
+               x=puro(p["html"])) for p in recentes]
+indice += [dict(t=l["titulo"], k="Livro", u=rota(l["slug"]), l=" · ".join(x for x in (l["autor"], l["colecao"]) if x),
+                b=sem_acento(" ".join([l["titulo"], l["autor"], l["colecao"]])), x=puro(l["html"] + " " + e(l["frase"]))) for l in LIVROS]
+for n in NOTAS:
+    txt = puro(n["html"])
+    if txt:
+        indice.append(dict(t=corta(txt, 80), k="Nota", u=rota(n["slug"]), l=data_ext(n["data"]) if re.match(r"\d{4}-\d{2}-\d{2}$", n["data"]) else "",
+                           b=sem_acento(n["tema"] or ""), x=txt))
+open(os.path.join(SITE, "busca.json"), "w", encoding="utf-8").write(json.dumps(indice, ensure_ascii=False, separators=(",", ":")))
+
 # mapa do site e robots, para o Google
 datas = {p["slug"]: p["data"] for p in posts}
 datas.update({l["slug"]: l["data"] for l in LIVROS if l["data"]})
 urls = "".join(f'<url><loc>{ENDERECO}{rota(i)}</loc>{f"<lastmod>{datas[i]}</lastmod>" if datas.get(i) else ""}</url>'
-               for i in sorted(ids, key=lambda x: (x != "inicio", rota(x))) if i != "links")
+               for i in sorted(ids, key=lambda x: (x != "inicio", rota(x))) if i not in ("links", "painel"))
 open(os.path.join(SITE, "sitemap.xml"), "w", encoding="utf-8").write(
     f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{urls}</urlset>\n')
-open(os.path.join(SITE, "robots.txt"), "w").write(f"User-agent: *\nAllow: /\nSitemap: {ENDERECO}/sitemap.xml\n")
+open(os.path.join(SITE, "robots.txt"), "w").write(f"User-agent: *\nAllow: /\nDisallow: /painel/\nSitemap: {ENDERECO}/sitemap.xml\n")
+open(os.path.join(SITE, indexnow.CHAVE + ".txt"), "w").write(indexnow.CHAVE)   # prova para o Bing de que o site é seu
 open(os.path.join(SITE, ".nojekyll"), "w").close()
 print("ok:", len(vistas), "páginas ·", len(posts), "textos ·", len(NOTAS), "notas ·", len(LIVROS), "livros")

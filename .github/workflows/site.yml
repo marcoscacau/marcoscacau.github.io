@@ -23,6 +23,8 @@ concurrency:
 jobs:
   montar:
     runs-on: ubuntu-latest
+    outputs:
+      mudou: ${{ steps.buscar.outputs.mudou || (github.event_name == 'push' && 'sim') || '' }}
     steps:
       - uses: actions/checkout@v7
 
@@ -34,6 +36,7 @@ jobs:
         run: pip install pillow pyyaml markdown-it-py
 
       - name: Buscar posts novos (Substack e Instagram)
+        id: buscar
         if: github.event_name != 'push'
         run: |
           python gerador/substack.py || echo "::warning::Substack não respondeu; tenta de novo amanhã"
@@ -45,6 +48,7 @@ jobs:
             git commit -m "Posts novos do Substack/Instagram"
             git pull --rebase
             git push
+            echo "mudou=sim" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Montar o site
@@ -63,3 +67,16 @@ jobs:
     steps:
       - id: deploy
         uses: actions/deploy-pages@v5
+
+  avisar-buscadores:
+    needs: [montar, publicar]
+    if: needs.montar.outputs.mudou == 'sim'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - run: pip install pyyaml pillow markdown-it-py
+      - name: Avisar o Bing e outros buscadores (IndexNow)
+        run: cd gerador && python indexnow.py || echo "::warning::IndexNow não respondeu"

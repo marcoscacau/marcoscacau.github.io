@@ -320,6 +320,45 @@ a.tag:hover { color: var(--tinta); }
   font-family: var(--serif); font-size: 1.08rem; }
 .links-destaque small { font-family: var(--ui); font-size: .68rem; letter-spacing: .12em; text-transform: uppercase; opacity: .75; }
 
+/* busca: botão na barra e janela por cima da página */
+.topo-busca { flex: none; display: grid; place-items: center; width: 38px; height: 38px; border: 0; border-radius: 9px; padding: 0;
+  background: rgba(255, 255, 255, .08); color: var(--barra-tinta); cursor: pointer; }
+.topo-busca:hover { background: rgba(255, 255, 255, .16); }
+.topo-busca svg { width: 19px; height: 19px; }
+dialog.busca { width: min(40rem, calc(100% - 24px)); max-height: min(80vh, 44rem); margin: 9vh auto auto; padding: 0; border: 0; border-radius: 16px;
+  background: var(--folha); color: var(--tinta); box-shadow: 0 24px 60px rgba(20, 22, 32, .3); overflow: hidden; }
+dialog.busca[open] { display: flex; flex-direction: column; }
+dialog.busca::backdrop { background: rgba(35, 38, 58, .45); backdrop-filter: blur(3px); }
+.busca-cab { display: flex; align-items: center; gap: .6rem; padding: .8rem .9rem; border-bottom: 1px solid var(--linha); }
+.busca-campo { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; color: var(--tinta); font: 400 1.15rem var(--serif); padding: .45rem .3rem; }
+.busca-campo::-webkit-search-cancel-button { cursor: pointer; }
+.busca-fechar { flex: none; border: 1px solid var(--linha); background: var(--fundo); color: var(--suave); border-radius: 7px; padding: .3rem .6rem;
+  font: 700 .72rem var(--ui); cursor: pointer; }
+.busca-info { margin: 0; padding: .6rem 1.2rem 0; font-size: .8rem; color: var(--suave); }
+.busca-info:empty { display: none; }
+.busca-lista { list-style: none; margin: 0; padding: .5rem; overflow-y: auto; }
+.busca-lista a { display: flex; flex-direction: column; gap: .15rem; padding: .7rem .8rem; border-radius: 10px; }
+.busca-lista a:hover, .busca-lista a:focus-visible { background: var(--ceu); outline: 0; }
+.busca-lista b { font-family: var(--serif); font-size: 1.05rem; line-height: 1.3; }
+.busca-lista small { font-size: .84rem; color: var(--suave); line-height: 1.45; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+/* painel (só para o autor) */
+.painel-resumo { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 1.2rem; }
+.painel-resumo div { background: var(--folha); border-radius: 14px; padding: 1rem 1.3rem; min-width: 11rem; display: flex; flex-direction: column; }
+.painel-resumo b { font-family: var(--serif); font-size: 2rem; line-height: 1.1; }
+.painel-resumo small { color: var(--suave); font-size: .82rem; }
+.painel-eu { display: inline-flex; align-items: center; gap: .5rem; font-size: .9rem; margin-bottom: 1rem; cursor: pointer; }
+.painel-filtros { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: .9rem; }
+.painel-filtros button { border: 1px solid var(--linha); background: var(--folha); color: var(--tinta); border-radius: 999px; padding: .35rem .85rem; font: 700 .8rem var(--ui); cursor: pointer; }
+.painel-filtros button[aria-pressed="true"] { background: var(--lavanda); border-color: var(--lavanda); color: #23263a; }
+.painel-tabela { width: 100%; border-collapse: collapse; background: var(--folha); border-radius: 14px; overflow: hidden; font-size: .9rem; margin-bottom: 1rem; }
+.painel-tabela th, .painel-tabela td { text-align: left; padding: .6rem .9rem; border-bottom: 1px solid var(--linha); }
+.painel-tabela th { font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; color: var(--suave); }
+.painel-tabela .n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.painel-tabela td a:hover { text-decoration: underline; text-decoration-color: var(--lavanda); }
+.painel-nota { font-size: .8rem; color: var(--suave); margin-bottom: 2.4rem; }
+@media (max-width: 640px) { .painel-tabela td:nth-child(2), .painel-tabela th:nth-child(2) { display: none; } .painel-tabela th, .painel-tabela td { padding: .55rem .6rem; } }
+
 /* rodapé (Gates Notes: escuro, links grandes) */
 .rodape { padding: 0 16px 16px; margin-top: 1rem; }
 .rodape-dentro { max-width: 1128px; margin: 0 auto; background: var(--barra); color: var(--barra-tinta); border-radius: 18px; padding: 2.6rem 2.4rem 1.6rem;

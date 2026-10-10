@@ -81,6 +81,137 @@ var Curtidas = (function () {
   });
 })();
 
+// Visitas: soma 1 no contador da página (o mesmo serviço das curtidas). Não guarda nada de quem visita.
+// Fica de fora: robôs, a versão de teste no computador e quem marcou "não contar" no /painel/.
+var Visitas = (function () {
+  var API = "https://abacus.jasoncameron.dev", NS = "marcoscacau-site";
+  function contar() {
+    var chave = document.body.dataset.conta;
+    if (!chave || navigator.webdriver || /bot|crawl|spider|headless|preview/i.test(navigator.userAgent)) return;
+    if (location.protocol !== "https:") return;        // a cópia de teste (http://localhost) não conta
+    try { if (localStorage.getItem("nao-contar") === "1") return; } catch (e) {}
+    fetch(API + "/hit/" + NS + "/" + chave, { keepalive: true }).catch(function () {});
+  }
+  function ler(chave) {
+    return fetch(API + "/get/" + NS + "/" + chave).then(function (r) { return r.ok ? r.json() : { value: 0 }; })
+      .then(function (d) { return d.value || 0; }, function () { return null; });
+  }
+  return { contar: contar, ler: ler };
+})();
+Visitas.contar();
+
+// Busca: o índice (/busca.json) só é baixado quando alguém abre a busca. Ignora acentos e maiúsculas.
+(function () {
+  var botao = document.querySelector(".topo-busca"), caixa = document.querySelector("dialog.busca");
+  if (!botao || !caixa || !caixa.showModal) return;
+  botao.hidden = false;
+  var campo = caixa.querySelector(".busca-campo"), lista = caixa.querySelector(".busca-lista"), info = caixa.querySelector(".busca-info");
+  var indice = null, pedido = null;
+  function limpa(s) { return (s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, ""); }
+  function esc(s) { return s.replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function carregar() {
+    pedido = pedido || fetch("/busca.json").then(function (r) { return r.json(); }).then(function (d) {
+      d.forEach(function (x) { x.tl = limpa(x.t); x.xl = limpa(x.x); }); indice = d; return d;
+    });
+    return pedido;
+  }
+  function trecho(x, termos) {
+    // o trecho em volta da palavra, tirado do texto original (com acentos); sem acento o tamanho é o mesmo
+    var i = x.xl.indexOf(termos[0]);
+    if (i < 0 || x.k === "Nota" || x.xl.length !== x.x.length || x.tl.indexOf(termos[0]) >= 0) return x.l || x.x.slice(0, 140) + "…";
+    var a = Math.max(0, x.x.lastIndexOf(" ", Math.max(0, i - 60)) + 1);
+    return (a > 0 ? "…" : "") + x.x.slice(a, a + 150).trim() + "…";
+  }
+  function buscar() {
+    var q = limpa(campo.value).trim(), termos = q.split(/\s+/).filter(function (t) { return t.length > 1; });
+    lista.innerHTML = "";
+    if (!termos.length) { info.textContent = indice ? indice.length + " textos, livros e notas para buscar" : ""; return; }
+    var achados = [];
+    indice.forEach(function (x) {
+      var pontos = 0;
+      for (var k = 0; k < termos.length; k++) {
+        var t = termos[k], p = 0;
+        if (x.tl.indexOf(t) >= 0) p += x.k === "Nota" ? 1 : 10;   // o "título" da nota é o próprio começo dela
+        if (x.b.indexOf(t) >= 0) p += 5;
+        if (x.xl.indexOf(t) >= 0) p += 1 + Math.min(4, x.xl.split(t).length - 2);
+        if (!p) return;                                  // todas as palavras precisam aparecer
+        pontos += p;
+      }
+      achados.push({ x: x, p: pontos + (x.k === "Texto" ? 3 : 0) });
+    });
+    achados.sort(function (a, b) { return b.p - a.p; });
+    info.textContent = achados.length ? achados.length + (achados.length === 1 ? " resultado" : " resultados") : "Nada encontrado para “" + campo.value.trim() + "”.";
+    lista.innerHTML = achados.slice(0, 30).map(function (a) {
+      var x = a.x;
+      return '<li><a href="' + esc(x.u) + '"><span class="kicker">' + esc(x.k) + "</span><b>" + esc(x.t) + "</b>" +
+        (x.l || x.x ? "<small>" + esc(trecho(x, termos) || "") + "</small>" : "") + "</a></li>";
+    }).join("");
+  }
+  function abrir(q) {
+    caixa.showModal();
+    if (q) campo.value = q;
+    campo.focus();
+    carregar().then(buscar, function () { info.textContent = "Não deu para carregar a busca. Tente de novo."; pedido = null; });
+  }
+  botao.addEventListener("click", function () { abrir(); });
+  campo.addEventListener("input", function () { if (indice) buscar(); });
+  caixa.addEventListener("click", function (ev) { if (ev.target === caixa) caixa.close(); });   // clique fora fecha
+  caixa.querySelector(".busca-cab").addEventListener("submit", function (ev) {
+    var primeiro = lista.querySelector("a");
+    if (ev.submitter && ev.submitter.value === "fechar") return;
+    ev.preventDefault();
+    if (primeiro) location.href = primeiro.href;
+  });
+  document.addEventListener("keydown", function (ev) {
+    var t = ev.target.tagName;
+    if (ev.key === "/" && !caixa.open && t !== "INPUT" && t !== "TEXTAREA" && !ev.target.isContentEditable) { ev.preventDefault(); abrir(); }
+  });
+  var pedida = new URLSearchParams(location.search).get("busca");          // /?busca=termo (o Google usa)
+  if (pedida) abrir(pedida);
+})();
+
+// Painel (/painel/): visitas e curtidas de cada página, lidas do contador.
+(function () {
+  var dados = document.getElementById("painel-dados");
+  if (!dados) return;
+  var linhas = JSON.parse(dados.textContent), corpo = document.querySelector(".painel-tabela tbody");
+  var marca = document.querySelector(".painel-nao-contar");
+  try { marca.checked = localStorage.getItem("nao-contar") === "1"; } catch (e) {}
+  marca.addEventListener("change", function () { try { localStorage.setItem("nao-contar", marca.checked ? "1" : "0"); } catch (e) {} });
+  var filtro = "Tudo";
+  function n(v) { return v === null ? "—" : v === undefined ? "" : v.toLocaleString("pt-BR"); }
+  function desenhar() {
+    var mostrar = linhas.filter(function (l) { return filtro === "Tudo" || l.k === filtro; });
+    mostrar.sort(function (a, b) { return ((b.vis || 0) - (a.vis || 0)) || ((b.cur || 0) - (a.cur || 0)); });
+    corpo.innerHTML = mostrar.map(function (l) {
+      var t = l.t.replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; });
+      return '<tr><td><a href="' + l.u + '">' + t + "</a></td><td>" + l.k + '</td><td class="n">' + (l.v ? n(l.vis) : "") +
+        '</td><td class="n">' + (l.c ? n(l.cur) : "") + "</td></tr>";
+    }).join("");
+    var soma = function (campo) { return linhas.reduce(function (s, l) { return s + (l[campo] || 0); }, 0); };
+    document.querySelector('.painel-total[data-o="visitas"]').textContent = soma("vis").toLocaleString("pt-BR");
+    document.querySelector('.painel-total[data-o="curtidas"]').textContent = soma("cur").toLocaleString("pt-BR");
+  }
+  Array.prototype.forEach.call(document.querySelectorAll(".painel-filtros button"), function (b) {
+    b.addEventListener("click", function () {
+      filtro = b.dataset.k;
+      Array.prototype.forEach.call(b.parentNode.children, function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+      desenhar();
+    });
+  });
+  // poucas leituras por vez, para não sobrecarregar o contador gratuito
+  var fila = [];
+  linhas.forEach(function (l) { if (l.v) fila.push([l, "vis", l.v]); if (l.c) fila.push([l, "cur", l.c]); });
+  var vez = 0;
+  function proximo() {
+    var item = fila.shift();
+    if (!item) { desenhar(); return; }
+    Visitas.ler(item[2]).then(function (v) { item[0][item[1]] = v; if (++vez % 12 === 0) desenhar(); proximo(); });
+  }
+  desenhar();
+  for (var k = 0; k < 4; k++) proximo();
+})();
+
 // Frase-manifesto: a palavra em negrito troca a cada 2,6 s (parada para quem prefere menos movimento).
 (function () {
   var b = document.querySelector(".manifesto .giro");
@@ -133,8 +264,19 @@ var Curtidas = (function () {
   if (!slides.length) return;
   var atual = 0, timer = null;
   var calmo = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // as capas dos slides escondidos só são baixadas pouco antes de aparecer (o próximo fica sempre pronto)
+  function revela(k) {
+    var im = slides[(k + slides.length) % slides.length].querySelector("img[data-src]");
+    if (!im) return;
+    if (im.dataset.srcset) im.srcset = im.dataset.srcset;
+    im.src = im.dataset.src;
+    im.removeAttribute("data-src"); im.removeAttribute("data-srcset");
+  }
+  if (document.readyState === "complete") revela(1);
+  else window.addEventListener("load", function () { revela(1); });
   function ir(i) {
     atual = (i + slides.length) % slides.length;
+    revela(atual); revela(atual + 1);
     slides.forEach(function (s, k) {
       var on = k === atual;
       s.classList.toggle("ativo", on);

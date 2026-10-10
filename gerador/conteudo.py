@@ -69,12 +69,26 @@ def config():
 
 # ---------- imagens ----------
 class Imagens:
-    """Toda imagem usada vira img/<nome>.jpg (1400 px) e mini/<nome>.jpg (640 px) no site."""
+    """Toda imagem usada vira img/<nome>.jpg (1400 px) e mini/<nome>.jpg (640 px) no site, para a prévia dos links,
+    e w/<nome>-<largura>.webp em 4 larguras: o navegador baixa só a que cabe na tela (bem mais leve)."""
+    LARGURAS = (360, 640, 960, 1400)
 
     def __init__(self, site):
         self.site = site
-        for p in ("img", "mini"):
+        self.medidas = {}                      # nome -> {"img": (l, a), "mini": (l, a), "w": [(largura, arquivo), ...]}
+        for p in ("img", "mini", "w"):
             os.makedirs(os.path.join(site, p), exist_ok=True)
+
+    def _salva(self, origem, f, larg, formato):
+        if not os.path.exists(f) or os.path.getmtime(f) < os.path.getmtime(origem):
+            im = Image.open(origem).convert("RGB")
+            im.thumbnail((larg, larg * 2))
+            if formato == "JPEG":
+                im.save(f, "JPEG", quality=82, optimize=True, progressive=True)
+            else:
+                im.save(f, "WEBP", quality=74, method=5)
+        with Image.open(f) as im:
+            return im.size
 
     def __call__(self, ref):
         if not ref:
@@ -84,14 +98,21 @@ class Imagens:
         if not os.path.exists(origem):
             print("  aviso: imagem não encontrada:", ref)
             return None
-        saida = os.path.splitext(nome)[0] + ".jpg"
+        base = os.path.splitext(nome)[0]
+        saida = base + ".jpg"
+        if saida in self.medidas:
+            return saida
+        m = {}
         for pasta, larg in (("img", 1400), ("mini", 640)):
-            f = os.path.join(self.site, pasta, saida)
-            if not os.path.exists(f) or os.path.getmtime(f) < os.path.getmtime(origem):
-                im = Image.open(origem)
-                im = im.convert("RGB")
-                im.thumbnail((larg, larg * 2))
-                im.save(f, "JPEG", quality=82, optimize=True, progressive=True)
+            m[pasta] = self._salva(origem, os.path.join(self.site, pasta, saida), larg, "JPEG")
+        m["w"], vistas = [], set()
+        for larg in self.LARGURAS:
+            arq = f"{base}-{larg}.webp"
+            l, _ = self._salva(origem, os.path.join(self.site, "w", arq), larg, "WEBP")
+            if l not in vistas:                # imagem pequena: as larguras maiores dariam o mesmo arquivo
+                vistas.add(l)
+                m["w"].append((l, arq))
+        self.medidas[saida] = m
         return saida
 
     def no_html(self, h):
