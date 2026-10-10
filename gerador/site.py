@@ -6,7 +6,7 @@ Tudo vem da pasta conteudo/ (ver conteudo.py). Biblioteca e Notas só aparecem q
 uso: python gerador/site.py [pasta de saída]     (padrão: _site)
 O GitHub roda isto sozinho a cada alteração (.github/workflows/site.yml).
 """
-import os, re, sys, html, datetime
+import os, re, sys, html, json, hashlib, datetime
 import conteudo
 
 S = os.path.dirname(os.path.abspath(__file__))
@@ -360,56 +360,185 @@ sobre = f'''<section class="vista" id="sobre">
   {assinar()}
 </section>'''
 
+# ---------- páginas: cada endereço vira um arquivo (bom para o Google e para a prévia no WhatsApp/Instagram) ----------
+ENDERECO = str(CFG.get("endereco") or "https://marcoscacau.github.io").rstrip("/")
+GOAT = str(CFG.get("goatcounter") or "").strip()
+CUSDIS = str(CFG.get("cusdis_app_id") or "").strip()
+GOOGLE = str(CFG.get("google_verificacao") or "").strip()
+
+
+def rota(i):
+    if i == "inicio":
+        return "/"
+    if i.startswith("tema-"):
+        return f"/tema/{i[5:]}/"
+    if i in ("notas", "biblioteca", "sobre", "links"):
+        return f"/{i}/"
+    if i.startswith("livro-"):
+        return f"/biblioteca/{i[6:]}/"
+    return f"/textos/{i}/"
+
+
+def comentarios(p):
+    if not CUSDIS:
+        return ""
+    return f'''<section class="comentarios" aria-label="Comentários">
+  <h2 class="etiqueta"><span>Comentários</span></h2>
+  <div id="cusdis_thread" data-host="https://cusdis.com" data-app-id="{e(CUSDIS)}" data-page-id="{e(p["slug"])}"
+       data-page-url="{ENDERECO}{rota(p["slug"])}" data-page-title="{e(p["titulo"])}" data-theme="auto"></div>
+  <p class="comentarios-nota">Qualquer pessoa pode comentar, sem criar conta. Os comentários aparecem depois de aprovados.</p>
+</section>
+<script async defer src="https://cusdis.com/js/cusdis.es.js"></script>'''
+
+
+# comentários no fim de cada texto (antes do convite para assinar)
+for p in recentes:
+    marca = f'<section class="vista" id="{p["slug"]}">'
+    i = artigos.find(marca)
+    j = artigos.find("</article>", i) + len("</article>")
+    artigos = artigos[:j] + comentarios(p) + artigos[j:]
+
+# página "links" (para a bio do Instagram)
+ultimo = recentes[0] if recentes else None
+links_pag = f'''<section class="vista" id="links">
+  <div class="links">
+    {f'<img class="links-foto" src="mini/{FOTO}" alt="Foto de Marcos Vinicius, o Cacau">' if FOTO else ""}
+    <h1>Marcos Vinicius · Cacau</h1>
+    <p>{e(BIO)}</p>
+    <nav class="links-lista">
+      {f'<a class="links-destaque" href="#{ultimo["slug"]}"><small>Texto mais recente</small>{e(ultimo["titulo"])}</a>' if ultimo else ""}
+      <a href="{SUBSTACK}/subscribe" target="_blank" rel="noopener">Receber os textos por e-mail (grátis)</a>
+      <a href="#inicio">Todos os textos no site</a>
+      {'<a href="#notas">Notas curtas</a>' if TEM_NOTAS else ""}
+      {'<a href="#biblioteca">Biblioteca</a>' if TEM_LIVROS else ""}
+      {"".join(f'<a href="{u}" target="_blank" rel="noopener">{IC[k]} {e(n)} · {e(h)}</a>' for k, n, h, u in REDES)}
+    </nav>
+  </div>
+</section>'''
+
+tudo = inicio + paginas_tema + paginas_extras + artigos + sobre + links_pag
+MARCA = '<section class="vista" id="'
+vistas = {}
+for parte in tudo.split(MARCA)[1:]:
+    i = parte[:parte.index('"')]
+    vistas[i] = MARCA + parte
+ids = set(vistas)
+
+
+def caminhos(h):
+    h = re.sub(r'href="#([^"]+)"', lambda m: f'href="{rota(m.group(1))}"' if m.group(1) in ids else m.group(0), h)
+    return re.sub(r'(src|srcset)="(img|mini)/', r'\1="/\2/', h)
+
+
+# título, resumo e imagem de cada página (o que aparece no Google e na prévia dos links)
+info = {"inicio": ("Cacau — Física, Ficção e Teologia", BIO, None), "sobre": ("Sobre · Cacau", BIO, FOTO),
+        "notas": ("Notas curtas · Cacau", "Pensamentos rápidos, entre um texto e outro.", NOTAS[0]["imagem"] if NOTAS else None),
+        "biblioteca": ("Biblioteca · Cacau", "Resumos de livros.", LIVROS[0]["capa"] if LIVROS else None),
+        "links": ("Cacau · links", BIO, FOTO)}
+for t in ORDEM_TEMAS:
+    info[slugt(t)] = (f"{t} · Cacau", f"Textos de {t.lower()} de Marcos Vinicius (Cacau).", None)
+for p in posts:
+    info[p["slug"]] = (f'{p["titulo"]} · Cacau', p["sub"] or linha(p, 160), p["capa"])
+for l in LIVROS:
+    info[l["slug"]] = (f'{l["titulo"]} — resumo · Cacau', l["resumo"][:160], l["capa"])
+
 menu = "".join(f'<a href="#{slugt(t)}">{e(t)}</a>' for t in ORDEM_TEMAS)
 menu += ('<a href="#biblioteca">Biblioteca</a>' if TEM_LIVROS else "") + ('<a href="#notas">Notas</a>' if TEM_NOTAS else "")
 CSS = open(os.path.join(S, "site.css"), encoding="utf-8").read()
 JS = open(os.path.join(S, "site.js"), encoding="utf-8").read()
-doc = f'''<!doctype html>
-<html lang="pt-BR">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Cacau — Física, Ficção e Teologia</title>
-<meta name="description" content="{e(BIO)}">
-{ICONES}
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,700;1,8..60,400&family=Roboto:wght@300;400;500;700&display=swap">
-<style>
-{CSS}
-</style>
-</head>
-<body>
-<header class="topo">
+VER = hashlib.sha1((CSS + JS).encode()).hexdigest()[:8]                  # muda o nome quando o visual muda (sem cache velho)
+open(os.path.join(SITE, "site.css"), "w", encoding="utf-8", newline="\n").write(CSS)
+open(os.path.join(SITE, "site.js"), "w", encoding="utf-8", newline="\n").write(JS)
+capa_padrao = next((p["capa"] for p in recentes if p["capa"]), FOTO)
+cabecalho = f'''<header class="topo">
   <div class="topo-dentro">
     <a class="logo" href="#inicio"><span class="logo-nome">CACAU</span><span class="logo-sub">física · ficção · teologia</span></a>
     <nav class="menu" aria-label="Seções"><a href="#inicio">Início</a>{menu}<a href="#sobre">Sobre</a></nav>
     <a class="topo-assinar" href="{SUBSTACK}/subscribe" target="_blank" rel="noopener">Assinar</a>
   </div>
-</header>
-<main class="pagina">
-{inicio}
-{paginas_tema}
-{paginas_extras}
-{artigos}
-{sobre}
-</main>
-<footer class="rodape"><div class="rodape-dentro">
+</header>'''
+rodape = f'''<footer class="rodape"><div class="rodape-dentro">
   <nav class="rodape-menu" aria-label="Seções"><a href="#inicio">Início</a>{menu}<a href="#sobre">Sobre</a></nav>
   <div class="rodape-redes">{"".join(f'<a href="{u}" target="_blank" rel="noopener" aria-label="{e(n)}">{IC[k]}</a>' for k, n, h, u in REDES)}</div>
   <div class="rodape-fim">
     <span class="logo-nome">CACAU</span>
     <p>© {HOJE[:4]} Marcos Vinicius (Cacau) · textos também em <a href="{SUBSTACK}" target="_blank" rel="noopener">marcoscacau.substack.com</a></p>
   </div>
-</div></footer>
-<script>
-{JS}
-</script>
+</div></footer>'''
+
+
+def pagina(i, corpo):
+    titulo, desc, imagem = info.get(i, ("Cacau", BIO, None))
+    url = ENDERECO + rota(i)
+    imagem = imagem or capa_padrao
+    tipo = "article" if i in porslug or i.startswith("livro-") else "website"
+    sem_moldura = i == "links"
+    extra = ""
+    if i in porslug:
+        p = porslug[i]
+        extra = (f'<meta property="article:published_time" content="{p["data"]}">\n'
+                 f'<script type="application/ld+json">{{"@context":"https://schema.org","@type":"Article","headline":{json.dumps(p["titulo"], ensure_ascii=False)},'
+                 f'"datePublished":"{p["data"]}","author":{{"@type":"Person","name":"Marcos Vinicius (Cacau)"}},'
+                 f'"image":"{ENDERECO}/img/{imagem}","mainEntityOfPage":"{url}"}}</script>')
+    return f'''<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{e(titulo)}</title>
+<meta name="description" content="{e(desc)}">
+<link rel="canonical" href="{url}">
+<meta property="og:site_name" content="Cacau">
+<meta property="og:type" content="{tipo}">
+<meta property="og:title" content="{e(titulo)}">
+<meta property="og:description" content="{e(desc)}">
+<meta property="og:url" content="{url}">
+<meta property="og:locale" content="pt_BR">
+{f'<meta property="og:image" content="{ENDERECO}/img/{imagem}">' if imagem else ""}
+<meta name="twitter:card" content="summary_large_image">
+{extra}
+{f'<meta name="google-site-verification" content="{e(GOOGLE)}">' if GOOGLE else ""}
+{ICONES.replace('href="', 'href="/')}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,700;1,8..60,400&family=Roboto:wght@300;400;500;700&display=swap">
+<link rel="stylesheet" href="/site.css?v={VER}">
+{f'<script data-goatcounter="https://{e(GOAT)}.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>' if GOAT else ""}
+</head>
+<body{' class="so-conteudo"' if sem_moldura else ""}>
+{"" if sem_moldura else caminhos(cabecalho)}
+<main class="pagina">
+{caminhos(corpo)}
+</main>
+{"" if sem_moldura else caminhos(rodape)}
+<script src="/site.js?v={VER}"></script>
 </body>
 </html>
 '''
-# as vistas têm id "v-<endereço>", para o navegador não pular até a âncora ao abrir #endereço
-doc = doc.replace('class="vista" id="', 'class="vista" id="v-')
-open(os.path.join(SITE, "index.html"), "w", encoding="utf-8", newline="\n").write(doc)
+
+
+for i, corpo in vistas.items():
+    pasta = os.path.join(SITE, *[x for x in rota(i).split("/") if x])
+    os.makedirs(pasta, exist_ok=True)
+    open(os.path.join(pasta, "index.html"), "w", encoding="utf-8", newline="\n").write(pagina(i, corpo))
+
+# endereços antigos (#vida) continuam funcionando: a página inicial redireciona
+antigos = json.dumps({i: rota(i) for i in ids}, ensure_ascii=False)
+inicio_f = os.path.join(SITE, "index.html")
+h = open(inicio_f, encoding="utf-8").read()
+h = h.replace("<head>\n", f'<head>\n<script>(function(){{var r={antigos},k=location.hash.slice(1);if(r[k]&&r[k]!=="/")location.replace(r[k]);}})();</script>\n', 1)
+open(inicio_f, "w", encoding="utf-8", newline="\n").write(h)
+nao_achou = f'''<section class="vista" id="erro"><article class="folha post"><h1 class="titulo-post">Página não encontrada</h1>
+<p class="linha-fina">O endereço pode ter mudado ou o texto saiu do site.</p><p><a class="botao-principal" href="#inicio">Ir para o início</a></p></article></section>'''
+open(os.path.join(SITE, "404.html"), "w", encoding="utf-8", newline="\n").write(pagina("erro", nao_achou.replace('href="#inicio"', 'href="/"')))
+
+# mapa do site e robots, para o Google
+datas = {p["slug"]: p["data"] for p in posts}
+datas.update({l["slug"]: l["data"] for l in LIVROS if l["data"]})
+urls = "".join(f'<url><loc>{ENDERECO}{rota(i)}</loc>{f"<lastmod>{datas[i]}</lastmod>" if datas.get(i) else ""}</url>'
+               for i in sorted(ids, key=lambda x: (x != "inicio", rota(x))) if i != "links")
+open(os.path.join(SITE, "sitemap.xml"), "w", encoding="utf-8").write(
+    f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{urls}</urlset>\n')
+open(os.path.join(SITE, "robots.txt"), "w").write(f"User-agent: *\nAllow: /\nSitemap: {ENDERECO}/sitemap.xml\n")
 open(os.path.join(SITE, ".nojekyll"), "w").close()
-print("ok:", len(doc) // 1024, "KB ·", len(posts), "textos ·", len(NOTAS), "notas ·", len(LIVROS), "livros")
+print("ok:", len(vistas), "páginas ·", len(posts), "textos ·", len(NOTAS), "notas ·", len(LIVROS), "livros")

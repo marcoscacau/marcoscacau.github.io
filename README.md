@@ -36,3 +36,15 @@ As imagens vão para `conteudo/imagens` (arraste no campo de foto ou dentro do t
 | `.github/workflows/site.yml` | a automação |
 
 As **Notas curtas** aparecem no site com 6 ou mais; a **Biblioteca** com 3 ou mais.
+
+## Endereços
+
+Cada texto tem o seu endereço, bom para compartilhar (a prévia mostra a capa e o título):
+`/textos/<nome-do-arquivo>/` · `/tema/fisica/` · `/notas/` · `/biblioteca/` · `/sobre/` · **`/links/`** (página para a bio do Instagram).
+Os links antigos com `#` continuam funcionando. O mapa para o Google fica em `/sitemap.xml`.
+
+## Estatísticas, comentários e Google (em Configurações do site)
+
+- **GoatCounter** (quantas pessoas leem cada texto): cadastre-se em goatcounter.com e cole o nome escolhido.
+- **Cusdis** (comentários sem conta para quem comenta; você aprova antes de aparecer): cadastre-se em cusdis.com, crie o site e cole o App ID.
+- **Google Search Console**: adicione `https://marcoscacau.github.io/` (tipo "Prefixo do URL"), escolha "Tag HTML", cole o código, salve, espere o site atualizar e clique em Verificar. Depois, em *Sitemaps*, envie `sitemap.xml`.

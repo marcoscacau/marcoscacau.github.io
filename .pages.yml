@@ -206,3 +206,19 @@ content:
       - name: x
         label: Endereço do X
         type: string
+      - name: endereco
+        label: Endereço do site
+        description: Mude só se comprar um domínio próprio (ex. https://marcoscacau.com.br).
+        type: string
+      - name: goatcounter
+        label: Código do GoatCounter (estatísticas)
+        description: O nome que você escolheu no cadastro, ex. marcoscacau (de marcoscacau.goatcounter.com). Vazio = desligado.
+        type: string
+      - name: cusdis_app_id
+        label: App ID do Cusdis (comentários)
+        description: Copie do painel do Cusdis. Vazio = sem comentários.
+        type: string
+      - name: google_verificacao
+        label: Código de verificação do Google
+        description: Do Google Search Console, opção "Tag HTML" — só o que vem em content="…".
+        type: string

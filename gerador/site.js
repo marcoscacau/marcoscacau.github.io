@@ -49,27 +49,18 @@ var Curtidas = (function () {
   }, 2600);
 })();
 
-// Navegação por endereço (#texto, #tema-fisica, #sobre) e carrossel de destaques.
+// Cada endereço é uma página própria (/textos/vida/, /tema/fisica/…). Aqui: item do menu atual,
+// estado dos botões de curtir, carrosséis e "continuar lendo".
 (function () {
-  var base = document.title;
-  var vistas = Array.prototype.slice.call(document.querySelectorAll(".vista"));
-  var links = Array.prototype.slice.call(document.querySelectorAll(".menu a"));
-  function mostrar() {
-    var id = (location.hash || "").slice(1);
-    var alvo = document.getElementById("v-" + id);
-    if (!alvo || !alvo.classList.contains("vista")) { alvo = document.getElementById("v-inicio"); id = "inicio"; }
-    vistas.forEach(function (v) { v.hidden = v !== alvo; });
-    links.forEach(function (a) { a.classList.toggle("atual", a.getAttribute("href") === "#" + id); });
-    var h = alvo.querySelector(".titulo-post, .etiqueta.grande span");
-    document.title = id === "inicio" || !h ? base : h.textContent + " · Cacau";
-    var vistos = {};
-    Array.prototype.forEach.call(alvo.querySelectorAll(".curtir"), function (c) {
-      if (!vistos[c.dataset.slug]) { vistos[c.dataset.slug] = true; Curtidas.carregar(c.dataset.slug); }
-    });
-    window.scrollTo(0, 0);
-  }
-  window.addEventListener("hashchange", mostrar);
-  mostrar();
+  var aqui = location.pathname.replace(/index\.html$/, "");
+  Array.prototype.forEach.call(document.querySelectorAll(".menu a"), function (a) {
+    var alvo = a.getAttribute("href");
+    a.classList.toggle("atual", alvo === aqui || (alvo !== "/" && aqui.indexOf(alvo) === 0));
+  });
+  var vistos = {};
+  Array.prototype.forEach.call(document.querySelectorAll(".curtir"), function (c) {
+    if (!vistos[c.dataset.slug]) { vistos[c.dataset.slug] = true; Curtidas.carregar(c.dataset.slug); }
+  });
 
   // notas: carrossel de fotos e legenda longa dobrada
   Array.prototype.forEach.call(document.querySelectorAll(".fotos"), function (f) {

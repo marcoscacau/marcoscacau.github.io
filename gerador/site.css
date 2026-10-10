@@ -223,7 +223,7 @@ a.tag:hover { color: var(--tinta); }
 .corpo { font-family: var(--serif); font-size: 1.15rem; line-height: 1.75; overflow-wrap: break-word; }
 .corpo p { margin: 0 0 1.1em; }
 /* texto justificado, com hifenização em português para não abrir buracos entre as palavras */
-.corpo p, .corpo li, .corpo blockquote, .nota-txt p, .linha-fina, .perfil-card p, .livro-frase {
+.corpo p, .corpo li, .corpo blockquote, .nota-txt p, .livro-frase {
   text-align: justify; -webkit-hyphens: auto; hyphens: auto; hyphenate-limit-chars: 6 3 3; }
 .corpo h2, .corpo h3, .corpo h4 { font-family: var(--serif); font-weight: 700; line-height: 1.2; margin: 1.8em 0 .55em; text-wrap: balance; }
 .corpo h2 { font-size: 1.6rem; } .corpo h3 { font-size: 1.35rem; } .corpo h4 { font-size: 1.15rem; }
@@ -262,6 +262,26 @@ a.tag:hover { color: var(--tinta); }
 @keyframes pulsa { 0% { transform: scale(1); } 40% { transform: scale(1.5); } 100% { transform: scale(1.15); } }
 .curtir-fim { display: flex; flex-wrap: wrap; align-items: center; gap: .8rem 1.2rem; margin-top: 2.4rem; padding: 1.2rem 1.4rem; background: var(--ceu); border-radius: 12px; }
 .curtir-fim p { margin: 0; font-family: var(--serif); font-style: italic; font-size: 1.08rem; }
+
+/* comentários (Cusdis: qualquer pessoa comenta, sem conta) */
+.comentarios { max-width: 44rem; margin: 2.4rem auto 0; }
+.comentarios #cusdis_thread { min-height: 2rem; }
+.comentarios-nota { font-size: .8rem; color: var(--suave); margin: .6rem 0 0; }
+
+/* página de links (bio do Instagram) */
+.so-conteudo .pagina { max-width: 34rem; padding-top: 2.4rem; }
+.links { display: flex; flex-direction: column; align-items: center; text-align: center; gap: .8rem; padding: 0 0 3rem; }
+.links-foto { width: 104px; height: 104px; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 5px var(--pessego); }
+.links h1 { font-family: var(--serif); font-size: 1.5rem; margin: .4rem 0 0; }
+.links > p { margin: 0 0 .6rem; color: var(--suave); font-size: .95rem; line-height: 1.55; }
+.links-lista { display: flex; flex-direction: column; gap: .7rem; width: 100%; }
+.links-lista a { display: flex; align-items: center; justify-content: center; gap: .5rem; padding: .95rem 1.2rem; border-radius: 14px;
+  background: var(--folha); border: 1px solid var(--linha); font-weight: 700; font-size: .95rem; transition: background .2s; }
+.links-lista a:hover { background: var(--lavanda); color: #23263a; }
+.links-lista a svg { width: 18px; height: 18px; }
+.links-lista .links-destaque { flex-direction: column; gap: .15rem; background: var(--barra); color: var(--barra-tinta); border-color: var(--barra);
+  font-family: var(--serif); font-size: 1.08rem; }
+.links-destaque small { font-family: var(--ui); font-size: .68rem; letter-spacing: .12em; text-transform: uppercase; opacity: .75; }
 
 /* rodapé (Gates Notes: escuro, links grandes) */
 .rodape { padding: 0 16px 16px; margin-top: 1rem; }
