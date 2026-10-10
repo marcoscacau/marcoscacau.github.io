@@ -4,21 +4,18 @@ jobs:
   teste:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-python@v7
-        with:
-          python-version: "3.12"
-      - run: pip install pillow pyyaml markdown-it-py
-      - name: Substack numa cópia (sem o texto vida)
+      - name: Quais endereços respondem a partir do GitHub
         run: |
-          cp -r . /tmp/t && cd /tmp/t
-          rm conteudo/textos/vida.md
-          python -c "import json;f='gerador/dados/vistos.json';v=json.load(open(f));v['substack'].remove('vida');v['instagram'].remove('DVZx8pnjsX5');json.dump(v,open(f,'w'))"
-          python gerador/substack.py
-          ls -la conteudo/textos/vida.md && head -c 600 conteudo/textos/vida.md
-      - name: Instagram numa cópia (um post pelo link)
-        run: |
-          cd /tmp/t
-          rm -f conteudo/notas/2026-03-02-*
-          python gerador/instagram.py DVZx8pnjsX5 || true
-          ls conteudo/notas | head -3; head -c 400 conteudo/notas/2026-03-02-* || true
+          UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36"
+          for u in \
+            "https://marcoscacau.substack.com/feed" \
+            "https://marcoscacau.substack.com/api/v1/archive?sort=new&offset=0&limit=12" \
+            "https://substack.com/api/v1/profile/posts?profile_user_id=308494937&limit=12" \
+            "https://substack.com/@marcoscacau" \
+            "https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fmarcoscacau.substack.com%2Ffeed" \
+            "https://www.instagram.com/marcos_cacau/embed/" \
+            "https://www.instagram.com/p/DVZx8pnjsX5/embed/captioned/" ; do
+            echo "$(curl -s -o /tmp/r -w '%{http_code}' -A "$UA" "$u") $(wc -c < /tmp/r) $u"
+          done
+          curl -s -A "$UA" "https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fmarcoscacau.substack.com%2Ffeed" | head -c 400; echo
+          curl -s -A "$UA" "https://www.instagram.com/p/DVZx8pnjsX5/embed/captioned/" | grep -o 'EmbeddedMediaImage\|Caption\|contextJSON\|login' | sort | uniq -c
