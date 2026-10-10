@@ -198,6 +198,24 @@ def pelo_feed():
     return out
 
 
+def pelo_leitor():
+    """Plano C: o mesmo feed lido por um leitor público (rss2json), para quando o Substack recusa os servidores do GitHub."""
+    u = "https://api.rss2json.com/v1/api.json?rss_url=" + urllib.parse.quote(f"{BASE}/feed", safe="")
+    d = json.loads(get(u, tent=3))
+    if d.get("status") != "ok":
+        raise RuntimeError(d.get("message") or "leitor do feed falhou")
+    out = []
+    for it in d.get("items", []):
+        m = re.search(r"/p/([^/?#]+)", it.get("link", ""))
+        if not m:
+            continue
+        capa = (it.get("enclosure") or {}).get("link") or it.get("thumbnail") or ""
+        out.append(({"slug": m.group(1), "audience": "everyone", "reaction_count": 0, "post_date": it.get("pubDate", "")[:10]},
+                    {"title": it.get("title") or m.group(1), "subtitle": html.unescape(re.sub(r"<[^>]+>", "", it.get("description") or "")).strip(),
+                     "body_html": it.get("content") or "", "canonical_url": it.get("link"), "cover_image": capa, "_leitor": True}))
+    return out
+
+
 def pela_api(ja):
     arch, off = [], 0
     while True:
@@ -220,7 +238,12 @@ def importar():
         fonte = list(pela_api(ja))
     except Exception as ex:
         print("API do Substack recusou (", ex, "); usando o feed RSS")
-        fonte = [(a, p) for a, p in pelo_feed() if a["slug"] not in ja]
+        try:
+            fonte = pelo_feed()
+        except Exception as ex2:
+            print("feed recusou (", ex2, "); usando o leitor público do feed")
+            fonte = pelo_leitor()
+        fonte = [(a, p) for a, p in fonte if a["slug"] not in ja]
     novos = []
     for a, p in fonte:
         if a["slug"] in ja or os.path.exists(os.path.join(TEXTOS, a["slug"] + ".md")):
@@ -229,7 +252,11 @@ def importar():
         arv.feed(p.get("body_html") or "")
         H = []
         blocos(arv.raiz, H)
-        capa = baixa_imagem(p["cover_image"]) if p.get("cover_image") else ""
+        primeira = re.match(r'<figure><img src="([^"]+)"', H[0]) if H else None
+        if p.get("_leitor") and primeira:
+            capa = primeira.group(1)                         # o leitor do feed muda o endereço da capa: vale a 1ª imagem
+        else:
+            capa = baixa_imagem(p["cover_image"]) if p.get("cover_image") else ""
         if capa and H and capa in H[0] and H[0].startswith("<figure>"):
             H.pop(0)                                         # a capa já abre o texto: fica só como capa
         sub = (p.get("subtitle") or "").strip()

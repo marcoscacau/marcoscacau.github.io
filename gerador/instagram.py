@@ -56,6 +56,18 @@ def linha_do_tempo():
             busca(json.loads(m.group(1)), nos)
         except ValueError:
             pass
+    if not nos:
+        # plano B: a página de incorporação do perfil (abre sem login até em servidores) traz os 6 mais recentes
+        h = render(f"https://www.instagram.com/{PERFIL}/embed/")
+        i = h.find('"contextJSON":')
+        if i >= 0:
+            s, _ = json.JSONDecoder().raw_decode(h, i + len('"contextJSON":'))
+            if isinstance(s, str):
+                for m in json.loads(s).get("context", {}).get("graphql_media", []):
+                    sm = m.get("shortcode_media") or {}
+                    if sm.get("shortcode"):
+                        nos.append({"code": sm["shortcode"], "pk": sm.get("id") or codigo_para_id(sm["shortcode"]),
+                                    "product_type": "clips" if sm.get("is_video") else ""})
     vistos, out = set(), []
     for n in nos:
         if n["code"] not in vistos:
