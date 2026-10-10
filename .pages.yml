@@ -148,6 +148,14 @@ content:
         type: select
         options:
           values: [Física, Teologia, Literatura, Filosofia, Sociedade]
+      - name: colecao
+        label: Coleção
+        description: Opcional. Livros com a mesma coleção ficam juntos na estante (ex. O Senhor dos Anéis, Dan Brown).
+        type: string
+      - name: ordem
+        label: Ordem na coleção
+        description: Opcional (1, 2, 3…).
+        type: number
       - name: nota
         label: Nota (estrelas)
         type: select

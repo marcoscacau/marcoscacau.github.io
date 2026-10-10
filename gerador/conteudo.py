@@ -152,7 +152,12 @@ def livros(img):
             nota = 0
         h = img.no_html(md_html(corpo))
         frase = str(m.get("frase") or "")
+        try:
+            ordem = float(m["ordem"]) if m.get("ordem") not in (None, "") else 999
+        except (TypeError, ValueError):
+            ordem = 999
         res.append(dict(slug="livro-" + nome, titulo=str(m.get("livro") or nome), autor=str(m.get("autor") or ""),
+                        colecao=str(m.get("colecao") or "").strip(), ordem=ordem,
                         ano=str(m.get("ano") or ""), tema=m.get("tema") or "", nota=nota, frase=frase,
                         data=data_str(m.get("data")), capa=img(m.get("capa")), html=h, resumo=frase or texto_puro(h)[:200]))
     return sorted(res, key=lambda x: x["data"], reverse=True)

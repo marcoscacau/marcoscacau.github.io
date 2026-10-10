@@ -294,9 +294,24 @@ if sem_tema:                                           # texto novo que ainda n�
   <h2 class="etiqueta"><span>Mais textos</span></h2>
   <div class="grade-bento">{grade(sem_tema)}</div>
 </section>'''
+def vitrine(n=5):
+    """Na página inicial, um pouco de cada coleção (alternando), para mostrar a variedade da estante."""
+    grupos = {}
+    for l in LIVROS:
+        grupos.setdefault(l["colecao"], []).append(l)
+    filas = [sorted(g, key=lambda x: (x["ordem"], x["titulo"])) if c else g for c, g in grupos.items()]
+    filas.sort(key=lambda g: g[0]["colecao"] != "")              # as leituras do Cacau primeiro
+    out = []
+    while len(out) < n and any(filas):
+        for g in filas:
+            if g and len(out) < n:
+                out.append(g.pop(0))
+    return out
+
+
 bloco_livros = f'''<section class="fileira">
-  <h2 class="etiqueta"><span>Biblioteca</span><a class="ver" href="#biblioteca">ver a biblioteca →</a></h2>
-  <div class="estante">{"".join(capa_livro(l) for l in LIVROS[:5])}</div>
+  <h2 class="etiqueta"><span>Biblioteca</span><a class="ver" href="#biblioteca">ver os {len(LIVROS)} livros →</a></h2>
+  <div class="estante">{"".join(capa_livro(l) for l in vitrine())}</div>
 </section>''' if TEM_LIVROS else ""
 bloco_notas = f'''<section class="fileira">
   <h2 class="etiqueta"><span>Notas curtas</span><a class="ver" href="#notas">ver todas →</a></h2>
@@ -306,10 +321,10 @@ bloco_notas = f'''<section class="fileira">
 inicio = f'''<section class="vista" id="inicio">
   {destaque}
   <div class="intro">{manifesto}{perfil_card}</div>
+  {bloco_livros}
   <section class="explore" aria-label="Explore por tema"><h2 class="etiqueta"><span>Explore por tema</span></h2>
     <div class="temas-tiles">{"".join(mosaico_tema(t) for t in ORDEM_TEMAS)}</div></section>
   {fileiras}
-  {bloco_livros}
   {bloco_notas}
   <section class="comece">
     <h2 class="etiqueta"><span>Comece por aqui</span></h2>
@@ -320,11 +335,29 @@ inicio = f'''<section class="vista" id="inicio">
 
 # ---------- biblioteca e notas ----------
 paginas_extras = ""
+def prateleiras():
+    """A Biblioteca por coleção: primeiro os livros avulsos (as leituras do Cacau), depois cada coleção em ordem."""
+    avulsos = [l for l in LIVROS if not l["colecao"]]
+    cols = {}
+    for l in LIVROS:
+        if l["colecao"]:
+            cols.setdefault(l["colecao"], []).append(l)
+    grupos = ([("Leituras do Cacau", avulsos)] if avulsos else []) + [
+        (c, sorted(ls, key=lambda x: (x["ordem"], x["titulo"]))) for c, ls in sorted(cols.items(), key=lambda kv: (len(kv[1]), kv[0]))]
+    sid = lambda c: "estante-" + re.sub(r"[^a-z0-9]+", "-", html.unescape(c).lower().translate(str.maketrans("áàâãéêíóôõúç", "aaaaeeiooouc"))).strip("-")
+    atalhos = "".join(f'<a href="#{sid(c)}">{e(c)} <small>{len(ls)}</small></a>' for c, ls in grupos)
+    blocos = "".join(f'''<section class="prateleira" id="{sid(c)}">
+    <h2 class="etiqueta"><span>{e(c)}</span><small class="ver">{len(ls)} livro{"s" if len(ls) != 1 else ""}</small></h2>
+    <div class="estante grande">{"".join(capa_livro(l) for l in ls)}</div>
+  </section>''' for c, ls in grupos)
+    return (f'<nav class="atalhos-estante" aria-label="Coleções">{atalhos}</nav>' if len(grupos) > 1 else "") + blocos
+
+
 if TEM_LIVROS:
     paginas_extras += f'''<section class="vista" id="biblioteca">
   <header class="cab-tema"><h1 class="etiqueta grande"><span>Biblioteca</span></h1>
-    <p class="contagem">{len(LIVROS)} livro{"s" if len(LIVROS) != 1 else ""} resumido{"s" if len(LIVROS) != 1 else ""}, do mais recente ao mais antigo</p></header>
-  <div class="estante grande">{"".join(capa_livro(l) for l in LIVROS)}</div>
+    <p class="contagem">{len(LIVROS)} livros, com sinopse, por coleção</p></header>
+  {prateleiras()}
   {assinar()}
 </section>'''
     for l in LIVROS:
@@ -335,7 +368,7 @@ if TEM_LIVROS:
     <div class="livro-cab">
       <div class="livro-capa grande">{f'<img src="img/{l["capa"]}" alt="Capa de {e(l["titulo"])}">' if l["capa"] else f'<span class="sem-capa">{e(l["titulo"])}</span>'}</div>
       <div class="livro-info">
-        <span class="kicker">Resumo de livro{" · " + e(l["tema"]) if l["tema"] else ""}</span>
+        <span class="kicker">{e(l["colecao"]) + (f" · volume {int(l['ordem'])}" if 1 <= l["ordem"] < 999 and l["colecao"] != l["autor"] and "Cury" not in l["colecao"] else "") if l["colecao"] else "Biblioteca"}{" · " + e(l["tema"]) if l["tema"] else ""}</span>
         <h1 class="titulo-post">{e(l["titulo"])}</h1>
         <p class="livro-meta">{e(meta)}</p>
         {estrelas(l["nota"]) if l["nota"] else ""}
