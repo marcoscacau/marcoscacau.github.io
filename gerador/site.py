@@ -92,10 +92,9 @@ def tags(p):
 
 
 def curtir(p, classe=""):
-    # curtidas que o post já tinha no Substack (data-base) + curtidas no site (contador Abacus, ver site2.js)
-    b = p.get("curtidas", 0)
-    return (f'<button class="curtir {classe}" type="button" data-slug="{p["slug"]}" data-base="{b}" aria-pressed="false">'
-            f'<span class="coracao" aria-hidden="true">♥</span><span class="rotulo">Curtir</span><span class="n">{b}</span></button>')
+    # sem número à vista (escolha do autor); o contador Abacus continua registrando (ver site.js)
+    return (f'<button class="curtir {classe}" type="button" data-slug="{p["slug"]}" aria-pressed="false" aria-label="Curtir este texto">'
+            f'<span class="coracao" aria-hidden="true">♥</span><span class="rotulo">Curtir</span></button>')
 
 
 def cartao(p, cls):

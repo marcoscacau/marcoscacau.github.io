@@ -1,5 +1,5 @@
-// Curtidas: o número = curtidas que o post já tinha no Substack (data-base) + curtidas dadas aqui no site.
-// As do site ficam num contador gratuito (abacus.jasoncameron.dev); cada navegador curte uma vez (guardado no próprio navegador).
+// Curtidas: o botão não mostra número (escolha do autor); as curtidas continuam contadas por trás,
+// num contador gratuito (abacus.jasoncameron.dev). Cada navegador curte uma vez (guardado no próprio navegador).
 var Curtidas = (function () {
   var API = "https://abacus.jasoncameron.dev", NS = "marcoscacau-site";
   var site = {}, carregado = {};
@@ -8,11 +8,10 @@ var Curtidas = (function () {
   function botoes(slug) { return Array.prototype.slice.call(document.querySelectorAll('.curtir[data-slug="' + slug + '"]')); }
   function pintar(slug) {
     botoes(slug).forEach(function (b) {
-      var n = (+b.dataset.base || 0) + (site[slug] || 0), feito = ja(slug);
-      b.querySelector(".n").textContent = n;
+      var feito = ja(slug);
       b.setAttribute("aria-pressed", feito ? "true" : "false");
       b.querySelector(".rotulo").textContent = feito ? "Curtido" : "Curtir";
-      b.setAttribute("aria-label", (feito ? "Você curtiu este texto. " : "Curtir este texto. ") + n + " curtida" + (n === 1 ? "" : "s"));
+      b.setAttribute("aria-label", feito ? "Você curtiu este texto" : "Curtir este texto");
     });
   }
   function carregar(slug) {

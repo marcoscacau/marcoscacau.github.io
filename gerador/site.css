@@ -254,8 +254,7 @@ a.tag:hover { color: var(--tinta); }
 .curtir { display: inline-flex; align-items: center; gap: .45rem; border: 1.5px solid var(--lavanda); background: var(--folha); color: var(--tinta); border-radius: 999px; padding: .55rem 1.15rem; font-family: var(--ui); font-weight: 700; font-size: .9rem; cursor: pointer; transition: background .2s ease; }
 .curtir:hover { background: var(--lavanda); color: #23263a; }
 .curtir .coracao { font-size: 1.1rem; line-height: 1; color: var(--suave); transition: transform .25s ease, color .2s ease; }
-.curtir .n { font-weight: 400; font-variant-numeric: tabular-nums; font-size: .88rem; min-width: 1.2em; text-align: left; }
-.curtir.pequeno { padding: .32rem .8rem; font-size: .8rem; }
+.curtir.pequeno { padding: .32rem .62rem; font-size: .8rem; }
 .curtir.pequeno .rotulo { display: none; }
 .curtir[aria-pressed="true"] { background: var(--pessego); border-color: var(--pessego); color: #23263a; cursor: default; }
 .curtir[aria-pressed="true"] .coracao { color: #c9748a; transform: scale(1.15); }
