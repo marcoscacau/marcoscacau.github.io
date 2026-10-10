@@ -177,23 +177,54 @@ def blocos(n, H):
                 H.append(f"<p>{h}</p>")
 
 
+def pelo_feed():
+    """Plano B: o feed RSS traz os textos públicos recentes com o texto inteiro (a API às vezes recusa servidores)."""
+    import xml.etree.ElementTree as ET
+    from email.utils import parsedate_to_datetime
+    raiz = ET.fromstring(get(f"{BASE}/feed", tent=3))
+    ns = {"content": "http://purl.org/rss/1.0/modules/content/"}
+    out = []
+    for it in raiz.iter("item"):
+        link = (it.findtext("link") or "").strip()
+        m = re.search(r"/p/([^/?#]+)", link)
+        if not m:
+            continue
+        enc = it.find("enclosure")
+        out.append(({"slug": m.group(1), "audience": "everyone", "reaction_count": 0,
+                     "post_date": parsedate_to_datetime(it.findtext("pubDate")).strftime("%Y-%m-%d")},
+                    {"title": it.findtext("title") or m.group(1), "subtitle": it.findtext("description") or "",
+                     "body_html": it.findtext("content:encoded", namespaces=ns) or "", "canonical_url": link,
+                     "cover_image": enc.get("url") if enc is not None else ""}))
+    return out
+
+
+def pela_api(ja):
+    arch, off = [], 0
+    while True:
+        a = json.loads(get(f"{BASE}/api/v1/archive?sort=new&offset={off}&limit=12", tent=3))
+        arch += a
+        off += len(a)
+        if len(a) < 12:
+            break
+    for a in arch:
+        if a.get("audience") == "everyone" and a["slug"] not in ja:
+            yield a, json.loads(get(f"{BASE}/api/v1/posts/{a['slug']}"))
+
+
 def importar():
     os.makedirs(TEXTOS, exist_ok=True)
     os.makedirs(IMAGENS, exist_ok=True)
     vistos = json.load(open(VISTOS, encoding="utf-8")) if os.path.exists(VISTOS) else {}
     ja = set(vistos.get("substack", []))
-    arch, off = [], 0
-    while True:
-        a = json.loads(get(f"{BASE}/api/v1/archive?sort=new&offset={off}&limit=12"))
-        arch += a
-        off += len(a)
-        if len(a) < 12:
-            break
+    try:
+        fonte = list(pela_api(ja))
+    except Exception as ex:
+        print("API do Substack recusou (", ex, "); usando o feed RSS")
+        fonte = [(a, p) for a, p in pelo_feed() if a["slug"] not in ja]
     novos = []
-    for a in arch:
-        if a.get("audience") != "everyone" or a["slug"] in ja or os.path.exists(os.path.join(TEXTOS, a["slug"] + ".md")):
+    for a, p in fonte:
+        if a["slug"] in ja or os.path.exists(os.path.join(TEXTOS, a["slug"] + ".md")):
             continue
-        p = json.loads(get(f"{BASE}/api/v1/posts/{a['slug']}"))
         arv = Arvore()
         arv.feed(p.get("body_html") or "")
         H = []

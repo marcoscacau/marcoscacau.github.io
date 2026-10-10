@@ -1,0 +1,24 @@
+name: Teste da busca (temporário)
+on: workflow_dispatch
+jobs:
+  teste:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - run: pip install pillow pyyaml markdown-it-py
+      - name: Substack numa cópia (sem o texto vida)
+        run: |
+          cp -r . /tmp/t && cd /tmp/t
+          rm conteudo/textos/vida.md
+          python -c "import json;f='gerador/dados/vistos.json';v=json.load(open(f));v['substack'].remove('vida');v['instagram'].remove('DVZx8pnjsX5');json.dump(v,open(f,'w'))"
+          python gerador/substack.py
+          ls -la conteudo/textos/vida.md && head -c 600 conteudo/textos/vida.md
+      - name: Instagram numa cópia (um post pelo link)
+        run: |
+          cd /tmp/t
+          rm -f conteudo/notas/2026-03-02-*
+          python gerador/instagram.py DVZx8pnjsX5 || true
+          ls conteudo/notas | head -3; head -c 400 conteudo/notas/2026-03-02-* || true
