@@ -1,0 +1,208 @@
+# Configuração do editor (Pages CMS: https://app.pagescms.org). Cada post é um arquivo em conteudo/.
+media:
+  input: conteudo/imagens
+  output: /conteudo/imagens
+  categories: [image]
+  rename: safe
+
+content:
+  - name: textos
+    label: Textos
+    type: collection
+    path: conteudo/textos
+    format: yaml-frontmatter
+    filename:
+      template: "{titulo}.md"
+      field: false
+    view:
+      fields: [titulo, data, temas, publicar]
+      primary: titulo
+      sort: [data, titulo]
+      search: [titulo, subtitulo]
+      default:
+        sort: data
+        order: desc
+    fields:
+      - name: titulo
+        label: Título
+        type: string
+        required: true
+      - name: subtitulo
+        label: Subtítulo
+        type: string
+      - name: data
+        label: Data
+        type: date
+        options:
+          format: yyyy-MM-dd
+      - name: temas
+        label: Temas
+        description: O primeiro é o principal (é nele que o texto aparece na página inicial).
+        type: select
+        options:
+          multiple: true
+          values: [Física, Teologia, Literatura, Filosofia, Sociedade, Apresentação]
+      - name: capa
+        label: Imagem de capa
+        type: image
+      - name: publicar
+        label: Mostrar no site
+        description: Desligue para esconder o texto sem apagar.
+        type: boolean
+        default: true
+      - name: substack
+        label: Link no Substack
+        description: Opcional. Se tiver, o texto mostra "Publicado originalmente no Substack".
+        type: string
+      - name: curtidas_substack
+        type: number
+        hidden: true
+      - name: body
+        label: Texto
+        type: rich-text
+        options:
+          format: html
+
+  - name: notas
+    label: Notas curtas
+    type: collection
+    path: conteudo/notas
+    format: yaml-frontmatter
+    filename:
+      template: "{year}-{month}-{day}-{titulo}.md"
+      field: false
+    view:
+      fields: [titulo, data, tema, publicar]
+      primary: titulo
+      sort: [data, titulo]
+      search: [titulo]
+      default:
+        sort: data
+        order: desc
+    fields:
+      - name: titulo
+        label: Nome
+        description: Só para achar a nota no editor; não aparece no site.
+        type: string
+        required: true
+      - name: data
+        label: Data
+        type: date
+        options:
+          format: yyyy-MM-dd
+      - name: tema
+        label: Tema
+        type: select
+        options:
+          values: [Física, Teologia, Literatura, Filosofia, Sociedade]
+      - name: fotos
+        label: Fotos
+        description: Uma foto, ou várias para virar carrossel.
+        type: image
+        options:
+          multiple: true
+      - name: video
+        label: É um vídeo
+        description: Mostra um botão ▶ que abre o link abaixo.
+        type: boolean
+        default: false
+      - name: link
+        label: Link do post no Instagram
+        description: Opcional. Aparece o ícone do Instagram no cartão.
+        type: string
+      - name: publicar
+        label: Mostrar no site
+        type: boolean
+        default: true
+      - name: body
+        label: Texto
+        type: rich-text
+
+  - name: livros
+    label: Biblioteca (resumos)
+    type: collection
+    path: conteudo/livros
+    format: yaml-frontmatter
+    filename:
+      template: "{livro}.md"
+      field: false
+    view:
+      fields: [livro, autor, nota, publicar]
+      primary: livro
+      default:
+        sort: data
+        order: desc
+    fields:
+      - name: livro
+        label: Livro
+        type: string
+        required: true
+      - name: autor
+        label: Autor
+        type: string
+      - name: ano
+        label: Ano
+        type: string
+      - name: tema
+        label: Tema
+        type: select
+        options:
+          values: [Física, Teologia, Literatura, Filosofia, Sociedade]
+      - name: nota
+        label: Nota (estrelas)
+        type: select
+        options:
+          values: ["1", "2", "3", "4", "5"]
+      - name: frase
+        label: O livro em uma frase
+        type: text
+      - name: capa
+        label: Capa do livro
+        type: image
+      - name: data
+        label: Data
+        type: date
+        options:
+          format: yyyy-MM-dd
+      - name: publicar
+        label: Mostrar no site
+        type: boolean
+        default: true
+      - name: body
+        label: Resumo
+        description: Sugestão de seções — Ideias principais, Citações que marquei, Para quem é, Minha opinião.
+        type: rich-text
+
+  - name: config
+    label: Configurações do site
+    type: file
+    path: conteudo/config.yml
+    format: yaml
+    fields:
+      - name: bio
+        label: Mini apresentação
+        type: text
+      - name: foto
+        label: Sua foto
+        type: image
+      - name: frase_palavras
+        label: Palavras que trocam na frase do topo
+        type: string
+        list: true
+      - name: comece
+        label: Comece por aqui
+        description: Nome do arquivo de cada texto, sem .md (ex. vida).
+        type: string
+        list: true
+      - name: destaques
+        label: Quantos textos passam no carrossel do topo
+        type: number
+      - name: substack
+        label: Endereço do Substack
+        type: string
+      - name: instagram
+        label: Endereço do Instagram
+        type: string
+      - name: x
+        label: Endereço do X
+        type: string

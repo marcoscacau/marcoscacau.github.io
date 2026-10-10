@@ -1,0 +1,65 @@
+# Refaz e publica o site:
+#  - a cada alteração no repositório (por exemplo, salvar no Pages CMS);
+#  - uma vez por dia, depois de buscar os posts novos do Substack e do Instagram;
+#  - ou à mão, em Actions → Site → Run workflow.
+name: Site
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "0 9 * * *"          # 6h da manhã em Brasília
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: site
+  cancel-in-progress: false
+
+jobs:
+  montar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar o necessário
+        run: pip install pillow pyyaml markdown-it-py
+
+      - name: Buscar posts novos (Substack e Instagram)
+        if: github.event_name != 'push'
+        run: |
+          python gerador/substack.py || echo "::warning::Substack não respondeu; tenta de novo amanhã"
+          python gerador/instagram.py || echo "::warning::Instagram não respondeu; tenta de novo amanhã"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add conteudo gerador/dados
+          if ! git diff --cached --quiet; then
+            git commit -m "Posts novos do Substack/Instagram"
+            git pull --rebase
+            git push
+          fi
+
+      - name: Montar o site
+        run: python gerador/site.py _site
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  publicar:
+    needs: montar
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4
