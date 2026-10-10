@@ -6,6 +6,6 @@ fotos:
   - /conteudo/imagens/teste-do-editor.jpg
 video: false
 link: ''
-publicar: true
+publicar: false
 ---
 NOTA DE TESTE EDITADA: se você está lendo isto, o editor funcionou. Esta nota será apagada em seguida.
