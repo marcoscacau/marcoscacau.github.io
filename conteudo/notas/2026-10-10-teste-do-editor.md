@@ -8,4 +8,4 @@ video: false
 link: ''
 publicar: true
 ---
-NOTA DE TESTE: se você está lendo isto, o editor funcionou. Esta nota será apagada em seguida.
+NOTA DE TESTE EDITADA: se você está lendo isto, o editor funcionou. Esta nota será apagada em seguida.
