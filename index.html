@@ -67,6 +67,15 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--lavanda); outli
 .destaque-tit { font-family: var(--serif); font-weight: 700; font-size: clamp(1.5rem, 3vw, 2.1rem); line-height: 1.1; text-wrap: balance; }
 .destaque-dek { font-size: .92rem; color: var(--suave); line-height: 1.5; }
 .ler { font-weight: 700; font-size: .85rem; margin-top: .2rem; }
+/* carrossel do topo: os destaques se sobrepõem e trocam com fade */
+.carrossel { position: relative; aspect-ratio: 16 / 7.4; border-radius: 18px; overflow: hidden; background: var(--ceu); }
+.carrossel .slide { position: absolute; inset: 0; aspect-ratio: auto; border-radius: 0; opacity: 0; visibility: hidden; transition: opacity .7s ease, visibility 0s linear .7s; }
+.carrossel .slide.ativo { opacity: 1; visibility: visible; transition: opacity .7s ease, visibility 0s; }
+.controles { position: absolute; right: 22px; bottom: 22px; display: flex; align-items: center; gap: 6px; padding: 5px 7px; border-radius: 99px; background: rgba(35, 38, 58, .62); }
+.seta-c { width: 28px; height: 28px; border: 0; border-radius: 50%; background: transparent; color: #fff; font-size: 1.25rem; line-height: 1; cursor: pointer; }
+.seta-c:hover { background: rgba(255, 255, 255, .18); }
+.ponto { width: 8px; height: 8px; padding: 0; border: 0; border-radius: 99px; background: rgba(255, 255, 255, .5); cursor: pointer; transition: width .3s, background .3s; }
+.ponto.ativo { width: 22px; background: var(--lavanda); }
 .destaque:hover .ler { text-decoration: underline; text-decoration-color: var(--lavanda); text-decoration-thickness: 2px; text-underline-offset: 3px; }
 
 /* frase-manifesto */
@@ -293,7 +302,10 @@ a.tag:hover { color: var(--tinta); }
   .logo { flex: 1; }
   .topo-assinar { padding: .4rem .85rem; }
   .menu { order: 3; flex-basis: 100%; margin-inline: -14px; padding: .35rem 8px .45rem; }
-  .destaque { aspect-ratio: 4 / 5; border-radius: 14px; }
+  .destaque, .carrossel { aspect-ratio: 4 / 5; border-radius: 14px; }
+  .carrossel .slide { aspect-ratio: auto; border-radius: 0; }
+  .controles { top: 12px; right: 12px; bottom: auto; padding: 3px 5px; }
+  .seta-c { display: none; }
   .destaque-card { left: 12px; right: 12px; bottom: 12px; width: auto; padding: 1.05rem 1.1rem; }
   .destaque-dek { display: none; }
   .intro { margin: 2.4rem 0 2.2rem; }
@@ -319,7 +331,7 @@ a.tag:hover { color: var(--tinta); }
   .rodape-dentro { grid-template-columns: minmax(0, 1fr); padding: 2rem 1.4rem 1.4rem; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .destaque img, .bento img, .manifesto b, .curtir, .curtir .coracao, .tema-tile img, .livro-capa { transition: none; }
+  .carrossel .slide, .ponto, .destaque img, .bento img, .manifesto b, .curtir, .curtir .coracao, .tema-tile img, .livro-capa { transition: none; }
   .curtir.pulsa .coracao { animation: none; }
 }
 
@@ -335,11 +347,34 @@ a.tag:hover { color: var(--tinta); }
 </header>
 <main class="pagina">
 <section class="vista" id="v-inicio">
-  <a class="destaque" href="#vida">
+  <section class="carrossel" aria-roledescription="carrossel" aria-label="Textos em destaque">
+  <a class="destaque slide ativo" href="#vida">
   <img src="img/b922fb9e0062.jpg" alt="">
   <span class="destaque-card"><span class="kicker">Teologia · 24 de abril de 2026</span><span class="destaque-tit">VIDA</span>
     <span class="destaque-dek">A percepção do vácuo não é a ausência de substância, mas a manifestação da inércia espiritual. Frequentemente, o “vazio” parece possuir uma massa…</span><span class="ler">Ler o texto →</span></span>
+</a><a class="destaque slide" href="#apenas-uma-visao-sobre-a-sociedade" aria-hidden="true" tabindex="-1">
+  <img src="img/07b07b12fc8b.jpg" alt="" loading="lazy">
+  <span class="destaque-card"><span class="kicker">Sociedade · 2 de março de 2026</span><span class="destaque-tit">Apenas uma visão sobre a sociedade cansada</span>
+    <span class="destaque-dek">A Síndrome do Motor no Vácuo</span><span class="ler">Ler o texto →</span></span>
+</a><a class="destaque slide" href="#para-meu-eu-do-futuro-parte-1" aria-hidden="true" tabindex="-1">
+  <img src="img/943ff53d100f.jpg" alt="" loading="lazy">
+  <span class="destaque-card"><span class="kicker">Teologia · 26 de fevereiro de 2026</span><span class="destaque-tit">Para Meu Eu do futuro (Parte 1)</span>
+    <span class="destaque-dek">A adoração sem a alma é uma anomalia de presença. É o equivalente biológico de gerar filhos e atravessar o tempo sem nunca observá-los crescer, com a…</span><span class="ler">Ler o texto →</span></span>
+</a><a class="destaque slide" href="#a-liturgia-do-invisivel-o-amor-e" aria-hidden="true" tabindex="-1">
+  <img src="img/0140b8a95d8f.jpg" alt="" loading="lazy">
+  <span class="destaque-card"><span class="kicker">Literatura · 22 de janeiro de 2026</span><span class="destaque-tit">A Liturgia do Invisível: O Amor e o Átomo em Vozes de Tchernóbil</span>
+    <span class="destaque-dek">Quando a Fé ocupa o espaço que a Física nega</span><span class="ler">Ler o texto →</span></span>
+</a><a class="destaque slide" href="#a-lei-do-fone-de-ouvido-ou-por-que" aria-hidden="true" tabindex="-1">
+  <img src="img/b163a7c36747.jpg" alt="" loading="lazy">
+  <span class="destaque-card"><span class="kicker">Física · 14 de janeiro de 2026</span><span class="destaque-tit">A Lei do Fone de Ouvido (Ou por que sua vida vira uma bagunça sozinha)</span>
+    <span class="destaque-dek">Conversa de Boteco</span><span class="ler">Ler o texto →</span></span>
 </a>
+  <div class="controles">
+    <button class="seta-c ant" type="button" aria-label="Destaque anterior">‹</button>
+    <button class="ponto ativo" type="button" data-i="0" aria-label="Destaque 1"></button><button class="ponto" type="button" data-i="1" aria-label="Destaque 2"></button><button class="ponto" type="button" data-i="2" aria-label="Destaque 3"></button><button class="ponto" type="button" data-i="3" aria-label="Destaque 4"></button><button class="ponto" type="button" data-i="4" aria-label="Destaque 5"></button>
+    <button class="seta-c prox" type="button" aria-label="Próximo destaque">›</button>
+  </div>
+</section>
   <div class="intro"><p class="manifesto">Escrevo sobre <b class="giro" data-palavras="física|teologia|literatura|filosofia|sociedade">física</b> para quem sente que o mundo visível nunca é o mundo inteiro.</p><aside class="perfil-card" aria-label="Sobre o autor">
   <div class="perfil-topo"><img src="mini/509d80dae681.jpg" alt="Foto de Marcos Vinicius, o Cacau">
     <div><b>Marcos Vinicius</b><span>Cacau · no Substack</span></div></div>
@@ -1171,7 +1206,8 @@ var Curtidas = (function () {
     });
     pontos.forEach(function (p, k) { p.classList.toggle("ativo", k === atual); });
   }
-  function auto() { if (calmo) return; clearInterval(timer); timer = setInterval(function () { ir(atual + 1); }, 6000); }
+  // com "reduzir animações" ligado, continua passando, mais devagar e sem fade (o CSS tira a transição)
+  function auto() { clearInterval(timer); timer = setInterval(function () { ir(atual + 1); }, calmo ? 8000 : 6000); }
   pontos.forEach(function (p) { p.addEventListener("click", function () { ir(+p.dataset.i); auto(); }); });
   var ant = document.querySelector(".seta-c.ant"), prox = document.querySelector(".seta-c.prox");
   if (ant) ant.addEventListener("click", function () { ir(atual - 1); auto(); });
@@ -1179,6 +1215,13 @@ var Curtidas = (function () {
   var c = document.querySelector(".carrossel");
   c.addEventListener("mouseenter", function () { clearInterval(timer); });
   c.addEventListener("mouseleave", auto);
+  var x0 = null;                                     // deslizar com o dedo no celular
+  c.addEventListener("touchstart", function (ev) { x0 = ev.touches[0].clientX; }, { passive: true });
+  c.addEventListener("touchend", function (ev) {
+    if (x0 === null) return;
+    var dx = ev.changedTouches[0].clientX - x0; x0 = null;
+    if (Math.abs(dx) > 40) { ev.preventDefault(); ir(atual + (dx < 0 ? 1 : -1)); auto(); }
+  });
   auto();
 })();
 
