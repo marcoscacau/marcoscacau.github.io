@@ -74,6 +74,22 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--lavanda); outli
 .manifesto b { font-weight: 700; color: var(--tinta); display: inline-block; transition: opacity .35s ease, transform .35s ease; }
 .manifesto b.troca { opacity: 0; transform: translateY(.3em); }
 
+/* frase + cartão de perfil lado a lado */
+.intro { display: grid; grid-template-columns: minmax(0, 1fr) 21rem; gap: 2.4rem; align-items: center; margin: 3.4rem 0 3rem; }
+.intro .manifesto { margin: 0; }
+.perfil-card { background: var(--folha); border: 1px solid var(--linha); border-radius: 16px; padding: 1.4rem 1.5rem; display: flex; flex-direction: column; gap: .9rem; }
+.perfil-topo { display: flex; align-items: center; gap: .9rem; }
+.perfil-topo img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; flex: none; box-shadow: 0 0 0 4px var(--pessego); }
+.perfil-topo div { min-width: 0; display: flex; flex-direction: column; }
+.perfil-topo b { font-family: var(--serif); font-size: 1.15rem; line-height: 1.2; }
+.perfil-topo span { font-size: .8rem; color: var(--suave); }
+.perfil-card p { margin: 0; font-size: .92rem; line-height: 1.55; color: var(--suave); }
+.perfil-acoes { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1.1rem; }
+.perfil-card .botao-principal { background: var(--lavanda); color: #23263a; padding: .6rem 1.2rem; font-size: .92rem; }
+.perfil-card .botao-principal:hover { background: var(--pessego); }
+.perfil-sobre { font-weight: 700; font-size: .88rem; }
+.perfil-sobre:hover { text-decoration: underline; text-decoration-color: var(--lavanda); text-decoration-thickness: 2px; text-underline-offset: 3px; }
+
 /* etiqueta de seção (Super Literário) */
 .etiqueta { margin: 0 0 1.2rem; border-bottom: 2px solid var(--etq); font-weight: normal; line-height: 1; }
 .etiqueta span { display: inline-block; background: var(--etq); color: var(--etq-tinta); font-family: var(--ui); font-weight: 700; text-transform: uppercase; font-size: .74rem; letter-spacing: .12em; padding: .5rem .9rem .45rem; border-radius: 6px 6px 0 0; }
@@ -245,6 +261,8 @@ a.tag:hover { color: var(--tinta); }
   .comece ol { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .temas-tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .estante { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .intro { grid-template-columns: minmax(0, 1fr); gap: 1.8rem; }
+  .perfil-card { max-width: 30rem; }
 }
 @media (max-width: 640px) {
   .topo { padding: 8px 10px 0; }
@@ -255,7 +273,7 @@ a.tag:hover { color: var(--tinta); }
   .destaque { aspect-ratio: 4 / 5; border-radius: 14px; }
   .destaque-card { left: 12px; right: 12px; bottom: 12px; width: auto; padding: 1.05rem 1.1rem; }
   .destaque-dek { display: none; }
-  .manifesto { margin: 2.4rem 0 2.2rem; }
+  .intro { margin: 2.4rem 0 2.2rem; }
   .grade-bento { grid-template-columns: minmax(0, 1fr); gap: 14px; }
   .b-largo, .b-2, .b-1 { grid-column: auto; min-height: 320px; }
   .b-card { left: 12px; right: 12px; bottom: 12px; width: auto; }
@@ -299,7 +317,13 @@ a.tag:hover { color: var(--tinta); }
   <span class="destaque-card"><span class="kicker">Teologia · 24 de abril de 2026</span><span class="destaque-tit">VIDA</span>
     <span class="destaque-dek">A percepção do vácuo não é a ausência de substância, mas a manifestação da inércia espiritual. Frequentemente, o “vazio” parece possuir uma massa…</span><span class="ler">Ler o texto →</span></span>
 </a>
-  <p class="manifesto">Escrevo sobre <b class="giro" data-palavras="física|teologia|literatura|filosofia|sociedade">física</b> para quem sente que o mundo visível nunca é o mundo inteiro.</p>
+  <div class="intro"><p class="manifesto">Escrevo sobre <b class="giro" data-palavras="física|teologia|literatura|filosofia|sociedade">física</b> para quem sente que o mundo visível nunca é o mundo inteiro.</p><aside class="perfil-card" aria-label="Sobre o autor">
+  <div class="perfil-topo"><img src="mini/509d80dae681.jpg" alt="Foto de Marcos Vinicius, o Cacau">
+    <div><b>Marcos Vinicius</b><span>Cacau · no Substack</span></div></div>
+  <p>Examino a realidade onde a física encontra símbolos, a teologia encontra estruturas e a ficção expõe possibilidades. Busco uma linguagem que una cálculo, imaginação e transcendência para compreender o invisível no real.</p>
+  <div class="perfil-acoes"><a class="botao-principal" href="https://marcoscacau.substack.com/subscribe" target="_blank" rel="noopener">Assinar grátis</a>
+    <a class="perfil-sobre" href="#sobre">Sobre mim →</a></div>
+</aside></div>
   <section class="explore" aria-label="Explore por tema"><h2 class="etiqueta"><span>Explore por tema</span></h2>
     <div class="temas-tiles"><a class="tema-tile" href="#tema-fisica"><img src="mini/b163a7c36747.jpg" alt="" loading="lazy"><span><b>Física</b><small>5 textos</small></span></a><a class="tema-tile" href="#tema-teologia"><img src="mini/b922fb9e0062.jpg" alt="" loading="lazy"><span><b>Teologia</b><small>3 textos</small></span></a><a class="tema-tile" href="#tema-literatura"><img src="mini/0140b8a95d8f.jpg" alt="" loading="lazy"><span><b>Literatura</b><small>3 textos</small></span></a><a class="tema-tile" href="#tema-filosofia"><img src="mini/e1c76d38df61.jpg" alt="" loading="lazy"><span><b>Filosofia</b><small>3 textos</small></span></a><a class="tema-tile" href="#tema-sociedade"><img src="mini/07b07b12fc8b.jpg" alt="" loading="lazy"><span><b>Sociedade</b><small>3 textos</small></span></a></div></section>
   <section class="fileira">
