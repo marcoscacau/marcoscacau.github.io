@@ -79,6 +79,52 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--lavanda); outli
 .etiqueta span { display: inline-block; background: var(--etq); color: var(--etq-tinta); font-family: var(--ui); font-weight: 700; text-transform: uppercase; font-size: .74rem; letter-spacing: .12em; padding: .5rem .9rem .45rem; border-radius: 6px 6px 0 0; }
 .etiqueta.grande span { font-size: 1rem; padding: .6rem 1.1rem .55rem; }
 
+.etiqueta { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; }
+.etiqueta .ver { font-size: .82rem; font-weight: 500; color: var(--suave); padding-bottom: .4rem; white-space: nowrap; }
+.etiqueta .ver:hover { color: var(--tinta); }
+.fileira .grade-bento { margin-bottom: 2.8rem; }
+
+/* explore por tema */
+.explore { margin-bottom: 3rem; }
+.temas-tiles { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; }
+.tema-tile { position: relative; display: block; aspect-ratio: 4 / 5; border-radius: 14px; overflow: hidden; background: var(--ceu); }
+.tema-tile img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .6s ease; }
+.tema-tile:hover img { transform: scale(1.05); }
+.tema-tile span { position: absolute; left: 10px; right: 10px; bottom: 10px; background: var(--folha); color: var(--tinta); border-radius: 10px; padding: .6rem .75rem; display: flex; flex-direction: column; }
+.tema-tile b { font-family: var(--serif); font-size: 1.15rem; line-height: 1.15; }
+.tema-tile small { font-size: .76rem; color: var(--suave); }
+
+/* biblioteca */
+.estante { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 22px 18px; margin-bottom: 2.8rem; }
+.livro { display: flex; flex-direction: column; gap: .3rem; min-width: 0; }
+.livro-capa { display: block; aspect-ratio: 2 / 3; border-radius: 4px 10px 10px 4px; overflow: hidden; background: var(--ceu);
+  box-shadow: 0 1px 2px rgba(20, 22, 32, .12), 0 10px 24px rgba(20, 22, 32, .16), inset 4px 0 0 rgba(0, 0, 0, .06); transition: transform .3s ease; }
+.livro-capa img { width: 100%; height: 100%; object-fit: cover; }
+.livro:hover .livro-capa { transform: translateY(-4px); }
+.sem-capa { height: 100%; display: grid; place-items: center; text-align: center; padding: 1rem; font-family: var(--serif); font-weight: 700; font-size: 1.05rem; background: linear-gradient(160deg, var(--lavanda), var(--pessego)); color: #23263a; }
+.livro-tit { font-family: var(--serif); font-weight: 700; font-size: 1rem; line-height: 1.25; margin-top: .45rem; }
+.livro-autor { font-size: .82rem; color: var(--suave); }
+.livro-cab { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 2.2rem; align-items: start; max-width: 54rem; margin: 0 auto 2.4rem; }
+.livro-capa.grande { border-radius: 4px 12px 12px 4px; }
+.livro-info { min-width: 0; display: flex; flex-direction: column; gap: .55rem; align-items: flex-start; }
+.livro-info .titulo-post { margin: 0; }
+.livro-meta { margin: 0; color: var(--suave); font-size: 1rem; }
+.estrelas { font-size: 1.15rem; letter-spacing: .1em; color: var(--linha); }
+.estrelas .on { color: #e3b96a; }
+.livro-frase { font-family: var(--serif); font-style: italic; font-size: 1.2rem; line-height: 1.5; margin: .3rem 0 .4rem; padding: .9rem 1.1rem; background: var(--pessego); border-radius: 10px; color: #23263a; }
+.livro-pag > .corpo { max-width: 44rem; margin-inline: auto; }
+.livro-pag > .curtir-fim { max-width: 44rem; margin-inline: auto; margin-top: 2.4rem; }
+
+/* notas curtas */
+.mural { columns: 3 260px; column-gap: 18px; margin-bottom: 2.8rem; }
+.nota { break-inside: avoid; background: var(--folha); border-radius: 14px; overflow: hidden; margin-bottom: 18px; display: flex; flex-direction: column; }
+.nota img { width: 100%; }
+.nota-txt { padding: 1.2rem 1.3rem .4rem; font-family: var(--serif); font-size: 1.05rem; line-height: 1.6; }
+.nota-txt p { margin: 0 0 .7em; }
+.nota-txt figure { display: none; }
+.nota.curta .nota-txt { font-size: 1.45rem; line-height: 1.35; font-weight: 700; padding-top: 1.5rem; }
+.nota footer { display: flex; align-items: center; justify-content: space-between; gap: .6rem; padding: .3rem 1.3rem 1.1rem; }
+
 /* grade de cartões */
 .grade-bento { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-bottom: 3.2rem; }
 .bento { position: relative; display: block; border-radius: 16px; overflow: hidden; background: var(--ceu); min-height: 340px; }
@@ -197,6 +243,8 @@ a.tag:hover { color: var(--tinta); }
   .grade-bento { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .b-2, .b-1 { grid-column: span 1; }
   .comece ol { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .temas-tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .estante { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 @media (max-width: 640px) {
   .topo { padding: 8px 10px 0; }
@@ -212,6 +260,14 @@ a.tag:hover { color: var(--tinta); }
   .b-largo, .b-2, .b-1 { grid-column: auto; min-height: 320px; }
   .b-card { left: 12px; right: 12px; bottom: 12px; width: auto; }
   .comece ol { grid-template-columns: minmax(0, 1fr); }
+  .temas-tiles { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 40%; gap: 10px; overflow-x: auto;
+    scroll-snap-type: x mandatory; scrollbar-width: none; margin-inline: -16px; padding-inline: 16px; }
+  .temas-tiles::-webkit-scrollbar { display: none; }
+  .tema-tile { scroll-snap-align: start; }
+  .estante { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .livro-cab { grid-template-columns: minmax(0, 1fr); gap: 1.4rem; }
+  .livro-capa.grande { width: 60%; }
+  .etiqueta .ver { font-size: .76rem; }
   .comece li { flex-direction: row; align-items: baseline; gap: .9rem; }
   .assinar { padding: 1.6rem 1.4rem; border-radius: 14px; }
   .folha { padding: 1.8rem 1.1rem 1.8rem; border-radius: 14px; }
@@ -222,7 +278,7 @@ a.tag:hover { color: var(--tinta); }
   .rodape-dentro { grid-template-columns: minmax(0, 1fr); padding: 2rem 1.4rem 1.4rem; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .destaque img, .bento img, .manifesto b, .curtir, .curtir .coracao { transition: none; }
+  .destaque img, .bento img, .manifesto b, .curtir, .curtir .coracao, .tema-tile img, .livro-capa { transition: none; }
   .curtir.pulsa .coracao { animation: none; }
 }
 
@@ -244,8 +300,26 @@ a.tag:hover { color: var(--tinta); }
     <span class="destaque-dek">A percepção do vácuo não é a ausência de substância, mas a manifestação da inércia espiritual. Frequentemente, o “vazio” parece possuir uma massa…</span><span class="ler">Ler o texto →</span></span>
 </a>
   <p class="manifesto">Escrevo sobre <b class="giro" data-palavras="física|teologia|literatura|filosofia|sociedade">física</b> para quem sente que o mundo visível nunca é o mundo inteiro.</p>
-  <h2 class="etiqueta"><span>Textos</span></h2>
-  <div class="grade-bento"><a class="bento b-2" href="#apenas-uma-visao-sobre-a-sociedade"><img src="img/07b07b12fc8b.jpg" alt="" loading="lazy"><span class="b-card"><span class="kicker">Sociedade</span><span class="b-tit">Apenas uma visão sobre a sociedade cansada</span><span class="b-dek">A Síndrome do Motor no Vácuo</span></span></a><a class="bento b-1" href="#para-meu-eu-do-futuro-parte-1"><img src="img/943ff53d100f.jpg" alt="" loading="lazy"><span class="b-barra"><span class="kicker">Teologia</span><span>Para Meu Eu do futuro (Parte 1)</span></span></a><a class="bento b-1" href="#a-liturgia-do-invisivel-o-amor-e"><img src="img/0140b8a95d8f.jpg" alt="" loading="lazy"><span class="b-barra"><span class="kicker">Literatura</span><span>A Liturgia do Invisível: O Amor e o Átomo em Vozes de Tchernóbil</span></span></a><a class="bento b-2" href="#a-lei-do-fone-de-ouvido-ou-por-que"><img src="img/b163a7c36747.jpg" alt="" loading="lazy"><span class="b-card"><span class="kicker">Física</span><span class="b-tit">A Lei do Fone de Ouvido (Ou por que sua vida vira uma bagunça sozinha)</span><span class="b-dek">Conversa de Boteco</span></span></a><a class="bento b-1" href="#a-miopia-dos-adultos-e-o-deserto"><img src="img/1b6e0477c3bc.jpg" alt="" loading="lazy"><span class="b-barra"><span class="kicker">Literatura</span><span>A Miopia dos Adultos e o Deserto em Nós</span></span></a><a class="bento b-1" href="#socrates-o-despertar-da-consciencia"><img src="img/e1c76d38df61.jpg" alt="" loading="lazy"><span class="b-barra"><span class="kicker">Filosofia</span><span>Sócrates: O Despertar da Consciência Humana</span></span></a><a class="bento b-1" href="#o-silencio-e-o-barulho-mais-insuportavel"><img src="img/9afb0997a0a9.jpg" alt="" loading="lazy"><span class="b-barra"><span class="kicker">Sociedade</span><span>O silêncio é o barulho mais insuportável deste século</span></span></a><a class="bento b-1" href="#a-anatomia-do-abismo-o-que-gogol"><img src="img/197214479671.jpg" alt="" loading="lazy"><span class="b-barra"><span class="kicker">Literatura</span><span>A Anatomia do Abismo: O Que Gogol nos Ensina Sobre Perder o Chão</span></span></a><a class="bento b-1" href="#antropomorfismo-o-universo-a-nossa"><img src="img/29e467d4136d.jpg" alt="" loading="lazy"><span class="b-barra"><span class="kicker">Física</span><span>Antropomorfismo: O Universo à Nossa Imagem e Semelhança</span></span></a><a class="bento b-1" href="#sejam-bem-vindos"><img src="img/91e31778dd0c.jpg" alt="" loading="lazy"><span class="b-barra"><span class="kicker">Apresentação</span><span>Sejam Bem vindos</span></span></a></div>
+  <section class="explore" aria-label="Explore por tema"><h2 class="etiqueta"><span>Explore por tema</span></h2>
+    <div class="temas-tiles"><a class="tema-tile" href="#tema-fisica"><img src="mini/b163a7c36747.jpg" alt="" loading="lazy"><span><b>Física</b><small>5 textos</small></span></a><a class="tema-tile" href="#tema-teologia"><img src="mini/b922fb9e0062.jpg" alt="" loading="lazy"><span><b>Teologia</b><small>3 textos</small></span></a><a class="tema-tile" href="#tema-literatura"><img src="mini/0140b8a95d8f.jpg" alt="" loading="lazy"><span><b>Literatura</b><small>3 textos</small></span></a><a class="tema-tile" href="#tema-filosofia"><img src="mini/e1c76d38df61.jpg" alt="" loading="lazy"><span><b>Filosofia</b><small>3 textos</small></span></a><a class="tema-tile" href="#tema-sociedade"><img src="mini/07b07b12fc8b.jpg" alt="" loading="lazy"><span><b>Sociedade</b><small>3 textos</small></span></a></div></section>
+  <section class="fileira">
+  <h2 class="etiqueta"><span>Física</span><a class="ver" href="#tema-fisica">ver todos →</a></h2>
+  <div class="grade-bento"><a class="bento b-2" href="#a-lei-do-fone-de-ouvido-ou-por-que"><img src="img/b163a7c36747.jpg" alt="" loading="lazy"><span class="b-card"><span class="kicker">Física</span><span class="b-tit">A Lei do Fone de Ouvido (Ou por que sua vida vira uma bagunça sozinha)</span><span class="b-dek">Conversa de Boteco</span></span></a><a class="bento b-1" href="#antropomorfismo-o-universo-a-nossa"><img src="img/29e467d4136d.jpg" alt="" loading="lazy"><span class="b-barra"><span class="kicker">Física</span><span>Antropomorfismo: O Universo à Nossa Imagem e Semelhança</span></span></a></div>
+</section><section class="fileira">
+  <h2 class="etiqueta"><span>Teologia</span><a class="ver" href="#tema-teologia">ver todos →</a></h2>
+  <div class="grade-bento"><a class="bento b-2" href="#vida"><img src="img/b922fb9e0062.jpg" alt="" loading="lazy"><span class="b-card"><span class="kicker">Teologia</span><span class="b-tit">VIDA</span><span class="b-dek">A percepção do vácuo não é a ausência de substância, mas a manifestação da inércia espiritual.…</span></span></a><a class="bento b-1" href="#para-meu-eu-do-futuro-parte-1"><img src="img/943ff53d100f.jpg" alt="" loading="lazy"><span class="b-barra"><span class="kicker">Teologia</span><span>Para Meu Eu do futuro (Parte 1)</span></span></a></div>
+</section><section class="fileira">
+  <h2 class="etiqueta"><span>Literatura</span><a class="ver" href="#tema-literatura">ver todos →</a></h2>
+  <div class="grade-bento"><a class="bento b-2" href="#a-liturgia-do-invisivel-o-amor-e"><img src="img/0140b8a95d8f.jpg" alt="" loading="lazy"><span class="b-card"><span class="kicker">Literatura</span><span class="b-tit">A Liturgia do Invisível: O Amor e o Átomo em Vozes de Tchernóbil</span><span class="b-dek">Quando a Fé ocupa o espaço que a Física nega</span></span></a><a class="bento b-1" href="#a-anatomia-do-abismo-o-que-gogol"><img src="img/197214479671.jpg" alt="" loading="lazy"><span class="b-barra"><span class="kicker">Literatura</span><span>A Anatomia do Abismo: O Que Gogol nos Ensina Sobre Perder o Chão</span></span></a></div>
+</section><section class="fileira">
+  <h2 class="etiqueta"><span>Filosofia</span><a class="ver" href="#tema-filosofia">ver todos →</a></h2>
+  <div class="grade-bento"><a class="bento b-2" href="#a-miopia-dos-adultos-e-o-deserto"><img src="img/1b6e0477c3bc.jpg" alt="" loading="lazy"><span class="b-card"><span class="kicker">Literatura</span><span class="b-tit">A Miopia dos Adultos e o Deserto em Nós</span><span class="b-dek">Antoine de Saint-Exupéry, nós aceitamos as suas desculpas. Você pediu perdão logo na dedicatória por oferecer…</span></span></a><a class="bento b-1" href="#socrates-o-despertar-da-consciencia"><img src="img/e1c76d38df61.jpg" alt="" loading="lazy"><span class="b-barra"><span class="kicker">Filosofia</span><span>Sócrates: O Despertar da Consciência Humana</span></span></a></div>
+</section><section class="fileira">
+  <h2 class="etiqueta"><span>Sociedade</span><a class="ver" href="#tema-sociedade">ver todos →</a></h2>
+  <div class="grade-bento"><a class="bento b-2" href="#apenas-uma-visao-sobre-a-sociedade"><img src="img/07b07b12fc8b.jpg" alt="" loading="lazy"><span class="b-card"><span class="kicker">Sociedade</span><span class="b-tit">Apenas uma visão sobre a sociedade cansada</span><span class="b-dek">A Síndrome do Motor no Vácuo</span></span></a><a class="bento b-1" href="#o-silencio-e-o-barulho-mais-insuportavel"><img src="img/9afb0997a0a9.jpg" alt="" loading="lazy"><span class="b-barra"><span class="kicker">Sociedade</span><span>O silêncio é o barulho mais insuportável deste século</span></span></a></div>
+</section>
+  
+  
   <section class="comece">
     <h2 class="etiqueta"><span>Comece por aqui</span></h2>
     <ol><li><span class="num">1</span><a href="#sejam-bem-vindos">Sejam Bem vindos</a></li><li><span class="num">2</span><a href="#o-silencio-e-o-barulho-mais-insuportavel">O silêncio é o barulho mais insuportável deste século</a></li><li><span class="num">3</span><a href="#a-liturgia-do-invisivel-o-amor-e">A Liturgia do Invisível: O Amor e o Átomo em Vozes de Tchernóbil</a></li><li><span class="num">4</span><a href="#a-miopia-dos-adultos-e-o-deserto">A Miopia dos Adultos e o Deserto em Nós</a></li><li><span class="num">5</span><a href="#vida">VIDA</a></li></ol>
@@ -332,6 +406,7 @@ a.tag:hover { color: var(--tinta); }
   </div>
 </section>
 </section>
+
 <section class="vista" id="v-vida">
   <article class="folha post">
     <a class="voltar" href="#inicio">← Todos os textos</a>
@@ -913,8 +988,10 @@ var Curtidas = (function () {
     links.forEach(function (a) { a.classList.toggle("atual", a.getAttribute("href") === "#" + id); });
     var h = alvo.querySelector(".titulo-post, .etiqueta.grande span");
     document.title = id === "inicio" || !h ? base : h.textContent + " · Cacau";
-    var c = alvo.querySelector(".curtir");
-    if (c) Curtidas.carregar(c.dataset.slug);
+    var vistos = {};
+    Array.prototype.forEach.call(alvo.querySelectorAll(".curtir"), function (c) {
+      if (!vistos[c.dataset.slug]) { vistos[c.dataset.slug] = true; Curtidas.carregar(c.dataset.slug); }
+    });
     window.scrollTo(0, 0);
   }
   window.addEventListener("hashchange", mostrar);
