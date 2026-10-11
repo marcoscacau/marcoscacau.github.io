@@ -9,6 +9,7 @@ on:
     branches: [main]
   schedule:
     - cron: "0 9 * * *"          # 6h da manhã em Brasília
+    - cron: "0 15,21,3 * * *"    # foto dos contadores do /painel/ ao meio-dia, 18h e meia-noite
   workflow_dispatch:
 
 permissions:
@@ -37,7 +38,7 @@ jobs:
 
       - name: Buscar posts novos (Substack e Instagram)
         id: buscar
-        if: github.event_name != 'push'
+        if: github.event_name != 'push' && github.event.schedule != '0 15,21,3 * * *'
         run: |
           python gerador/substack.py || echo "::warning::Substack não respondeu; tenta de novo amanhã"
           python gerador/instagram.py || echo "::warning::Instagram não respondeu; tenta de novo amanhã"
@@ -53,6 +54,10 @@ jobs:
 
       - name: Montar o site
         run: python gerador/site.py _site
+
+      # Ao salvar no Pages CMS, só repete a foto anterior (rápido); nas rodadas agendadas lê tudo (uns 3 minutos).
+      - name: Foto dos contadores (visitas e curtidas)
+        run: python gerador/contadores.py _site ${{ github.event_name == 'push' && '--rapido' || '' }}
 
       - uses: actions/upload-pages-artifact@v5
         with:

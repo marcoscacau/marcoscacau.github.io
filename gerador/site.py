@@ -155,9 +155,12 @@ def tags(p):
         f'<a class="tag" href="#{slugt(t)}">{e(t)}</a>' if t in ORDEM_TEMAS else f'<span class="tag">{e(t)}</span>' for t in p["temas"]) + "</div>"
 
 
+chave_curtida = lambda slug: slug[:64]                  # o Abacus recusa chave com mais de 64 caracteres
+
+
 def curtir(p, classe=""):
     # sem número à vista (escolha do autor); o contador Abacus continua registrando (ver site.js)
-    return (f'<button class="curtir {classe}" type="button" data-slug="{p["slug"]}" aria-pressed="false" aria-label="Curtir este texto">'
+    return (f'<button class="curtir {classe}" type="button" data-slug="{chave_curtida(p["slug"])}" aria-pressed="false" aria-label="Curtir este texto">'
             f'<span class="coracao" aria-hidden="true">♥</span><span class="rotulo">Curtir</span></button>')
 
 
@@ -523,9 +526,9 @@ links_pag = f'''<section class="vista" id="links">
 # painel (só para o autor; fora do menu, do mapa do site e do Google): visitas e curtidas de cada página
 chave_visita = lambda i: "v-" + i[:60]                    # contador de visitas no Abacus, o mesmo serviço das curtidas
 painel_dados = [dict(t="Página inicial", k="Página", u="/", v=chave_visita("inicio"))]
-painel_dados += [dict(t=p["titulo"], k="Texto", u=rota(p["slug"]), v=chave_visita(p["slug"]), c=p["slug"]) for p in recentes]
-painel_dados += [dict(t=l["titulo"], k="Livro", u=rota(l["slug"]), v=chave_visita(l["slug"]), c=l["slug"]) for l in LIVROS]
-painel_dados += [dict(t=corta(conteudo.texto_puro(n["html"]), 60) or "(nota só com foto)", k="Nota", u=rota(n["slug"]), c=n["slug"]) for n in NOTAS]
+painel_dados += [dict(t=p["titulo"], k="Texto", u=rota(p["slug"]), v=chave_visita(p["slug"]), c=chave_curtida(p["slug"])) for p in recentes]
+painel_dados += [dict(t=l["titulo"], k="Livro", u=rota(l["slug"]), v=chave_visita(l["slug"]), c=chave_curtida(l["slug"])) for l in LIVROS]
+painel_dados += [dict(t=corta(conteudo.texto_puro(n["html"]), 60) or "(nota só com foto)", k="Nota", u=rota(n["slug"]), c=chave_curtida(n["slug"])) for n in NOTAS]
 painel_dados += [dict(t=t, k="Tema", u=rota(slugt(t)), v=chave_visita(slugt(t))) for t in ORDEM_TEMAS]
 painel_dados += [dict(t=t, k="Página", u=rota(i), v=chave_visita(i)) for i, t in
                  (("biblioteca", "Biblioteca"), ("notas", "Notas curtas"), ("sobre", "Sobre"), ("links", "Links (bio do Instagram)")) if i != "notas" or TEM_NOTAS]
@@ -534,10 +537,11 @@ painel = f'''<section class="vista" id="painel">
     <p class="contagem">Visitas e curtidas de cada página. Esta página não aparece no menu nem no Google; guarde o endereço.</p></header>
   <div class="painel-resumo"><div><b class="painel-total" data-o="visitas">…</b><small>visitas no total</small></div>
     <div><b class="painel-total" data-o="curtidas">…</b><small>curtidas no total</small></div></div>
+  <p class="painel-status" aria-live="polite"></p>
   <label class="painel-eu"><input type="checkbox" class="painel-nao-contar"> Não contar as minhas visitas neste aparelho</label>
   <div class="painel-filtros" role="group" aria-label="Mostrar">{"".join(f'<button type="button" data-k="{k}" aria-pressed="{str(k == "Tudo").lower()}">{k}</button>' for k in ("Tudo", "Texto", "Livro", "Nota", "Tema", "Página"))}</div>
   <table class="painel-tabela"><thead><tr><th>Página</th><th>Tipo</th><th class="n">Visitas</th><th class="n">Curtidas</th></tr></thead><tbody></tbody></table>
-  <p class="painel-nota">As visitas começaram a ser contadas em {data_ext(HOJE)}. Robôs e as suas visitas marcadas acima ficam de fora. Não guarda nada de quem visita: só soma um número por página.</p>
+  <p class="painel-nota">As visitas começaram a ser contadas em 10 de outubro de 2026. Robôs e as suas visitas marcadas acima ficam de fora. Não guarda nada de quem visita: só soma um número por página.</p>
   <script type="application/json" id="painel-dados">{json.dumps(painel_dados, ensure_ascii=False).replace("</", "<\\/")}</script>
 </section>'''
 

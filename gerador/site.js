@@ -199,17 +199,57 @@ Visitas.contar();
       desenhar();
     });
   });
-  // poucas leituras por vez, para não sobrecarregar o contador gratuito
-  var fila = [];
-  linhas.forEach(function (l) { if (l.v) fila.push([l, "vis", l.v]); if (l.c) fila.push([l, "cur", l.c]); });
-  var vez = 0;
-  function proximo() {
-    var item = fila.shift();
-    if (!item) { desenhar(); return; }
-    Visitas.ler(item[2]).then(function (v) { item[0][item[1]] = v; if (++vez % 12 === 0) desenhar(); proximo(); });
+  // O contador gratuito aceita só 30 leituras a cada 10 s, e aqui são umas 400. Por isso:
+  // 1) mostra na hora a foto que o site tira com calma ao ser montado (/contadores.json, várias vezes por dia);
+  // 2) confere ao vivo, uma leitura por vez; quando o contador pede calma, espera e tenta de novo.
+  // Um número nunca desce: vale o maior entre a foto, a leitura ao vivo e o último visto neste aparelho.
+  var status = document.querySelector(".painel-status"), guardados = {};
+  try { guardados = JSON.parse(localStorage.getItem("painel-valores") || "{}"); } catch (e) {}
+  function guardar() { try { localStorage.setItem("painel-valores", JSON.stringify(guardados)); } catch (e) {} }
+  function aplicar(chave, v) {
+    if (typeof v !== "number") return;
+    guardados[chave] = Math.max(guardados[chave] || 0, v);
+    linhas.forEach(function (l) {
+      if (l.v === chave) l.vis = guardados[chave];
+      if (l.c === chave) l.cur = guardados[chave];
+    });
   }
-  desenhar();
-  for (var k = 0; k < 4; k++) proximo();
+  var chaves = [];
+  linhas.forEach(function (l) { if (l.v) chaves.push(l.v); if (l.c) chaves.push(l.c); });
+  Object.keys(guardados).forEach(function (k) { aplicar(k, guardados[k]); });
+  function lerAoVivo(chave) {
+    return fetch("https://abacus.jasoncameron.dev/get/marcoscacau-site/" + chave).then(function (r) {
+      if (r.status === 404) return 0;
+      if (r.status === 429) return "calma";
+      return r.ok ? r.json().then(function (d) { return d.value || 0; }) : null;
+    }, function () { return null; });
+  }
+  var i = 0;
+  function proximo() {
+    if (i >= chaves.length) {
+      guardar(); desenhar();
+      status.textContent = "Números conferidos agora há pouco.";
+      return;
+    }
+    lerAoVivo(chaves[i]).then(function (v) {
+      if (v === "calma") {
+        status.textContent = "Conferindo ao vivo: " + i + " de " + chaves.length + " (o contador pediu uma pausa)…";
+        setTimeout(proximo, 11000);
+        return;
+      }
+      aplicar(chaves[i], v);
+      i++;
+      if (i % 15 === 0) { guardar(); desenhar(); status.textContent = "Conferindo ao vivo: " + i + " de " + chaves.length + "…"; }
+      setTimeout(proximo, 150);
+    });
+  }
+  fetch("/contadores.json", { cache: "no-store" }).then(function (r) { return r.ok ? r.json() : null; }).then(function (foto) {
+    if (foto && foto.valores) Object.keys(foto.valores).forEach(function (k) { aplicar(k, foto.valores[k]); });
+  }, function () {}).then(function () {
+    desenhar();
+    status.textContent = "Conferindo ao vivo…";
+    proximo();
+  });
 })();
 
 // Frase-manifesto: a palavra em negrito troca a cada 2,6 s (parada para quem prefere menos movimento).
