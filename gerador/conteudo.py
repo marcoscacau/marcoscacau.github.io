@@ -154,12 +154,15 @@ def textos(img):
 def notas(img):
     res = []
     for nome, m, corpo in itens("notas"):
-        h = md_html(re.sub(r"!\[[^\]]*\]\([^)]*\)", "", corpo))         # fotos ficam no campo "fotos"
+        h = img.no_html(md_html(corpo))         # o campo "fotos" vai no topo; imagem no meio do texto fica onde foi posta
+        h = re.sub(r'(\salt="[^"]*?)\.(?:png|jpe?g|webp|gif)"', r'\1"', h, flags=re.I)   # o CMS põe o nome do arquivo como descrição
         fotos = [x for x in (img(f) for f in lista(m.get("fotos"))) if x]
         tam = len(texto_puro(h))
+        no_meio = "<img" in h
         link = m.get("link") or ""
         res.append(dict(slug="nota-" + nome, data=data_str(m.get("data")) or nome[:10], tema=m.get("tema") or "",
-                        html=h, imagens=fotos, imagem=fotos[0] if fotos else None, curta=tam <= 160, longa=tam > 420,
+                        html=h, imagens=fotos, imagem=fotos[0] if fotos else None, curta=tam <= 160 and not no_meio,
+                        longa=tam > 420 or (no_meio and tam > 200),
                         url=link, instagram="instagram.com" in link, video=bool(m.get("video"))))
     return sorted(res, key=lambda x: x["data"], reverse=True)
 

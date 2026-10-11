@@ -144,6 +144,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--lavanda); outli
 .nota-txt { padding: 1.2rem 1.3rem .4rem; font-family: var(--serif); font-size: 1.05rem; line-height: 1.6; }
 .nota-txt p { margin: 0 0 .7em; }
 .nota-txt figure { display: none; }
+.nota-txt img { display: block; height: auto; border-radius: 10px; margin: .2rem 0 .3rem; }
 .nota.curta .nota-txt { font-size: 1.45rem; line-height: 1.35; font-weight: 700; padding-top: 1.5rem; }
 .nota footer { display: flex; align-items: center; justify-content: space-between; gap: .6rem; padding: .3rem 1.3rem 1.1rem; }
 .nota > img, .fotos-trilho img, .nota-video > img { aspect-ratio: 4 / 5; object-fit: cover; }
